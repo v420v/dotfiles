@@ -3,6 +3,7 @@
 !.vim/
 !.vim/**/
 !.vim/colors/**
+!.config/ghostty/config
 !.gitignore
 .vim/autoload/**
 .vim/plugged/**
