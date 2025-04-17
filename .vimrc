@@ -13,6 +13,7 @@ set display=lastline
 set history=10000
 set noswapfile
 set clipboard=unnamed,autoselect
+set updatetime=100
 syntax on
 
 
@@ -43,6 +44,7 @@ call plug#begin()
 Plug 'wfxr/minimap.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 
@@ -54,5 +56,13 @@ let g:minimap_auto_start_win_enter = 1
 
 " vim-airline/vim-airline config
 let g:airline_theme='minimalist'
+
+
+" airblade/vim-gitgutter
+highlight GitGutterAdd guifg=#009900 ctermfg=Green
+highlight GitGutterChange guifg=#bbbb00 ctermfg=Yellow
+highlight GitGutterDelete guifg=#ff2222 ctermfg=Red
+let g:gitgutter_enabled = 1
+let g:gitgutter_map_keys = 0
 
 
