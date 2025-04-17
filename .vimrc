@@ -41,6 +41,8 @@ call CheckDependency('wfxr/minimap.vim', 'code-minimap')
 " Plugins
 call plug#begin()
 Plug 'wfxr/minimap.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 
@@ -48,5 +50,9 @@ call plug#end()
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
+
+
+" vim-airline/vim-airline config
+let g:airline_theme='minimalist'
 
 
