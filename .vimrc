@@ -71,6 +71,12 @@ highlight GitGutterChange guifg=#bbbb00 ctermfg=Yellow
 highlight GitGutterDelete guifg=#ff2222 ctermfg=Red
 let g:gitgutter_enabled = 1
 let g:gitgutter_map_keys = 0
+let g:gitgutter_preview_win_floating = 1
+let g:gitgutter_close_preview_on_escape=1
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+nmap hu <Plug>(GitGutterUndoHunk)
+nmap hp <Plug>(GitGutterPreviewHunk)
 
 
 " fzf.vim
