@@ -1,0 +1,9 @@
+*
+!.vimrc
+!.vim/
+!.vim/**/
+!.vim/colors/**
+!.gitignore
+.vim/autoload/**
+.vim/plugged/**
+
