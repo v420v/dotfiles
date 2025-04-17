@@ -2,6 +2,8 @@
 !.vimrc
 !.vim/
 !.vim/**/
+!.vim/syntax/**
+!.vim/ftdetect/**
 !.vim/colors/**
 !.config/ghostty/config
 !.gitignore
