@@ -1,9 +1,11 @@
 
+set encoding=utf-8
+set termencoding=utf-8
 set number
 set nowritebackup
 set nobackup
 set backspace=indent,eol,start
-set ambiwidth=double
+set ambiwidth=single
 set wildmenu
 set incsearch
 set hlsearch
@@ -36,7 +38,10 @@ function! CheckDependency(plugin_name, dependency) abort
   endif
 endfunction
 
+
 call CheckDependency('wfxr/minimap.vim', 'code-minimap')
+call CheckDependency('junegunn/fzf', 'fzf')
+call CheckDependency('junegunn/fzf', 'rg')
 
 
 " Plugins
@@ -45,6 +50,8 @@ Plug 'wfxr/minimap.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 
@@ -64,5 +71,10 @@ highlight GitGutterChange guifg=#bbbb00 ctermfg=Yellow
 highlight GitGutterDelete guifg=#ff2222 ctermfg=Red
 let g:gitgutter_enabled = 1
 let g:gitgutter_map_keys = 0
+
+
+" fzf.vim
+nnoremap <C-p> :Files<Cr>
+nnoremap <C-f> :Rg<Cr>
 
 
