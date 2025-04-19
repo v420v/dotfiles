@@ -19,6 +19,7 @@ set updatetime=100
 set mouse=a
 syntax on
 
+let mapleader = " "
 
 colorscheme GruberDarker
 
@@ -59,6 +60,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'preservim/nerdtree'
 call plug#end()
 
 
@@ -90,4 +92,23 @@ nmap hp <Plug>(GitGutterPreviewHunk)
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-f> :Rg<Cr>
 
+
+" Auto Refresh
+autocmd BufEnter NERD_tree_* | execute 'normal R'
+autocmd FocusGained NERD_tree_* | execute 'normal R'
+
+
+" Switching windows
+nnoremap <leader>h <C-w>h
+nnoremap <leader>l <C-w>l
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+
+
+" source current file
+nnoremap <leader>r :source %<CR>
+
+
+" Auto dislay nerdtree on vim enter
+autocmd VimEnter * NERDTree
 
