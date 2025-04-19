@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 DOTFILES_DIR="$HOME/dotfiles"
 CONFIG_DIR="$HOME/.config"
