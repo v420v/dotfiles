@@ -18,9 +18,29 @@ set clipboard=unnamed,autoselect
 set updatetime=100
 set mouse=a
 syntax on
+set smartindent
+set expandtab
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+
+
+augroup filetypeIndent
+  autocmd!
+  autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4
+  autocmd FileType php setlocal tabstop=4 softtabstop=4 shiftwidth=4
+  autocmd FileType make setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  autocmd FileType sshconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  autocmd FileType gitconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+augroup END
+
 
 let mapleader = " "
 
+
+" Tsoding
 colorscheme GruberDarker
 
 
@@ -135,6 +155,18 @@ function! CheckLeftBuffers()
   endif
 endfunction
 autocmd BufEnter * call CheckLeftBuffers()
+
+
+augroup filetypeIndent
+  autocmd!
+  autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType css setlocal tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4
+  autocmd FileType php setlocal tabstop=4 softtabstop=4 shiftwidth=4
+  autocmd FileType make setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  autocmd FileType sshconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  autocmd FileType gitconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+augroup END
 
 
 " Auto dislay nerdtree on vim enter
