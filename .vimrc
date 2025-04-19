@@ -109,6 +109,32 @@ nnoremap <leader>k <C-w>k
 nnoremap <leader>r :source %<CR>
 
 
+" Automatically Quit Vim if Actual Files are Closed
+" https://yous.be/2014/11/30/automatically-quit-vim-if-actual-files-are-closed
+function! CheckLeftBuffers()
+  if tabpagenr('$') == 1
+    let i = 1
+    while i <= winnr('$')
+      if getbufvar(winbufnr(i), '&buftype') == 'help' ||
+          \ getbufvar(winbufnr(i), '&buftype') == 'quickfix' ||
+          \ exists('t:NERDTreeBufName') &&
+          \ bufname(winbufnr(i)) == t:NERDTreeBufName ||
+          \ bufname(winbufnr(i)) == '__Tag_List__' ||
+          \ bufname(winbufnr(i)) == '-MINIMAP-'
+        let i += 1
+      else
+        break
+      endif
+    endwhile
+    if i == winnr('$') + 1
+      qall
+    endif
+    unlet i
+  endif
+endfunction
+autocmd BufEnter * call CheckLeftBuffers()
+
+
 " Auto dislay nerdtree on vim enter
 autocmd VimEnter * NERDTree
 
