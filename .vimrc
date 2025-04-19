@@ -61,6 +61,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/nerdtree'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 
@@ -72,6 +73,7 @@ let g:minimap_auto_start_win_enter = 1
 
 " vim-airline/vim-airline config
 let g:airline_theme='minimalist'
+let g:airline#extensions#branch#enabled = 1
 
 
 " airblade/vim-gitgutter
