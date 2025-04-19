@@ -16,6 +16,7 @@ set history=10000
 set noswapfile
 set clipboard=unnamed,autoselect
 set updatetime=100
+set mouse=a
 syntax on
 
 
