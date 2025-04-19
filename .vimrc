@@ -25,8 +25,13 @@ colorscheme GruberDarker
 
 " Bootstrap plugin manager
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+   silent exec "!curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+   if v:shell_error
+     echom "❌ Error downloading vim-plug. Please install it manually."
+   else
+     echom "🚀 vim-plug has been installed."
+     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+   endif
 endif
 
 
