@@ -34,6 +34,7 @@ augroup filetypeIndent
   autocmd FileType make setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
   autocmd FileType sshconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
   autocmd FileType gitconfig setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  autocmd FileType ibu setlocal tabstop=4 softtabstop=4 shiftwidth=4
 augroup END
 
 
