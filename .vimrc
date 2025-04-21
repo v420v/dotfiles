@@ -81,7 +81,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree' |
+\ Plug 'Xuyuanp/nerdtree-git-plugin' |
+\ Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-fugitive'
 call plug#end()
 
@@ -172,4 +174,17 @@ augroup END
 
 " Auto dislay nerdtree on vim enter
 autocmd VimEnter * NERDTree
+let g:NERDTreeGitStatusShowIgnored = 1
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+      \ 'Modified'  :'~',
+      \ 'Staged'    :'+',
+      \ 'Untracked' :'*',
+      \ 'Renamed'   :'>',
+      \ 'Unmerged'  :'=',
+      \ 'Deleted'   :'x',
+      \ 'Dirty'     :'!',
+      \ 'Ignored'   :'i',
+      \ 'Clean'     :'.',
+      \ 'Unknown'   :'?',
+      \ }
 
