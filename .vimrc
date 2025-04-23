@@ -86,6 +86,7 @@ Plug 'preservim/nerdtree' |
 \ Plug 'ryanoasis/vim-devicons' |
 \ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive'
+Plug 'Eliot00/git-lens.vim'
 call plug#end()
 
 
@@ -188,4 +189,10 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
       \ 'Clean'     :'.',
       \ 'Unknown'   :'?',
       \ }
+
+
+" Eliot00/git-lens.vim
+let g:GIT_LENS_ENABLED = 1
+
+
 
