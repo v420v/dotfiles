@@ -83,7 +83,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'preservim/nerdtree' |
 \ Plug 'Xuyuanp/nerdtree-git-plugin' |
-\ Plug 'ryanoasis/vim-devicons'
+\ Plug 'ryanoasis/vim-devicons' |
+\ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive'
 call plug#end()
 
