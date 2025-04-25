@@ -87,6 +87,7 @@ Plug 'preservim/nerdtree' |
 \ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive'
 Plug 'Eliot00/git-lens.vim'
+Plug 'ap/vim-css-color'
 call plug#end()
 
 
