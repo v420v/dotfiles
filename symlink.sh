@@ -23,6 +23,7 @@ SYMLINKS=(
   "$DOTFILES_DIR/.vimrc:$HOME/.vimrc"
   "$DOTFILES_DIR/.vim:$HOME/.vim"
   "$DOTFILES_DIR/.config/ghostty:$CONFIG_DIR/ghostty"
+  "$DOTFILES_DIR/.config/nvim/init.lua:$CONFIG_DIR/nvim/init.lua"
 )
 
 log "🚀 start creating symlinks..."
