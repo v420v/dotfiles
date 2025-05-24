@@ -24,6 +24,7 @@
 	        pkgs.docker
 	        pkgs.docker-compose
 	        pkgs.go
+          pkgs.aerospace
         ];
 
       fonts.packages = [

@@ -25,6 +25,7 @@ SYMLINKS=(
   #"$DOTFILES_DIR/.config/ghostty:$CONFIG_DIR/ghostty" # switched to alacritty
   "$DOTFILES_DIR/.config/nvim/init.lua:$CONFIG_DIR/nvim/init.lua"
   "$DOTFILES_DIR/.config/alacritty/alacritty.toml:$CONFIG_DIR/alacritty/alacritty.toml"
+  "$DOTFILES_DIR/.config/aerospace/aerospace.toml:$CONFIG_DIR/aerospace/aerospace.toml"
 )
 
 log "start creating symlinks..."
