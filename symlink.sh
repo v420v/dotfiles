@@ -20,19 +20,20 @@ log "Creating config directories..."
 mkdir -p "$CONFIG_DIR"
 
 SYMLINKS=(
-  "$DOTFILES_DIR/.vimrc:$HOME/.vimrc"
-  "$DOTFILES_DIR/.vim:$HOME/.vim"
-  "$DOTFILES_DIR/.config/ghostty:$CONFIG_DIR/ghostty"
+  #"$DOTFILES_DIR/.vimrc:$HOME/.vimrc"  # switched to neovim
+  #"$DOTFILES_DIR/.vim:$HOME/.vim"
+  #"$DOTFILES_DIR/.config/ghostty:$CONFIG_DIR/ghostty" # switched to alacritty
   "$DOTFILES_DIR/.config/nvim/init.lua:$CONFIG_DIR/nvim/init.lua"
+  "$DOTFILES_DIR/.config/alacritty/alacritty.toml:$CONFIG_DIR/alacritty/alacritty.toml"
 )
 
-log "🚀 start creating symlinks..."
+log "start creating symlinks..."
 for pair in "${SYMLINKS[@]}"; do
   src="${pair%%:*}"
   dest="${pair##*:}"
   ln -sf "$src" "$dest"
-  success "🔗 linked $dest → $src"
+  success "linked $dest → $src"
 done
 
-log "${GREEN}✅ all symlinks created successfully${NC}"
+log "${GREEN}all symlinks created successfully${NC}"
 

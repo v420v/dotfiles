@@ -7,6 +7,7 @@
 !.vim/ftplugin/**
 !.vim/colors/**
 !.config/nvim/init.lua
+!.config/alacritty/alacritty.toml
 !.config/ghostty/config
 !.gitignore
 !symlink.sh
