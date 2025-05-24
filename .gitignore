@@ -1,4 +1,12 @@
+
 *
+
+# nix
+!nix-darwin/**
+nix-darwin/flake.lock
+!nix/**
+
+# vim
 !.vimrc
 !.vim/
 !.vim/**/
@@ -6,12 +14,19 @@
 !.vim/ftdetect/**
 !.vim/ftplugin/**
 !.vim/colors/**
+.vim/autoload/**
+.vim/plugged/**
+
+# neovim
 !.config/nvim/init.lua
+
+# alacritty
 !.config/alacritty/alacritty.toml
+
+# ghostty
 !.config/ghostty/config
+
 !.gitignore
 !symlink.sh
 !README.md
-.vim/autoload/**
-.vim/plugged/**
 
