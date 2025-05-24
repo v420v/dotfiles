@@ -25,6 +25,7 @@
 	        pkgs.docker-compose
 	        pkgs.go
           pkgs.aerospace
+          pkgs.zsh-syntax-highlighting
         ];
 
       fonts.packages = [
@@ -57,14 +58,19 @@
         dock.autohide = false;
         NSGlobalDomain.AppleICUForce24HourTime = true;
         NSGlobalDomain.AppleInterfaceStyle = "Dark";
-        NSGlobalDomain.KeyRepeat = 2;
+        NSGlobalDomain.InitialKeyRepeat = 12;
+        NSGlobalDomain.KeyRepeat = 1;
       };
       
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
 
       # Enable alternative shell support in nix-darwin.
-      programs.zsh.enable = true;
+      programs.zsh = {
+        enable = true;
+        enableSyntaxHighlighting = true;
+        enableCompletion = true;
+      };
       # programs.fish.enable = true;
 
       # Set Git commit hash for darwin-version.
