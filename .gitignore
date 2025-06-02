@@ -1,0 +1,36 @@
+
+*
+
+# nix
+!nix-darwin/**
+nix-darwin/flake.lock
+!nix/**
+
+# aerospace
+!.config/aerospace/*
+!.config/aerospace/aerospace.toml
+
+# vim
+!.vimrc
+!.vim/
+!.vim/**/
+!.vim/syntax/**
+!.vim/ftdetect/**
+!.vim/ftplugin/**
+!.vim/colors/**
+.vim/autoload/**
+.vim/plugged/**
+
+# neovim
+!.config/nvim/init.lua
+
+# alacritty
+!.config/alacritty/alacritty.toml
+
+# ghostty
+!.config/ghostty/config
+
+!.gitignore
+!symlink.sh
+!README.md
+
