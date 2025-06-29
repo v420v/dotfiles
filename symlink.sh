@@ -16,7 +16,7 @@ success() {
   echo -e "${GREEN}✔${NC} $1"
 }
 
-log "Creating config directories..."
+log "creating config directories..."
 mkdir -p "$CONFIG_DIR"
 mkdir -p "$CONFIG_DIR/nvim"
 mkdir -p "$CONFIG_DIR/alacritty"
@@ -24,10 +24,9 @@ mkdir -p "$CONFIG_DIR/alacritty"
 SYMLINKS=(
   #"$DOTFILES_DIR/.vimrc:$HOME/.vimrc"  # switched to neovim
   #"$DOTFILES_DIR/.vim:$HOME/.vim"
-  #"$DOTFILES_DIR/.config/ghostty:$CONFIG_DIR/ghostty" # switched to alacritty
   "$DOTFILES_DIR/.config/nvim/init.lua:$CONFIG_DIR/nvim/init.lua"
   "$DOTFILES_DIR/.config/alacritty/alacritty.toml:$CONFIG_DIR/alacritty/alacritty.toml"
-  #"$DOTFILES_DIR/.config/aerospace/aerospace.toml:$CONFIG_DIR/aerospace/aerospace.toml"
+  "$DOTFILES_DIR/.gitconfig:$HOME/.gitconfig"
 )
 
 log "start creating symlinks..."

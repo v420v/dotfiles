@@ -7,9 +7,9 @@ decorations = "Buttonless"
 decorations_theme_variant = "Dark"
 
 [font]
-normal.family = "0xProto Nerd Font"
-bold.family = "0xProto Nerd Font"
-italic.family = "0xProto Nerd Font"
-bold_italic.family = "0xProto Nerd Font"
-size = 10.0
+normal.family = "0xProto"
+bold.family = "0xProto"
+italic.family = "0xProto"
+bold_italic.family = "0xProto"
+size = 13.0
 

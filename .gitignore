@@ -1,15 +1,6 @@
 
 *
 
-# nix
-!nix-darwin/**
-nix-darwin/flake.lock
-!nix/**
-
-# aerospace
-!.config/aerospace/*
-!.config/aerospace/aerospace.toml
-
 # vim
 !.vimrc
 !.vim/
@@ -27,10 +18,12 @@ nix-darwin/flake.lock
 # alacritty
 !.config/alacritty/alacritty.toml
 
-# ghostty
-!.config/ghostty/config
+# git
+!.gitconfig
 
 !.gitignore
 !symlink.sh
 !README.md
+
+
 
