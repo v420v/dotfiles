@@ -1,0 +1,13 @@
+[user]
+    name = v420v
+    email = ibuki420v@gmail.com
+
+[alias]
+    lol = log --graph --all --abbrev-commit --pretty=format:'%C(bold yellow)%h%Creset -> %s%C(auto)%d%Creset %C(dim green)(%cr)%Creset%C(dim blue)<%an>%Creset'
+
+[core]
+    editor = nvim
+
+[color]
+    ui = auto
+

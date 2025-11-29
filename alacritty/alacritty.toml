@@ -1,0 +1,14 @@
+
+[window]
+opacity = 0.8
+padding.x = 10
+padding.y = 10
+decorations = "Buttonless"
+decorations_theme_variant = "Dark"
+
+[font]
+normal.family = "0xProto Nerd Font"
+bold.family = "0xProto Nerd Font"
+italic.family = "0xProto Nerd Font"
+bold_italic.family = "0xProto Nerd Font"
+size = 13.0
