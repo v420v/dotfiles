@@ -52,6 +52,13 @@ require('packer').startup(function(use)
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
 
+  use {
+    'goolord/alpha-nvim',
+    config = function ()
+        require'alpha'.setup(require'alpha.themes.dashboard'.config)
+    end
+  }
+
   -- File explorer
   use {
     'kyazdani42/nvim-tree.lua',
@@ -588,3 +595,4 @@ cmp.setup.cmdline(':', {
 
 -- LuaSnip設定
 require('luasnip.loaders.from_vscode').lazy_load()
+
