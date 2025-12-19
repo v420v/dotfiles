@@ -43,7 +43,15 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
   -- Theme
-  use "rebelot/kanagawa.nvim"
+  use({
+    'projekt0n/github-nvim-theme',
+    config = function()
+      require('github-theme').setup({
+        -- ...
+      })
+      vim.cmd('colorscheme github_dark')
+    end
+  })
 
   -- Status line
   use {
@@ -83,6 +91,9 @@ require('packer').startup(function(use)
   -- Indent guides
   use 'lukas-reineke/indent-blankline.nvim'
 
+  -- Git signs (show git changes in line numbers)
+  use 'lewis6991/gitsigns.nvim'
+
   -- LSP (Language Server Protocol)
   use 'neovim/nvim-lspconfig'
   use 'williamboman/mason.nvim'
@@ -102,41 +113,7 @@ end)
 -----------------------
 -- Theme
 -----------------------
-require('kanagawa').setup({
-    compile = false,             -- enable compiling the colorscheme
-    undercurl = true,            -- enable undercurls
-    commentStyle = { italic = true },
-    functionStyle = {},
-    keywordStyle = { italic = true},
-    statementStyle = { bold = true },
-    typeStyle = {},
-    transparent = false,         -- do not set background color
-    dimInactive = false,         -- dim inactive window `:h hl-NormalNC`
-    terminalColors = true,       -- define vim.g.terminal_color_{0,17}
-    colors = {                   -- add/modify theme and palette colors
-        palette = {},
-        theme = { wave = {}, lotus = {}, dragon = {}, all = {} },
-    },
-    overrides = function(colors) -- add/modify highlights
-        return {}
-    end,
-    theme = "wave",              -- Load "wave" theme
-    background = {               -- map the value of 'background' option to a theme
-        dark = "wave",           -- try "dragon" !
-        light = "lotus"
-    },
-})
-vim.cmd("colorscheme kanagawa")
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
-vim.api.nvim_set_hl(0, "CursorLineNr", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNrAbove", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNrBelow", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "Pmenu", { bg = "none" })
+vim.cmd('colorscheme github_dark')
 
 
 -----------------------
@@ -263,6 +240,67 @@ require('ibl').setup {
   indent = { char = "┊" },
   scope = { enabled = true },
 }
+
+
+-----------------------
+-- Git signs setup
+-----------------------
+require('gitsigns').setup {
+  signs = {
+    add          = { text = '│' },
+    change       = { text = '│' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    interval = 1000,
+    follow_files = true
+  },
+  attach_to_untracked = true,
+  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  max_file_length = 40000, -- Disable if file is longer than this (in lines)
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+  yadm = {
+    enable = false
+  },
+}
+
+
+-- Git signs key mappings
+vim.keymap.set('n', '<leader>gh', ':Gitsigns preview_hunk<CR>', { desc = 'Preview hunk diff' })
+vim.keymap.set('n', '<leader>gd', ':Gitsigns diffthis<CR>', { desc = 'Toggle diff for current file' })
+vim.keymap.set('n', '<leader>gD', ':Gitsigns diffthis ~<CR>', { desc = 'Toggle diff against HEAD' })
+vim.keymap.set('n', ']h', ':Gitsigns next_hunk<CR>', { desc = 'Next hunk' })
+vim.keymap.set('n', '[h', ':Gitsigns prev_hunk<CR>', { desc = 'Previous hunk' })
+vim.keymap.set('n', '<leader>gs', ':Gitsigns stage_hunk<CR>', { desc = 'Stage hunk' })
+vim.keymap.set('n', '<leader>gu', ':Gitsigns undo_stage_hunk<CR>', { desc = 'Undo stage hunk' })
+vim.keymap.set('n', '<leader>gr', ':Gitsigns reset_hunk<CR>', { desc = 'Reset hunk' })
+vim.keymap.set('n', '<leader>gR', ':Gitsigns reset_buffer<CR>', { desc = 'Reset buffer' })
+vim.keymap.set('n', '<leader>gb', ':Gitsigns toggle_current_line_blame<CR>', { desc = 'Toggle line blame' })
+vim.keymap.set('n', '<leader>gt', ':Gitsigns toggle_deleted<CR>', { desc = 'Toggle deleted lines' })
 
 
 -----------------------
