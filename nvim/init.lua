@@ -113,6 +113,15 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-cmdline'
   use 'L3MON4D3/LuaSnip'
   use 'saadparwaiz1/cmp_luasnip'
+  
+  -- Auto pairs (自動で括弧や引用符をペアで入力)
+  use {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup {}
+    end
+  }
+  use 'windwp/nvim-ts-autotag'  -- HTML/JSXタグの自動ペア
 end)
 
 
@@ -666,9 +675,39 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostic
 
 
 -----------------------
+-- Auto pairs setup
+-----------------------
+require('nvim-autopairs').setup({
+  check_ts = true,  -- Treesitterと統合
+  ts_config = {
+    lua = { 'string', 'source' },
+    javascript = { 'string', 'template_string' },
+    typescript = { 'string', 'template_string' },
+  },
+  disable_filetype = { 'TelescopePrompt', 'spectre_panel' },
+  fast_wrap = {
+    map = '<M-e>',
+    chars = { '{', '[', '(', '"', "'" },
+    pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
+    end_key = '$',
+    keys = 'qwertyuiopzxcvbnmasdfghjkl',
+    check_comma = true,
+    highlight = 'PmenuSel',
+    highlight_grey = 'LineNr'
+  },
+})
+
+-- nvim-cmpと統合
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local cmp = require('cmp')
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+-- HTML/JSXタグの自動ペア
+require('nvim-ts-autotag').setup()
+
+-----------------------
 -- Autocompletion (nvim-cmp)
 -----------------------
-local cmp = require('cmp')
 local luasnip = require('luasnip')
 
 cmp.setup({
