@@ -241,6 +241,9 @@ vim.keymap.set('n', '<leader>bh', ':bprevious<CR>', { desc = 'Previous buffer (r
 vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Delete buffer' })
 vim.keymap.set('n', '<leader>bD', ':bdelete!<CR>', { desc = 'Force delete buffer' })
 
+-- Terminal mode escape
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
 
 -----------------------
 -- Set up indent guides
