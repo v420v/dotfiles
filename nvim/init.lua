@@ -233,6 +233,15 @@ require('bufferline').setup {
 }
 
 
+-- Buffer (tab) navigation
+vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<leader>bl', ':bnext<CR>', { desc = 'Next buffer (left)' })
+vim.keymap.set('n', '<leader>bh', ':bprevious<CR>', { desc = 'Previous buffer (right)' })
+vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<leader>bD', ':bdelete!<CR>', { desc = 'Force delete buffer' })
+
+
 -----------------------
 -- Set up indent guides
 -----------------------
@@ -282,9 +291,6 @@ require('gitsigns').setup {
     relative = 'cursor',
     row = 0,
     col = 1
-  },
-  yadm = {
-    enable = false
   },
 }
 
