@@ -82,6 +82,12 @@ require('packer').startup(function(use)
     requires = { {'nvim-lua/plenary.nvim'} }
   }
 
+  -- Advanced search and replace
+  use {
+    'nvim-pack/nvim-spectre',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
   -- Syntax Highlighting
   use {
     'nvim-treesitter/nvim-treesitter',
@@ -321,6 +327,88 @@ vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { desc = 'Fin
 vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { desc = 'Live grep' })
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>', { desc = 'Find buffers' })
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'Find help tags' })
+
+
+-----------------------
+-- Advanced Search and Replace (nvim-spectre)
+-----------------------
+require('spectre').setup {
+  mapping = {
+    ['toggle_line'] = {
+      map = "dd",
+      cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+      desc = "toggle current item"
+    },
+    ['enter_file'] = {
+      map = "<cr>",
+      cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+      desc = "goto current file"
+    },
+    ['send_to_qf'] = {
+      map = "<leader>q",
+      cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+      desc = "send all item to quickfix"
+    },
+    ['replace_cmd'] = {
+      map = "<leader>r",
+      cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+      desc = "input replace vim command"
+    },
+    ['show_option_menu'] = {
+      map = "<leader>o",
+      cmd = "<cmd>lua require('spectre').show_options()<CR>",
+      desc = "show option"
+    },
+    ['run_replace'] = {
+      map = "<leader>R",
+      cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+      desc = "replace all"
+    },
+    ['change_view_mode'] = {
+      map = "<leader>v",
+      cmd = "<cmd>lua require('spectre').change_view()<CR>",
+      desc = "change result view mode"
+    },
+    ['toggle_live_update'] = {
+      map = "tu",
+      cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+      desc = "update change when vim write file."
+    },
+    ['toggle_ignore_case'] = {
+      map = "ti",
+      cmd = "<cmd>lua require('spectre').show_options()<CR>",
+      desc = "show options menu (use to toggle ignore case)"
+    },
+    ['toggle_ignore_hidden'] = {
+      map = "th",
+      cmd = "<cmd>lua require('spectre').toggle_ignore_hidden()<CR>",
+      desc = "toggle search hidden"
+    },
+    ['toggle_match_word'] = {
+      map = "tw",
+      cmd = "<cmd>lua require('spectre').show_options()<CR>",
+      desc = "show options menu (use to toggle match word)"
+    },
+    ['resume_last_search'] = {
+      map = "<leader>l",
+      cmd = "<cmd>lua require('spectre').resume_last_search()<CR>",
+      desc = "resume last search"
+    },
+  }
+}
+
+-- Key mappings for search and replace
+vim.keymap.set('n', '<leader>sr', function()
+  require('spectre').open()
+end, { desc = 'Search and replace' })
+
+vim.keymap.set('n', '<leader>sw', function()
+  require('spectre').open_visual({ select_word = true })
+end, { desc = 'Search current word' })
+
+vim.keymap.set('v', '<leader>sw', function()
+  require('spectre').open_visual()
+end, { desc = 'Search selected text' })
 
 
 -----------------------
