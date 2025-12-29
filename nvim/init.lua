@@ -143,15 +143,20 @@ vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
 -----------------------
 -- Treesitter
 -----------------------
-require('nvim-treesitter.configs').setup {
-  ensure_installed = {
-    "lua", "go", "php", "javascript", "typescript",
-    "html", "css", "json", "yaml"
-  },
-  highlight = {
-    enable = true,
-  },
-}
+local ok_ts, ts_configs = pcall(require, 'nvim-treesitter.configs')
+if ok_ts then
+  ts_configs.setup {
+    ensure_installed = {
+      "lua", "go", "php", "javascript", "typescript",
+      "html", "css", "json", "yaml"
+    },
+    highlight = {
+      enable = true,
+    },
+  }
+else
+  vim.notify("nvim-treesitter not found; Treesitter disabled", vim.log.levels.WARN)
+end
 
 
 -----------------------
