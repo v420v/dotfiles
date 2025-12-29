@@ -1,8 +1,21 @@
 #!/bin/bash
 
-mkdir -p ~/.config/alacritty && ln -s ~/dotfiles/alacritty/alacritty.toml ~/.config/alacritty
-mkdir -p ~/.config/nvim &&ln -s ~/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
-ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+# alacritty
+mkdir -p ~/.config/alacritty
+if [ ! -L ~/.config/alacritty/alacritty.toml ]; then
+  ln -s ~/dotfiles/alacritty/alacritty.toml ~/.config/alacritty
+fi
+
+# nvim
+mkdir -p ~/.config/nvim 
+if [ ! -L ~/.config/nvim/init.lua ]; then
+ln -s ~/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
+fi
+
+# gitconfig
+if [ ! -L ~/.gitconfig ]; then
+  ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+fi
 
 # Only create bash_aliases symlink if bash is the shell
 if [[ "$SHELL" == *"bash"* ]]; then
