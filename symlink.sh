@@ -18,6 +18,10 @@ if [ ! -L ~/.gitconfig ]; then
 fi
 
 # Only create bash_aliases symlink if bash is the shell
-if [[ "$SHELL" == *"bash"* ]]; then
-  ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
-fi
+case "$SHELL" in
+  *bash*)
+    if [ ! -L ~/.bash_aliases ]; then
+      ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
+    fi
+    ;;
+esac
