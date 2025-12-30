@@ -5,6 +5,7 @@
 # Enabled options
 #######################################
 shopt -s \
+  autocd \
   checkwinsize \
   cmdhist \
   complete_fullquote \
@@ -26,7 +27,6 @@ shopt -s \
 # Disabled options
 #######################################
 shopt -u \
-  autocd \
   assoc_expand_once \
   cdable_vars \
   cdspell \
