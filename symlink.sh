@@ -29,4 +29,11 @@ case "$SHELL" in
     ;;
 esac
 
-
+# ZSH
+case "$SHELL" in
+  *zsh*)
+    if [ ! -L ~/.zsh_aliases ]; then
+      ln -s ~/dotfiles/zsh/.zsh_aliases ~/.zsh_aliases
+    fi
+    ;;
+esac
