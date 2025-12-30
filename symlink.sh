@@ -17,11 +17,14 @@ if [ ! -L ~/.gitconfig ]; then
   ln -s ~/dotfiles/.gitconfig ~/.gitconfig
 fi
 
-# Only create bash_aliases symlink if bash is the shell
+# if bash
 case "$SHELL" in
   *bash*)
     if [ ! -L ~/.bash_aliases ]; then
       ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
+    fi
+    if [ ! -L ~/shopt.sh ]; then
+      ln -s ~/dotfiles/shopt.sh ~/shopt.sh
     fi
     ;;
 esac
