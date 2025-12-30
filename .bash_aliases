@@ -1,3 +1,3 @@
 
-alias ls='eza --icons --group-directories-first'
+alias ls='eza --icons --group-directories-first -a'
 
