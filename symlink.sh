@@ -25,3 +25,10 @@ case "$SHELL" in
     fi
     ;;
 esac
+
+# .zshrc
+if [ ! -L ~/.zshrc ]; then
+  ln -s ~/dotfiles/.zshrc ~/.zshrc
+fi
+
+
