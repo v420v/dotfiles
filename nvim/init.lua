@@ -256,10 +256,10 @@ require('bufferline').setup {
 -- Buffer (tab) navigation
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = 'Previous buffer' })
-vim.keymap.set('n', '<leader>bl', ':bnext<CR>', { desc = 'Next buffer (left)' })
-vim.keymap.set('n', '<leader>bh', ':bprevious<CR>', { desc = 'Previous buffer (right)' })
-vim.keymap.set('n', '<leader>bd', ':bdelete<CR>', { desc = 'Delete buffer' })
-vim.keymap.set('n', '<leader>bD', ':bdelete!<CR>', { desc = 'Force delete buffer' })
+vim.keymap.set('n', '<leader>l', ':bnext<CR>', { desc = 'Next buffer (left)' })
+vim.keymap.set('n', '<leader>h', ':bprevious<CR>', { desc = 'Previous buffer (right)' })
+vim.keymap.set('n', '<leader>d', ':bdelete<CR>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<leader>D', ':bdelete!<CR>', { desc = 'Force delete buffer' })
 
 -- Terminal mode escape
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -529,6 +529,7 @@ local function get_mason_cmd(server_name)
       ts_ls = { install_path .. '/node_modules/.bin/typescript-language-server', '--stdio' },
       html = { install_path .. '/node_modules/.bin/vscode-html-language-server', '--stdio' },
       cssls = { install_path .. '/node_modules/.bin/vscode-css-language-server', '--stdio' },
+      clangd = { install_path .. '/bin/clangd' },
     }
     return cmd_map[server_name]
   end
@@ -542,6 +543,7 @@ require('mason-lspconfig').setup {
     "ts_ls",             -- TypeScript/JavaScript
     "html",              -- HTML
     "cssls",             -- CSS
+    "clangd",            -- C/C++
   },
   automatic_installation = true,
   handlers = {
@@ -650,6 +652,17 @@ require('mason-lspconfig').setup {
         name = 'cssls',
         cmd = cmd,
         capabilities = capabilities,
+      })
+    end,
+    -- C/C++ (clangd) - カスタム設定
+    ['clangd'] = function()
+      local cmd = get_mason_cmd('clangd') or { 'clangd' }
+
+      vim.lsp.start({
+        name = 'clangd',
+        cmd = cmd,
+        capabilities = capabilities,
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
       })
     end,
   },
