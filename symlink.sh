@@ -17,18 +17,6 @@ if [ ! -L ~/.gitconfig ]; then
   ln -s ~/dotfiles/.gitconfig ~/.gitconfig
 fi
 
-# BASH
-case "$SHELL" in
-  *bash*)
-    if [ ! -L ~/.bash_aliases ]; then
-      ln -s ~/dotfiles/bash/.bash_aliases ~/.bash_aliases
-    fi
-    if [ ! -L ~/shopt.sh ]; then
-      ln -s ~/dotfiles/bash/shopt.sh ~/shopt.sh
-    fi
-    ;;
-esac
-
 # ZSH
 case "$SHELL" in
   *zsh*)
