@@ -32,7 +32,7 @@ fi
 
 
 # -- paths --
-if [[ true ]]; then
+if [[ false ]]; then
   export PATH="$HOME/node-v24.12.0-linux-x64/bin:$PATH"
   export PATH="$HOME/nvim-linux-x86_64/bin:$PATH"
 fi
@@ -48,7 +48,12 @@ if [[ false ]]; then
   #export PATH="$HOME/pkg/node/node-v22.21.1-darwin-arm64/bin:$PATH"
 fi
 
-if [[ false ]]; then
+if [[ true ]]; then
+  export PATH="$HOME/.volta/bin:$PATH"
+  export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+  export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
+  export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
+  export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
 fi
 
 
