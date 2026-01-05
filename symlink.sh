@@ -17,14 +17,10 @@ if [ ! -L ~/.gitconfig ]; then
   ln -s ~/dotfiles/.gitconfig ~/.gitconfig
 fi
 
-# ZSH
-case "$SHELL" in
-  *zsh*)
-    if [ ! -L ~/.zsh_aliases ]; then
-      ln -s ~/dotfiles/zsh/.zsh_aliases ~/.zsh_aliases
-    fi
-    ;;
-esac
+# aliases
+if [ ! -L ~/.zsh_aliases ]; then
+  ln -s ~/dotfiles/zsh/.zsh_aliases ~/.zsh_aliases
+fi
 
 # .zshrc
 if [ ! -L ~/.zshrc ]; then

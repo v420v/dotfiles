@@ -16,13 +16,13 @@ if [[ ! -d "$ZSH_SYNTAX_DIR" ]]; then
   mkdir -p "$ZSH_PLUGIN_DIR"
   git clone --depth=1 git@github.com:zsh-users/zsh-syntax-highlighting.git "$ZSH_SYNTAX_DIR"
 fi
-source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "$ZSH_SYNTAX_DIR/zsh-syntax-highlighting.zsh"
 
 if [[ ! -d "$ZSH_SUGGESTIONS_DIR" ]]; then
   mkdir -p "$ZSH_PLUGIN_DIR"
   git clone --depth=1 git@github.com:zsh-users/zsh-autosuggestions.git "$ZSH_SUGGESTIONS_DIR"
 fi
-source ~/zsh-autosuggestions/zsh-autosuggestions.zsh
+source "$ZSH_SUGGESTIONS_DIR/zsh-autosuggestions.zsh"
 
 
 # -- zsh_aliases --
