@@ -1,2 +1,4 @@
 
-alias ls='eza --icons --group-directories-first -a'
+alias ls='eza -l --icons --git-repos --header --group-directories-first -a'
+
+
