@@ -14,7 +14,13 @@ fi
 
 # gitconfig
 if [ ! -L ~/.gitconfig ]; then
-  ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+  ln -s ~/dotfiles/git/.gitconfig ~/.gitconfig
+fi
+
+# git ignore
+mkdir -p ~/.config/git
+if [ ! -L ~/.config/git/ingore ]; then
+  ln -s ~/dotfiles/git/ignore ~/.config/git/ignore
 fi
 
 # aliases
