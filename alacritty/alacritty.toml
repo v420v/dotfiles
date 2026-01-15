@@ -1,10 +1,11 @@
 
 [window]
-opacity = 1
+opacity = 0.6
 padding.x = 10
 padding.y = 10
 decorations = "Buttonless"
 decorations_theme_variant = "Dark"
+blur = true
 
 [font]
 normal.family = "0xProto Nerd Font"
@@ -12,3 +13,5 @@ bold.family = "0xProto Nerd Font"
 italic.family = "0xProto Nerd Font"
 bold_italic.family = "0xProto Nerd Font"
 size = 13.0
+
+
