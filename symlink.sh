@@ -19,7 +19,7 @@ fi
 
 # git ignore
 mkdir -p ~/.config/git
-if [ ! -L ~/.config/git/ingore ]; then
+if [ ! -L ~/.config/git/ignore ]; then
   ln -s ~/dotfiles/git/ignore ~/.config/git/ignore
 fi
 
