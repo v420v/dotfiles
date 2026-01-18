@@ -30,30 +30,35 @@ if [ -f ~/.zsh_aliases ]; then
   . ~/.zsh_aliases
 fi
 
+# -- zsh_paths --
+if [ -f ~/.zsh_paths ]; then
+  . ~/.zsh_paths
+fi
 
 # -- paths --
-if [[ false ]]; then
-  export PATH="$HOME/node-v24.12.0-linux-x64/bin:$PATH"
-  export PATH="$HOME/nvim-linux-x86_64/bin:$PATH"
-fi
-
-if [[ false ]]; then
-  export VOLTA_HOME="$HOME/.volta"
-  export PATH="$VOLTA_HOME/bin:$PATH"
-  export PATH="/opt/homebrew/opt/bison/bin:$PATH"
-  export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
-  export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
-  export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
-  export PATH="$HOME/pkg/node/node-v24.11.1-darwin-arm64/bin:$PATH"
-  #export PATH="$HOME/pkg/node/node-v22.21.1-darwin-arm64/bin:$PATH"
-fi
-
-if [[ true ]]; then
-  export PATH="$HOME/.volta/bin:$PATH"
-  export PATH="/opt/homebrew/opt/bison/bin:$PATH"
-  export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
-  export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
-  export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
-fi
+#if [[ false ]]; then
+#  export PATH="$HOME/node-v24.12.0-linux-x64/bin:$PATH"
+#  export PATH="$HOME/nvim-linux-x86_64/bin:$PATH"
+#fi
+#
+#if [[ true ]]; then
+#  export VOLTA_HOME="$HOME/.volta"
+#  export PATH="$VOLTA_HOME/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+#  export PATH="$HOME/pkg/node/node-v24.11.1-darwin-arm64/bin:$PATH"
+#  #export PATH="$HOME/pkg/node/node-v22.21.1-darwin-arm64/bin:$PATH"
+#  export PATH="$HOME/pkg/lua/lua-5.5.0/src:$PATH"
+#fi
+#
+#if [[ false ]]; then
+#  export PATH="$HOME/.volta/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
+#  export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+#fi
 
 
