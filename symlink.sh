@@ -33,4 +33,10 @@ if [ ! -L ~/.zshrc ]; then
   ln -s ~/dotfiles/.zshrc ~/.zshrc
 fi
 
+# wezterm
+mkdir -p ~/.config/wezterm
+if [ ! -L ~/.config/wezterm/wezterm.lua ]; then
+  ln -s ~/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+fi
+
 
