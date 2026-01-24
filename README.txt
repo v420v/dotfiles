@@ -30,3 +30,11 @@ This will create the necessary directories and symbolic links for:
 
 Note: Make sure the script has execute permissions:
     chmod +x symlink.sh
+
+MacOS
+- Stop macOS from automatically creating .DS_Store files
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+- Set KyeRepeast Speed
+    defaults write NSGlobalDomain KeyRepeat -int 1
+
+
