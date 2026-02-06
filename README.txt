@@ -36,5 +36,9 @@ MacOS
     defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 - Set KyeRepeast Speed
     defaults write NSGlobalDomain KeyRepeat -int 1
-
+- Cursor 
+    osascript -e 'id of app "Cursor.app"'
+    defaults write {domain name} ApplePressAndHoldEnabled -bool false
+- Show dotfiles on Finder
+    defaults write com.apple.finder AppleShowAllFiles ON
 
