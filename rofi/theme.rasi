@@ -1,0 +1,82 @@
+/* Catppuccin Mocha */
+* {
+    bg:        #1e1e2e;
+    bg-alt:    #181825;
+    surface:   #313244;
+    fg:        #cdd6f4;
+    subtext:   #a6adc8;
+    accent:    #cba6f7;
+    accent2:   #b4befe;
+    border:    #cba6f7;
+    selected:  #585b70;
+    urgent:    #f38ba8;
+
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    transparency:    "real";
+    location:        center;
+    anchor:          center;
+    width:           620px;
+    border-radius:   16px;
+    border:          2px;
+    border-color:    @border;
+    background-color: @bg;
+    padding:         18px;
+    children:        [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius:    12px;
+    padding:          10px 14px;
+    spacing:          10px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    font:       "JetBrainsMono Nerd Font Bold 11";
+}
+
+entry {
+    placeholder:        "Search…";
+    placeholder-color:  @subtext;
+    text-color:         @fg;
+}
+
+listview {
+    margin:        14px 0 0 0;
+    spacing:       6px;
+    lines:         8;
+    columns:       1;
+    fixed-height:  true;
+    cycle:         true;
+    scrollbar:     false;
+}
+
+element {
+    padding:        8px 12px;
+    border-radius:  10px;
+    spacing:        10px;
+    children:       [ element-icon, element-text ];
+}
+
+element selected {
+    background-color: @selected;
+    text-color:       @accent2;
+}
+
+element-icon {
+    size:             24px;
+    background-color: transparent;
+    vertical-align:   0.5;
+}
+
+element-text {
+    text-color:       inherit;
+    vertical-align:   0.5;
+}
