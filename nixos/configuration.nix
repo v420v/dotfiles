@@ -195,6 +195,8 @@
     zoxide
     unzip
     p7zip
+    ghq
+    peco
 
     # Apps
     firefox

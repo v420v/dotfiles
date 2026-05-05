@@ -121,6 +121,21 @@ fi
 # zoxide — smarter cd; `z foo` to jump, `zi` for interactive
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)"
 
+# ghq + peco — Ctrl-G to fuzzy-jump into any cloned repo under $(ghq root)
+if command -v ghq >/dev/null 2>&1 && command -v peco >/dev/null 2>&1; then
+  peco-ghq-src() {
+    local src
+    src=$(ghq list --full-path | peco --query "$LBUFFER")
+    if [[ -n $src ]]; then
+      BUFFER="cd ${(q)src}"
+      zle accept-line
+    fi
+    zle reset-prompt
+  }
+  zle -N peco-ghq-src
+  bindkey '^G' peco-ghq-src
+fi
+
 # Starship prompt
 command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
