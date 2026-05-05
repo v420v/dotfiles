@@ -49,7 +49,6 @@
     description = "ibuki";
     extraGroups = [ "networkmanager" "wheel" "video" "audio" "input" ];
     shell = pkgs.zsh;
-    packages = with pkgs; [];
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -95,7 +94,7 @@
   # ---------- Printing ----------
   services.printing.enable = true;
 
-  # ---------- Fonts ----------
+  # ---------- Fonts (system-wide so all apps can discover them) ----------
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
@@ -108,15 +107,13 @@
     font-awesome
   ];
 
-  # ---------- Programs ----------
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    histSize = 100000;
-  };
+  # ---------- System-level program enablement ----------
+  # zsh must be enabled at the system level so it's a registered login shell.
+  # User-facing zsh configuration (plugins, history, aliases) lives in
+  # home-manager (home/ibuki.nix).
+  programs.zsh.enable = true;
 
+  # Thunar wires up gvfs / tumbler at the system level.
   programs.thunar.enable = true;
   programs.thunar.plugins = with pkgs; [ thunar-archive-plugin thunar-volman ];
 
@@ -124,95 +121,51 @@
   programs.dconf.enable = true;
 
   # ---------- System packages ----------
+  # Dev toolchains/LSPs/formatters live here (not in home-manager) because
+  # several of them ship overlapping binaries (gcc+clang both have /bin/cpp,
+  # gopls+gotools both have /bin/modernize, etc.) and NixOS' system buildEnv
+  # is the only profile that tolerates those collisions.
   environment.systemPackages = with pkgs; [
-    # Core
+    # Always-available rescue tools (also useful as root)
     vim
-    neovim
     wget
     curl
     git
-    lazygit
-    nodejs_20
-    claude-code
 
-    # Toolchains for low-level work
+    # Compilers / build tools
     gcc
     clang
     gnumake
     cmake
     gdb
     nasm
+    nodejs_20
 
-    # Language servers (consumed by nvim-lspconfig — no Mason on Nix)
-    gopls                          # Go
-    clang-tools                    # clangd, clang-format
+    # Language servers (consumed by nvim-lspconfig from $PATH)
+    gopls
+    clang-tools
     typescript-language-server
-    vscode-langservers-extracted   # html / css / json / eslint
-    asm-lsp                        # x86 / ARM / RISC-V assembly hover
+    vscode-langservers-extracted
+    asm-lsp
     lua-language-server
     bash-language-server
-    nil                            # Nix LSP
+    nil
 
     # Formatters
     gofumpt
-    gotools                        # goimports
+    gotools
     prettierd
     stylua
     nixpkgs-fmt
     shfmt
 
-    # Hyprland ecosystem
-    waybar
-    hyprpaper
-    hyprlock
-    hypridle
-    hyprshot
-    rofi
-    dunst
-    libnotify
-    wl-clipboard
-    cliphist
-    grim
-    slurp
-    swappy
-    brightnessctl
-    pamixer
-    pavucontrol
-    playerctl
-    networkmanagerapplet
-    polkit_gnome
-
-    # Terminal & shell
-    kitty
-    starship
-    fastfetch
-    btop
-    fzf
-    ripgrep
-    fd
-    bat
-    eza
-    zoxide
-    unzip
-    p7zip
-    ghq
-    peco
-
-    # Apps
-    firefox
-    thunderbird
-    file-roller
-
-    # Theming
-    catppuccin-gtk
-    catppuccin-cursors.mochaMauve
-    papirus-icon-theme
-
-    # Misc
+    # GTK/portal plumbing referenced by user apps
     xdg-utils
     gsettings-desktop-schemas
     gnome-themes-extra
-    imagemagick
+
+    # Polkit GUI agent (referenced by the systemd user service below)
+    polkit_gnome
   ];
 
   # Allow polkit agent to run for GUI auth prompts

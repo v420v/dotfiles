@@ -1,12 +1,20 @@
 # NixOS + Hyprland dotfiles — Catppuccin Mocha
 
-Personal NixOS rice. Wayland session built around Hyprland.
+Personal NixOS rice. Wayland session built around Hyprland. Managed with
+**flakes + home-manager** (HM as a NixOS module — one rebuild covers
+both system and user).
 
 ## Layout
 
 ```
 dotfiles/
-├── nixos/configuration.nix     # System config (copied to /etc/nixos/)
+├── flake.nix                   # nixpkgs + home-manager pinning
+├── flake.lock
+├── nixos/
+│   ├── configuration.nix       # system: boot, services, fonts, login user
+│   └── hardware-configuration.nix
+├── home/
+│   └── ibuki.nix               # user: packages + programs.{zsh,starship,...}
 ├── hypr/
 │   ├── hyprland.conf           # WM
 │   ├── hyprpaper.conf          # wallpaper
@@ -14,35 +22,48 @@ dotfiles/
 │   └── hypridle.conf           # idle daemon
 ├── waybar/{config.jsonc,style.css}
 ├── kitty/kitty.conf
-├── zsh/.zshrc                  # interactive shell
-├── starship/starship.toml      # prompt
 ├── rofi/{config.rasi,theme.rasi}
 ├── dunst/dunstrc
+├── fastfetch/config.jsonc
 ├── nvim/                       # editor (lazy.nvim, see below)
 ├── wallpapers/{generate.sh,wall.png}
-└── install.sh
+├── zsh/                        # legacy reference — HM owns ~/.zshrc now
+├── starship/                   # legacy reference — HM owns starship config
+└── install.sh                  # one-shot bootstrap
 ```
+
+The `hypr/`, `waybar/`, `rofi/`, `dunst/`, `fastfetch/`, `nvim/`, and
+`kitty/kitty.conf` directories are symlinked **out-of-store** into
+`~/.config` by home-manager — edit them in the repo and changes are live
+without a rebuild. `zsh`, `starship`, `git`, `fzf`, `bat`, `zoxide`, and
+`eza` are owned by HM modules in `home/ibuki.nix` — change those, then
+`rebuild`.
 
 ## Bootstrap
 
-From a fresh NixOS install (no DE), as user `ibuki`:
+From a fresh NixOS install (no DE), as user `ibuki`, with this repo
+checked out at `~/dotfiles`:
 
 ```bash
 cd ~/dotfiles
-./install.sh        # symlinks user configs, then prompts to rebuild NixOS
+./install.sh        # imports hardware-config, generates wallpaper, runs nixos-rebuild
 ```
 
-Or apply by hand:
+Or by hand:
 
 ```bash
-sudo cp ~/dotfiles/nixos/configuration.nix /etc/nixos/configuration.nix
-sudo nixos-rebuild switch
-~/dotfiles/wallpapers/generate.sh   # once magick is installed
-./install.sh                         # again to symlink configs
+sudo cp /etc/nixos/hardware-configuration.nix ~/dotfiles/nixos/
+sudo nixos-rebuild switch --flake ~/dotfiles#nixos
 reboot
 ```
 
 After reboot, `tuigreet` (greetd) launches. Pick `Hyprland` if not default, log in, and you're in.
+
+Day-to-day rebuilds (also aliased as `rebuild` in zsh):
+
+```bash
+sudo nixos-rebuild switch --flake ~/dotfiles#nixos
+```
 
 ## Default keybinds (`SUPER` = mod)
 
@@ -171,6 +192,7 @@ streams diffs back into nvim.
 
 - Wallpaper: drop any image at `wallpapers/wall.png` (or rerun `generate.sh`).
 - Colors: every config uses the same Catppuccin Mocha palette — search/replace the hex codes to switch flavors.
-- Bar: edit `waybar/config.jsonc` & `waybar/style.css`, then `pkill -SIGUSR2 waybar`.
-- Prompt: tweak `starship/starship.toml` — changes apply on the next prompt.
-- Hyprland reloads on save.
+- Bar: edit `waybar/config.jsonc` & `waybar/style.css`, then `pkill -SIGUSR2 waybar`. (Live — symlinked.)
+- Hyprland reloads on save. (Live — symlinked.)
+- Prompt / shell / git: edit `home/ibuki.nix`, then `rebuild`.
+- System (services, hyprland enable, fonts): edit `nixos/configuration.nix`, then `rebuild`.

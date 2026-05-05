@@ -1,35 +1,23 @@
 #!/usr/bin/env bash
-# Symlink dotfiles into ~/.config and apply NixOS system config.
-# Idempotent: re-running just refreshes the links.
+# Bootstrap a fresh NixOS install onto this rice.
+#
+# Assumes:
+#   - You ran `nixos-install` and rebooted into the new system.
+#   - This repo is checked out at ~/dotfiles (path is referenced by HM).
+#   - `hardware-configuration.nix` exists at /etc/nixos/.
+#
+# After the first switch, day-to-day rebuilds are just:
+#   sudo nixos-rebuild switch --flake ~/dotfiles#nixos
 
 set -euo pipefail
 DOTS="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
-CFG="$HOME/.config"
-mkdir -p "$CFG"
 
-link() {
-    local src="$1" dst="$2"
-    if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-        local bak="${dst}.bak.$(date +%s)"
-        echo "  backing up existing $dst -> $bak"
-        mv "$dst" "$bak"
-    fi
-    ln -sfn "$src" "$dst"
-    echo "  $dst -> $src"
-}
-
-echo "Linking user configs into $CFG ..."
-link "$DOTS/hypr"                   "$CFG/hypr"
-link "$DOTS/waybar"                 "$CFG/waybar"
-link "$DOTS/kitty"                  "$CFG/kitty"
-link "$DOTS/rofi"                   "$CFG/rofi"
-link "$DOTS/dunst"                  "$CFG/dunst"
-link "$DOTS/fastfetch"              "$CFG/fastfetch"
-link "$DOTS/nvim"                   "$CFG/nvim"
-link "$DOTS/starship/starship.toml" "$CFG/starship.toml"
-
-# zsh lives at $HOME, not $CFG
-link "$DOTS/zsh/.zshrc"             "$HOME/.zshrc"
+# Pull the live hardware-configuration into the repo so the flake can see it.
+if [ ! -f "$DOTS/nixos/hardware-configuration.nix" ]; then
+    echo "Importing /etc/nixos/hardware-configuration.nix into repo ..."
+    sudo cp /etc/nixos/hardware-configuration.nix "$DOTS/nixos/hardware-configuration.nix"
+    sudo chown "$USER:" "$DOTS/nixos/hardware-configuration.nix"
+fi
 
 # Generate wallpaper if missing and ImageMagick is available.
 if [ ! -f "$DOTS/wallpapers/wall.png" ]; then
@@ -37,29 +25,16 @@ if [ ! -f "$DOTS/wallpapers/wall.png" ]; then
         echo "Generating wallpaper ..."
         bash "$DOTS/wallpapers/generate.sh"
     else
-        echo "Skipping wallpaper generation (ImageMagick not installed yet — run nixos-rebuild first)."
+        echo "Skipping wallpaper generation (ImageMagick not installed yet)."
+        echo "Re-run this script after the first nixos-rebuild."
     fi
 fi
 
-# Apply NixOS system config.
 echo
-read -r -p "Apply NixOS system config to /etc/nixos and rebuild now? [y/N] " ans
+read -r -p "Run nixos-rebuild switch --flake $DOTS#nixos now? [y/N] " ans
 case "${ans,,}" in
-    y|yes)
-        # Preserve the auto-generated hardware config.
-        sudo install -d -m 0755 /etc/nixos
-        if [ ! -f "$DOTS/nixos/hardware-configuration.nix" ]; then
-            sudo cp /etc/nixos/hardware-configuration.nix "$DOTS/nixos/hardware-configuration.nix"
-        fi
-        sudo cp "$DOTS/nixos/configuration.nix"          /etc/nixos/configuration.nix
-        sudo cp "$DOTS/nixos/hardware-configuration.nix" /etc/nixos/hardware-configuration.nix
-        sudo nixos-rebuild switch
-        ;;
-    *)
-        echo "Skipped system rebuild. To apply later:"
-        echo "  sudo cp $DOTS/nixos/configuration.nix /etc/nixos/configuration.nix"
-        echo "  sudo nixos-rebuild switch"
-        ;;
+    y|yes) sudo nixos-rebuild switch --flake "$DOTS#nixos" ;;
+    *)     echo "Skipped. Run when ready: sudo nixos-rebuild switch --flake $DOTS#nixos" ;;
 esac
 
 echo "Done."
