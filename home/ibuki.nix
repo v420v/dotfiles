@@ -55,10 +55,16 @@
     thunderbird
     file-roller
 
-    # Theming assets
-    catppuccin-gtk
-    catppuccin-cursors.mochaMauve
-    papirus-icon-theme
+    # Qt theming: qt5ct/qt6ct as the platform theme (color scheme, fonts),
+    # Kvantum as the widget style, Catppuccin-Mocha-Mauve as the Kvantum theme.
+    libsForQt5.qt5ct
+    qt6Packages.qt6ct
+    libsForQt5.qtstyleplugin-kvantum
+    qt6Packages.qtstyleplugin-kvantum
+    (catppuccin-kvantum.override {
+      accent = "mauve";
+      variant = "mocha";
+    })
   ];
 
   # ---------- Session-wide env ----------
@@ -149,6 +155,54 @@
     icons = "auto";
     git = true;
   };
+
+  # ---------- Cursor (single source of truth for X11 / Wayland / GTK) ----------
+  home.pointerCursor = {
+    name = "catppuccin-mocha-mauve-cursors";
+    package = pkgs.catppuccin-cursors.mochaMauve;
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
+  # ---------- GTK 2/3/4 ----------
+  gtk = {
+    enable = true;
+    theme = {
+      name = "catppuccin-mocha-mauve-standard";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "mauve" ];
+        variant = "mocha";
+        size = "standard";
+      };
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    font = {
+      name = "0xProto Nerd Font";
+      size = 11;
+    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
+  };
+
+  # ---------- Qt ----------
+  # qt5ct/qt6ct as platform theme (palette + fonts), Kvantum as widget
+  # style, Catppuccin-Mocha-Mauve as the Kvantum theme. HM writes
+  # Style=kvantum into qt5ct.conf / qt6ct.conf automatically.
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";
+    style.name = "kvantum";
+  };
+
+  # Tell Kvantum which theme to load (no native HM option for this).
+  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=catppuccin-mocha-mauve
+  '';
 
   # ---------- Zsh ----------
   programs.zsh = {
