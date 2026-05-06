@@ -58,16 +58,20 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start -- hyprland-uwsm.desktop'";
         user = "greeter";
       };
     };
   };
 
   # ---------- Hyprland ----------
+  # withUWSM wraps Hyprland in Universal Wayland Session Manager so
+  # graphical-session.target activates properly and the env reaches dbus —
+  # required to silence Hyprland's "started without start-hyprland" warning.
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    withUWSM = true;
   };
 
   # XDG portals (file pickers, screenshare)
