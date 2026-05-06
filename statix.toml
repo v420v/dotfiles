@@ -1,0 +1,8 @@
+# statix config — see https://github.com/nerdypepper/statix
+#
+# repeated_keys (W20) flags `home.x = ...; home.y = ...;` flat-attribute style.
+# The flat form is intentional in this rice (greppable, easier to comment out
+# individual keys) so the rule is disabled rather than the files restructured.
+disabled = ["repeated_keys"]
+
+ignore = ["nixos/hardware-configuration.nix"]

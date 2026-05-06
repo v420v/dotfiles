@@ -11,7 +11,6 @@ return {
             { "j-hui/fidget.nvim", opts = {} },     -- LSP progress UI
         },
         config = function()
-            local lspconfig    = require("lspconfig")
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             -- Diagnostics presentation
@@ -100,12 +99,13 @@ return {
                 },
             }
 
+            -- Apply our cmp capabilities to every server (0.11 API).
+            vim.lsp.config("*", { capabilities = capabilities })
+
             for name, cfg in pairs(servers) do
-                cfg.capabilities = vim.tbl_deep_extend(
-                    "force", {}, capabilities, cfg.capabilities or {}
-                )
-                lspconfig[name].setup(cfg)
+                vim.lsp.config(name, cfg)
             end
+            vim.lsp.enable(vim.tbl_keys(servers))
         end,
     },
 

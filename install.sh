@@ -33,8 +33,8 @@ fi
 echo
 read -r -p "Run nixos-rebuild switch --flake $DOTS#nixos now? [y/N] " ans
 case "${ans,,}" in
-    y|yes) sudo nixos-rebuild switch --flake "$DOTS#nixos" ;;
-    *)     echo "Skipped. Run when ready: sudo nixos-rebuild switch --flake $DOTS#nixos" ;;
+    y | yes) sudo nixos-rebuild switch --flake "$DOTS#nixos" ;;
+    *) echo "Skipped. Run when ready: sudo nixos-rebuild switch --flake $DOTS#nixos" ;;
 esac
 
 echo "Done."
