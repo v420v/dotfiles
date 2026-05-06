@@ -2,47 +2,100 @@
 // Truecolor escapes use the 38;2;R;G;B form throughout.
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-
   "logo": {
-    "source": "nixos_small",
-    "padding": { "top": 1, "right": 3 },
-    // Mauve + lavender — match the starship/rofi accents.
-    "color": { "1": "38;2;203;166;247", "2": "38;2;180;190;254" }
+    "type": "kitty-direct",
+    "source": "~/dotfiles/fastfetch/nixos-logo.png",
+    "width": 30,
+    "height": 15,
+    "preserveAspectRatio": true,
+    "padding": {
+      "top": 1,
+      "right": 3
+    }
   },
-
   "display": {
     "separator": "  ",
     "color": {
-      "keys":   "38;2;203;166;247",
-      "title":  "38;2;245;194;231",
+      "keys": "38;2;203;166;247",
+      "title": "38;2;245;194;231",
       "output": "38;2;205;214;244"
     },
-    "key": { "width": 9 }
+    "key": {
+      "width": 1
+    }
   },
-
   "modules": [
     {
       "type": "title",
       "color": {
         "user": "38;2;245;194;231",
-        "at":   "38;2;108;112;134",
+        "at": "38;2;108;112;134",
         "host": "38;2;180;190;254"
       }
     },
     "separator",
-    { "type": "os",       "key": "  ", "keyColor": "38;2;137;180;250" },
-    { "type": "kernel",   "key": "  ", "keyColor": "38;2;137;180;250" },
-    { "type": "uptime",   "key": "  ", "keyColor": "38;2;249;226;175" },
-    { "type": "packages", "key": "  ", "keyColor": "38;2;166;227;161" },
-    { "type": "shell",    "key": "  ", "keyColor": "38;2;166;227;161" },
-    { "type": "wm",       "key": "  ", "keyColor": "38;2;203;166;247" },
-    { "type": "terminal", "key": "  ", "keyColor": "38;2;203;166;247" },
-    { "type": "cpu",      "key": "  ", "keyColor": "38;2;243;139;168" },
-    { "type": "gpu",      "key": "󰢮  ", "keyColor": "38;2;243;139;168" },
-    { "type": "memory",   "key": "  ", "keyColor": "38;2;250;179;135" },
-    { "type": "disk",     "key": "  ", "keyColor": "38;2;250;179;135", "folders": "/" },
+    {
+      "type": "os",
+      "key": "  ",
+      "keyColor": "38;2;137;180;250"
+    },
+    {
+      "type": "kernel",
+      "key": "  ",
+      "keyColor": "38;2;137;180;250"
+    },
+    {
+      "type": "uptime",
+      "key": "  ",
+      "keyColor": "38;2;249;226;175"
+    },
+    {
+      "type": "packages",
+      "key": "  ",
+      "keyColor": "38;2;166;227;161"
+    },
+    {
+      "type": "shell",
+      "key": "  ",
+      "keyColor": "38;2;166;227;161"
+    },
+    {
+      "type": "wm",
+      "key": "  ",
+      "keyColor": "38;2;203;166;247"
+    },
+    {
+      "type": "terminal",
+      "key": "  ",
+      "keyColor": "38;2;203;166;247"
+    },
+    {
+      "type": "cpu",
+      "key": "  ",
+      "keyColor": "38;2;243;139;168"
+    },
+    {
+      "type": "gpu",
+      "key": "  ",
+      "keyColor": "38;2;243;139;168"
+    },
+    {
+      "type": "memory",
+      "key": "  ",
+      "keyColor": "38;2;250;179;135"
+    },
+    {
+      "type": "disk",
+      "key": "  ",
+      "keyColor": "38;2;250;179;135",
+      "folders": "/"
+    },
     "separator",
-    { "type": "colors", "symbol": "circle", "paddingLeft": 2 },
+    {
+      "type": "colors",
+      "symbol": "circle",
+      "paddingLeft": 0
+    },
     "break"
   ]
 }
