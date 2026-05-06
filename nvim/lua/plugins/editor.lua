@@ -3,10 +3,10 @@ return {
     -- File explorer in a buffer (vim-vinegar-style: edit the dir)
     {
         "stevearc/oil.nvim",
-        cmd  = "Oil",
+        lazy = false,
         keys = {
             { "-",         "<cmd>Oil<CR>", desc = "Open parent directory" },
-            { "<leader>e", "<cmd>Oil<CR>", desc = "Open parent directory (oil)" },
+            { "<leader>e", function() require("oil").open(vim.fn.getcwd()) end, desc = "Open cwd (oil)" },
         },
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
