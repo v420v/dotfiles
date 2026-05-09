@@ -135,6 +135,7 @@
     wget
     curl
     git
+    tdf
 
     # Compilers / build tools
     gcc
