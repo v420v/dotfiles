@@ -136,6 +136,7 @@
     curl
     git
     tdf
+    zed-editor
 
     # Compilers / build tools
     gcc
