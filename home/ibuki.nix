@@ -16,7 +16,15 @@
     # Editor + lightweight wrappers
     neovim
     lazygit
-    claude-code
+    # Pinned: nixpkgs skipped 2.1.139 (went 2.1.138 -> 2.1.140), so we
+    # fetch the upstream binary directly. Linux x86_64 only.
+    (claude-code.overrideAttrs (_: rec {
+      version = "2.1.139";
+      src = fetchurl {
+        url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/${version}/linux-x64/claude";
+        hash = "sha256-wYAKCuUbWkx7M75qMtYrYWnZP2F0EZsu62iWzwzV1+Y=";
+      };
+    }))
 
     # Hyprland ecosystem (user-side helpers)
     waybar
