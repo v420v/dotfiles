@@ -10,7 +10,7 @@ return {
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
             options = {
-                theme = "catppuccin-mocha",
+                theme = "modus-vivendi",
                 globalstatus = true,
                 component_separators = { left = "", right = "" },
                 section_separators   = { left = "", right = "" },
@@ -92,7 +92,7 @@ return {
     {
         "rcarriga/nvim-notify",
         lazy = true,
-        opts = { background_colour = "#1e1e2e", render = "compact", stages = "fade", timeout = 2500 },
+        opts = { background_colour = "#000000", render = "compact", stages = "fade", timeout = 2500 },
         init = function() vim.notify = function(...) require("notify")(...) end end,
     },
 }

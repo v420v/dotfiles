@@ -63,16 +63,9 @@
     thunderbird
     file-roller
 
-    # Qt theming: qt5ct/qt6ct as the platform theme (color scheme, fonts),
-    # Kvantum as the widget style, Catppuccin-Mocha-Mauve as the Kvantum theme.
-    libsForQt5.qt5ct
-    qt6Packages.qt6ct
-    libsForQt5.qtstyleplugin-kvantum
-    qt6Packages.qtstyleplugin-kvantum
-    (catppuccin-kvantum.override {
-      accent = "mauve";
-      variant = "mocha";
-    })
+    # Cursor + GTK theme packages for the Modus Vivendi rice.
+    bibata-cursors
+    gnome-themes-extra
   ];
 
   # ---------- Session-wide env ----------
@@ -131,10 +124,10 @@
     enableZshIntegration = true;
     defaultCommand = "fd --type f --hidden --follow --exclude .git";
     defaultOptions = [
-      "--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8"
-      "--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc"
-      "--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
-      "--color=selected-bg:#45475a"
+      "--color=bg+:#1e1e1e,bg:#000000,spinner:#fec43f,hl:#ff5f59"
+      "--color=fg:#ffffff,header:#ff5f59,info:#b6a0ff,pointer:#fec43f"
+      "--color=marker:#79a8ff,fg+:#ffffff,prompt:#b6a0ff,hl+:#ff5f59"
+      "--color=selected-bg:#2b2b2b"
       "--height=40%"
       "--layout=reverse"
       "--border=rounded"
@@ -166,8 +159,8 @@
 
   # ---------- Cursor (single source of truth for X11 / Wayland / GTK) ----------
   home.pointerCursor = {
-    name = "catppuccin-mocha-mauve-cursors";
-    package = pkgs.catppuccin-cursors.mochaMauve;
+    name = "Bibata-Modern-Classic";
+    package = pkgs.bibata-cursors;
     size = 24;
     gtk.enable = true;
     x11.enable = true;
@@ -177,12 +170,8 @@
   gtk = {
     enable = true;
     theme = {
-      name = "catppuccin-mocha-mauve-standard";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "mauve" ];
-        variant = "mocha";
-        size = "standard";
-      };
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -197,20 +186,14 @@
   };
 
   # ---------- Qt ----------
-  # qt5ct/qt6ct as platform theme (palette + fonts), Kvantum as widget
-  # style, Catppuccin-Mocha-Mauve as the Kvantum theme. HM writes
-  # Style=kvantum into qt5ct.conf / qt6ct.conf automatically.
+  # Adwaita-dark as both platform theme and widget style. Drops the Kvantum
+  # stack entirely — matches the Modus Vivendi "no chrome" aesthetic. HM pulls
+  # in adwaita-qt / adwaita-qt6 automatically.
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
-    style.name = "kvantum";
+    platformTheme.name = "adwaita-dark";
+    style.name = "adwaita-dark";
   };
-
-  # Tell Kvantum which theme to load (no native HM option for this).
-  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=catppuccin-mocha-mauve
-  '';
 
   # ---------- Zsh ----------
   programs.zsh = {
@@ -290,8 +273,8 @@
       zstyle ':completion:*' group-name ''\'\'
       zstyle ':completion:*' verbose yes
 
-      # Catppuccin-flavoured ls/eza colours
-      export LS_COLORS="di=38;5;111:ln=38;5;176:so=38;5;217:pi=38;5;223:ex=38;5;150:bd=38;5;215:cd=38;5;215:su=38;5;217:sg=38;5;217:tw=38;5;111:ow=38;5;111"
+      # Modus Vivendi-friendly ls/eza colours (256-color ANSI indices)
+      export LS_COLORS="di=38;5;75:ln=38;5;141:so=38;5;217:pi=38;5;223:ex=38;5;78:bd=38;5;215:cd=38;5;215:su=38;5;217:sg=38;5;217:tw=38;5;75:ow=38;5;75"
 
       # ─── Keybinds ────────────────────────────────────────────────
       bindkey -e

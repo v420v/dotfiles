@@ -1,4 +1,4 @@
-# NixOS + Hyprland dotfiles — Catppuccin Mocha
+# NixOS + Hyprland dotfiles — Modus Vivendi
 
 Personal NixOS rice. Wayland session built around Hyprland. Managed with
 **flakes + home-manager** (HM as a NixOS module — one rebuild covers
@@ -104,7 +104,7 @@ Highlights baked in:
 | bat       | cat / less | uses `ansi` theme so it inherits kitty's palette     |
 | ripgrep   | grep       | `rg` aliased as `grep`                               |
 | fd        | find       | also drives fzf's file source                        |
-| fzf       | —          | Catppuccin-themed, `Ctrl-T` / `Alt-C` / `Ctrl-R`     |
+| fzf       | —          | Modus Vivendi-themed, `Ctrl-T` / `Alt-C` / `Ctrl-R`  |
 | zoxide    | cd         | `cd foo` jumps to the most-frecent match             |
 | btop      | top        | aliased                                              |
 | starship  | PS1        | two-line powerline prompt, OS / git / lang / runtime |
@@ -191,7 +191,7 @@ streams diffs back into nvim.
 ## Customizing the rice
 
 - Wallpaper: drop any image at `wallpapers/wall.png` (or rerun `generate.sh`).
-- Colors: every config uses the same Catppuccin Mocha palette — search/replace the hex codes to switch flavors.
+- Colors: every config uses the same Modus Vivendi palette — search/replace the hex codes to switch themes.
 - Bar: edit `waybar/config.jsonc` & `waybar/style.css`, then `pkill -SIGUSR2 waybar`. (Live — symlinked.)
 - Hyprland reloads on save. (Live — symlinked.)
 - Prompt / shell / git: edit `home/ibuki.nix`, then `rebuild`.

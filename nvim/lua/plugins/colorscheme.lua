@@ -1,37 +1,25 @@
--- ─── Colorscheme ── Catppuccin Mocha ─────────────────────────
+-- ─── Colorscheme ── Modus Vivendi ────────────────────────────
 return {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "miikanissi/modus-themes.nvim",
     priority = 1000,
     lazy = false,
     opts = {
-        flavour = "mocha",
-        transparent_background = false,
-        term_colors = true,
-        integrations = {
-            cmp           = true,
-            gitsigns      = true,
-            telescope     = { enabled = true },
-            treesitter    = true,
-            mason         = false,
-            native_lsp    = {
-                enabled = true,
-                underlines = {
-                    errors      = { "undercurl" },
-                    hints       = { "undercurl" },
-                    warnings    = { "undercurl" },
-                    information = { "undercurl" },
-                },
-            },
-            mini          = { enabled = true, indentscope_color = "lavender" },
-            indent_blankline = { enabled = true, scope_color = "lavender" },
-            which_key     = true,
-            notify        = true,
-            -- claudecode renders inside terminal buffers; no integration flag needed
+        style = "modus_vivendi",
+        variant = "default",
+        transparent = false,
+        dim_inactive = false,
+        hide_inactive_statusline = false,
+        line_nr_column_background = false,
+        sign_column_background = false,
+        styles = {
+            comments = { italic = true },
+            keywords = { bold = true },
+            functions = {},
+            variables = {},
         },
     },
     config = function(_, opts)
-        require("catppuccin").setup(opts)
-        vim.cmd.colorscheme("catppuccin-mocha")
+        require("modus-themes").setup(opts)
+        vim.cmd.colorscheme("modus_vivendi")
     end,
 }

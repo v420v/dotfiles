@@ -1,23 +1,23 @@
-/* Catppuccin Mocha */
-@define-color base    #1e1e2e;
-@define-color mantle  #181825;
-@define-color crust   #11111b;
-@define-color text    #cdd6f4;
-@define-color subtext #a6adc8;
-@define-color surface #313244;
-@define-color overlay #6c7086;
-@define-color blue     #89b4fa;
-@define-color lavender #b4befe;
-@define-color sapphire #74c7ec;
-@define-color sky      #89dceb;
-@define-color teal     #94e2d5;
-@define-color green    #a6e3a1;
-@define-color yellow   #f9e2af;
-@define-color peach    #fab387;
-@define-color maroon   #eba0ac;
-@define-color red      #f38ba8;
-@define-color mauve    #cba6f7;
-@define-color pink     #f5c2e7;
+/* Modus Vivendi */
+@define-color base    #000000;
+@define-color mantle  #1e1e1e;
+@define-color crust   #000000;
+@define-color text    #ffffff;
+@define-color subtext #989898;
+@define-color surface #2b2b2b;
+@define-color overlay #595959;
+@define-color blue     #2fafff;
+@define-color lavender #79a8ff;
+@define-color sapphire #00bcff;
+@define-color sky      #6ae4b9;
+@define-color teal     #00d3d0;
+@define-color green    #44bc44;
+@define-color yellow   #d0bc00;
+@define-color peach    #fec43f;
+@define-color maroon   #ff7f9f;
+@define-color red      #ff5f59;
+@define-color mauve    #b6a0ff;
+@define-color pink     #feacd0;
 
 * {
     font-family: "0xProto Nerd Font", "Noto Sans CJK JP", sans-serif;
@@ -30,15 +30,15 @@
 }
 
 window#waybar {
-    background-color: alpha(@base, 0.78);
+    background-color: alpha(@base, 0.85);
     color: @text;
     border-radius: 12px;
-    border: 1px solid alpha(@overlay, 0.18);
+    border: 1px solid alpha(@overlay, 0.30);
 }
 
 /* ---- left ---- */
 #custom-launcher {
-    color: @mauve;
+    color: @blue;
     font-size: 15px;
     padding: 0 14px 0 16px;
     margin: 0;
@@ -65,8 +65,8 @@ window#waybar {
 }
 
 #workspaces button.active {
-    color: @lavender;
-    background: alpha(@lavender, 0.10);
+    color: @blue;
+    background: alpha(@blue, 0.12);
 }
 
 #window {
@@ -125,7 +125,7 @@ window#waybar {
 
 tooltip {
     background: @mantle;
-    border: 1px solid alpha(@overlay, 0.4);
+    border: 1px solid alpha(@overlay, 0.5);
     border-radius: 8px;
 }
 

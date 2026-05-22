@@ -1,5 +1,5 @@
 {
-  description = "ibuki's NixOS + Hyprland rice (Catppuccin Mocha)";
+  description = "ibuki's NixOS + Hyprland rice (Modus Vivendi)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

@@ -1,4 +1,4 @@
--- ─── Alpha dashboard ──── Catppuccin Mocha rice ──────────────
+-- ─── Alpha dashboard ──── Modus Vivendi rice ─────────────────
 return {
     "goolord/alpha-nvim",
     event = "VimEnter",
@@ -68,12 +68,12 @@ return {
             dashboard.section.footer,
         }
 
-        -- ── Highlights (Catppuccin Mocha) ──
+        -- ── Highlights (Modus Vivendi) ──
         local function paint()
-            vim.api.nvim_set_hl(0, "AlphaHeader",   { fg = "#89b4fa", bold = true })  -- blue
-            vim.api.nvim_set_hl(0, "AlphaButton",   { fg = "#cdd6f4" })                -- text
-            vim.api.nvim_set_hl(0, "AlphaShortcut",{ fg = "#89b4fa", italic = true })  -- blue italic
-            vim.api.nvim_set_hl(0, "AlphaFooter",   { fg = "#fab387" })                -- peach
+            vim.api.nvim_set_hl(0, "AlphaHeader",   { fg = "#2fafff", bold = true })  -- blue
+            vim.api.nvim_set_hl(0, "AlphaButton",   { fg = "#ffffff" })                -- fg-main
+            vim.api.nvim_set_hl(0, "AlphaShortcut",{ fg = "#79a8ff", italic = true })  -- blue-warmer italic
+            vim.api.nvim_set_hl(0, "AlphaFooter",   { fg = "#fec43f" })                -- yellow-warmer
         end
         paint()
         vim.api.nvim_create_autocmd("ColorScheme", { callback = paint })

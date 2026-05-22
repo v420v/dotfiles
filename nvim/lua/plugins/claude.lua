@@ -51,6 +51,7 @@ return {
             terminal = { win = { border = "rounded" } },
             input    = { enabled = true },
             notifier = { enabled = false },          -- nvim-notify already wired
+            image    = { enabled = true },           -- inline image previews via kitty graphics protocol
         },
     },
 }

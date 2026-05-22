@@ -98,16 +98,16 @@ else
   export VISUAL='vim'
 fi
 
-# bat — `ansi` inherits the kitty Catppuccin Mocha palette
+# bat — `ansi` inherits the kitty Modus Vivendi palette
 export BAT_THEME="ansi"
 
-# fzf — Catppuccin Mocha palette + fd as the source
+# fzf — Modus Vivendi palette + fd as the source
 if command -v fzf >/dev/null 2>&1; then
   export FZF_DEFAULT_OPTS=" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
---color=selected-bg:#45475a \
+--color=bg+:#1e1e1e,bg:#000000,spinner:#fec43f,hl:#ff5f59 \
+--color=fg:#ffffff,header:#ff5f59,info:#b6a0ff,pointer:#fec43f \
+--color=marker:#79a8ff,fg+:#ffffff,prompt:#b6a0ff,hl+:#ff5f59 \
+--color=selected-bg:#2b2b2b \
 --height=40% --layout=reverse --border=rounded --prompt='❯ ' --pointer='▶' --marker='✚'"
   command -v fd >/dev/null 2>&1 && export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
