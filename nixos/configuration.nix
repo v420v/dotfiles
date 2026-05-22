@@ -137,6 +137,9 @@
     git
     tdf
     zed-editor
+    btop
+    ncdu
+    nix-du
 
     # Compilers / build tools
     gcc
