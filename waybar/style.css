@@ -20,9 +20,9 @@
 @define-color pink     #feacd0;
 
 * {
-    font-family: "0xProto Nerd Font", "Noto Sans CJK JP", sans-serif;
+    font-family: "0xProto Nerd Font", "JetBrainsMono Nerd Font", "Symbols Nerd Font", "Noto Sans CJK JP", sans-serif;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 400;
     font-feature-settings: "tnum";
     border: none;
     border-radius: 0;
@@ -91,15 +91,20 @@ window#waybar {
 #battery,
 #tray {
     background: transparent;
-    padding: 0 8px;
+    padding: 0 7px;
     margin: 0;
 }
 
-#cpu        { color: @subtext; }
-#memory     { color: @subtext; }
-#network    { color: @subtext; }
-#pulseaudio { color: @subtext; }
-#battery    { color: @subtext; }
+#cpu        { color: @text; }
+#memory     { color: @text; }
+#network    { color: @text; }
+#pulseaudio { color: @text; }
+#battery    { color: @text; }
+
+#cpu.warning,
+#memory.warning   { color: @peach; }
+#cpu.critical,
+#memory.critical  { color: @red; }
 
 #battery.warning  { color: @peach; }
 #battery.critical { color: @red; animation: pulse 1.4s ease-in-out infinite alternate; }
