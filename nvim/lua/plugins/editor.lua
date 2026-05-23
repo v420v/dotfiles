@@ -8,7 +8,10 @@ return {
             { "-",         "<cmd>Oil<CR>", desc = "Open parent directory" },
             { "<leader>e", function() require("oil").open(vim.fn.getcwd()) end, desc = "Open cwd (oil)" },
         },
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+            "refractalize/oil-git-status.nvim",
+        },
         opts = {
             default_file_explorer = true,
             view_options = { show_hidden = true },
@@ -17,7 +20,17 @@ return {
                 ["<C-l>"] = false,
                 ["q"]     = "actions.close",
             },
+            win_options = {
+                signcolumn = "yes:2",
+            },
         },
+    },
+
+    -- Git status column for oil.nvim
+    {
+        "refractalize/oil-git-status.nvim",
+        dependencies = { "stevearc/oil.nvim" },
+        config = true,
     },
 
     -- Comments: gcc / gc<motion>
