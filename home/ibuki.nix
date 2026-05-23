@@ -44,7 +44,7 @@
     pamixer
     pavucontrol
     playerctl
-    networkmanagerapplet
+    impala
 
     # Terminal companions
     kitty

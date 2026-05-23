@@ -12,7 +12,24 @@
 
   # ---------- Networking ----------
   networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
+  # iwd handles wifi (auth + DHCP via EnableNetworkConfiguration).
+  # Wired interfaces stay on the default dhcpcd path; dhcpcd must skip
+  # the wifi NIC or it races iwd's built-in DHCP client and the link flaps.
+  # First-boot setup: run `impala` (or `iwctl`) to enter the wifi password
+  # once — iwd writes /var/lib/iwd/<SSID>.psk and auto-connects on reboot.
+  networking.wireless.iwd = {
+    enable = true;
+    settings = {
+      General.EnableNetworkConfiguration = true;
+      Network.NameResolvingService = "systemd";
+    };
+  };
+  networking.dhcpcd.denyInterfaces = [ "wlp0s20f3" ];
+
+  # iwd hands DHCP-supplied DNS to systemd-resolved; without resolved
+  # enabled, /etc/resolv.conf stays empty after the NetworkManager removal
+  # and every name lookup fails on reboot.
+  services.resolved.enable = true;
 
   # ---------- Locale / Time ----------
   time.timeZone = "Asia/Tokyo";
@@ -47,7 +64,7 @@
   users.users.ibuki = {
     isNormalUser = true;
     description = "ibuki";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" "input" ];
+    extraGroups = [ "wheel" "video" "audio" "input" ];
     shell = pkgs.zsh;
   };
 

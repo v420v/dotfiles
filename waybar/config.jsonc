@@ -63,7 +63,7 @@
         "format-ethernet":     "󰈀  {ipaddr}",
         "format-disconnected": "󰖪  offline",
         "tooltip-format":      "{ifname}: {ipaddr}/{cidr}",
-        "on-click":            "kitty -e nmtui"
+        "on-click":            "kitty -e impala"
     },
 
     "pulseaudio": {
