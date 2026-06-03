@@ -4,17 +4,23 @@ Personal NixOS rice. Wayland session built around Hyprland. Managed with
 **flakes + home-manager** (HM as a NixOS module — one rebuild covers
 both system and user).
 
+Also drives an **M1 MacBook (aarch64-darwin)** through standalone
+home-manager — the portable shell/editor/CLI half of the rice, with no
+Hyprland desktop. See [macOS](#macos-m1--standalone-home-manager) below.
+
 ## Layout
 
 ```
 dotfiles/
-├── flake.nix                   # nixpkgs + home-manager pinning
+├── flake.nix                   # nixpkgs + home-manager; nixos + ibuki@mac outputs
 ├── flake.lock
 ├── nixos/
 │   ├── configuration.nix       # system: boot, services, fonts, login user
 │   └── hardware-configuration.nix
 ├── home/
-│   └── ibuki.nix               # user: packages + programs.{zsh,starship,...}
+│   ├── common.nix              # cross-platform: packages + programs.{zsh,starship,...}
+│   ├── ibuki.nix               # NixOS/Linux extras (Hyprland, GTK/Qt, cursor) — imports common
+│   └── darwin.nix              # M1 Mac extras — imports common
 ├── hypr/
 │   ├── hyprland.conf           # WM
 │   ├── hyprpaper.conf          # wallpaper
@@ -36,8 +42,19 @@ The `hypr/`, `waybar/`, `rofi/`, `dunst/`, `fastfetch/`, `nvim/`, and
 `kitty/kitty.conf` directories are symlinked **out-of-store** into
 `~/.config` by home-manager — edit them in the repo and changes are live
 without a rebuild. `zsh`, `starship`, `git`, `fzf`, `bat`, `zoxide`, and
-`eza` are owned by HM modules in `home/ibuki.nix` — change those, then
-`rebuild`.
+`eza` are owned by HM modules — change those, then `rebuild`.
+
+The HM config is split so both hosts share one source of truth:
+
+- **`home/common.nix`** — everything portable (zsh, starship, git, fzf, bat,
+  zoxide, eza, the CLI package set, and the `fastfetch`/`nvim`/`kitty`
+  symlinks). Builds on both `x86_64-linux` and `aarch64-darwin`.
+- **`home/ibuki.nix`** — imports `common.nix`, then adds the Linux-only desktop
+  (Hyprland helpers, GTK/Qt theming, X11/Wayland cursor, the pinned Linux
+  `claude-code`, and the `hypr`/`waybar`/`rofi`/`dunst` symlinks). This is what
+  the NixOS host imports.
+- **`home/darwin.nix`** — imports `common.nix`, then adds Mac-only bits
+  (`/Users/ibuki` home dir, BSD-safe aliases, `claude-code`, `coreutils`).
 
 ## Bootstrap
 
@@ -64,6 +81,41 @@ Day-to-day rebuilds (also aliased as `rebuild` in zsh):
 ```bash
 sudo nixos-rebuild switch --flake ~/dotfiles#nixos
 ```
+
+## macOS (M1) — standalone home-manager
+
+The Mac runs the **Nix package manager only** (no NixOS, no nix-darwin), so the
+portable half of the rice is applied with standalone home-manager. It manages
+your user environment — shell, editor, prompt, CLI tools — and never touches
+system settings, so it's safe to run on a normal macOS install.
+
+One-time setup (Nix already installed, flakes enabled), with this repo at
+`~/dotfiles`:
+
+```bash
+# Enable flakes if you haven't:
+mkdir -p ~/.config/nix
+echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
+
+# First apply (no home-manager on PATH yet → run it via nix):
+nix run home-manager/master -- switch --flake ~/dotfiles#ibuki@mac
+```
+
+After that, day-to-day applies are just `home-manager switch` (also aliased as
+`rebuild` in zsh, pointed at `#ibuki@mac`):
+
+```bash
+home-manager switch --flake ~/dotfiles#ibuki@mac
+```
+
+Notes:
+
+- GUI apps (Firefox, etc.) aren't installed here — grab those from Homebrew or
+  the App Store; the two coexist fine.
+- `rebuild` → `home-manager switch`, `edit-nix` → edits `home/darwin.nix`.
+  `rm` drops to `rm -iv` (BSD has no `-I`) and `free` isn't aliased.
+- Editing `nvim`/`kitty`/`fastfetch` configs is live (symlinked); changing
+  packages or zsh/git/starship needs a `rebuild`.
 
 ## Default keybinds (`SUPER` = mod)
 

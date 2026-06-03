@@ -1,5 +1,5 @@
 {
-  description = "ibuki's NixOS + Hyprland rice (Modus Vivendi)";
+  description = "ibuki's NixOS + Hyprland rice (Modus Vivendi) + M1 Mac home-manager";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -11,12 +11,16 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # The NixOS box is x86_64-linux; the Mac is aarch64-darwin. devShell and
+      # formatter are exposed for both (CI runs the x86_64-linux one).
+      linuxSystem = "x86_64-linux";
+      darwinSystem = "aarch64-darwin";
+      forAllSystems = nixpkgs.lib.genAttrs [ linuxSystem darwinSystem ];
     in
     {
+      # ---------- NixOS host (system + user via HM module) ----------
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = linuxSystem;
         specialArgs = { inherit inputs; };
         modules = [
           ./nixos/configuration.nix
@@ -31,21 +35,38 @@
         ];
       };
 
-      # `nix develop` — tooling for tests/check.sh and tests/format.sh.
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          shellcheck
-          shfmt
-          nixpkgs-fmt
-          statix
-          deadnix
-          lua
-          taplo
-          jq
-        ];
+      # ---------- M1 Mac (standalone home-manager) ----------
+      # Apply with: home-manager switch --flake ~/dotfiles#ibuki@mac
+      # allowUnfree is set on the pkgs we pass in (claude-code is unfree); the
+      # NixOS host sets the same flag in nixos/configuration.nix.
+      homeConfigurations."ibuki@mac" = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = darwinSystem;
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./home/darwin.nix ];
       };
 
+      # `nix develop` — tooling for tests/check.sh and tests/format.sh.
+      devShells = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              shellcheck
+              shfmt
+              nixpkgs-fmt
+              statix
+              deadnix
+              lua
+              taplo
+              jq
+            ];
+          };
+        });
+
       # `nix fmt` — formats every .nix file in the tree.
-      formatter.${system} = pkgs.nixpkgs-fmt;
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
     };
 }
