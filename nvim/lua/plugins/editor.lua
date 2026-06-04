@@ -10,7 +10,6 @@ return {
         },
         dependencies = {
             "nvim-tree/nvim-web-devicons",
-            "refractalize/oil-git-status.nvim",
         },
         opts = {
             default_file_explorer = true,
