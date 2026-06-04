@@ -27,10 +27,12 @@
 
   # ---------- macOS-only shell aliases ----------
   # BSD `rm` has no `-I`; `-i` is the closest portable equivalent. There's no
-  # `free`. `rebuild` runs the standalone home-manager switch (no NixOS here).
+  # `free`. `rebuild` runs nix-darwin (system + user); `rebuild-home` is the
+  # standalone home-manager fallback for user-only changes without sudo.
   programs.zsh.shellAliases = {
     rm = "rm -iv";
-    rebuild = "home-manager switch --flake ~/dotfiles#ibuki@mac";
-    edit-nix = "$EDITOR ~/dotfiles/home/darwin.nix";
+    rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#mac";
+    rebuild-home = "home-manager switch --flake ~/dotfiles#ibuki@mac";
+    edit-nix = "$EDITOR ~/dotfiles/darwin/configuration.nix";
   };
 }

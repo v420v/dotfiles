@@ -19,7 +19,9 @@
     lazygit
 
     # Terminal companions
-    kitty
+    # (kitty itself: nix pkg on Linux/NixOS, Homebrew Cask on macOS — see
+    #  home/ibuki.nix and darwin/configuration.nix. The kitty.conf symlink
+    #  below is shared by both.)
     fastfetch
     btop
     ripgrep

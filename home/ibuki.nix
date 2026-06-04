@@ -47,6 +47,10 @@
     playerctl
     impala
 
+    # Terminal (macOS gets kitty from a Homebrew Cask instead; see
+    # darwin/configuration.nix)
+    kitty
+
     # Apps
     firefox
     thunderbird

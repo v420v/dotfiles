@@ -4,9 +4,10 @@ Personal NixOS rice. Wayland session built around Hyprland. Managed with
 **flakes + home-manager** (HM as a NixOS module — one rebuild covers
 both system and user).
 
-Also drives an **M1 MacBook (aarch64-darwin)** through standalone
-home-manager — the portable shell/editor/CLI half of the rice, with no
-Hyprland desktop. See [macOS](#macos-m1--standalone-home-manager) below.
+Also drives an **M1 MacBook (aarch64-darwin)** via **nix-darwin +
+home-manager** — the portable shell/editor/CLI half of the rice plus macOS
+system defaults, with no Hyprland desktop. See
+[macOS](#macos-m1--nix-darwin--home-manager) below.
 
 ## Layout
 
@@ -15,8 +16,10 @@ dotfiles/
 ├── flake.nix                   # nixpkgs + home-manager; nixos + ibuki@mac outputs
 ├── flake.lock
 ├── nixos/
-│   ├── configuration.nix       # system: boot, services, fonts, login user
+│   ├── configuration.nix       # NixOS system: boot, services, fonts, login user
 │   └── hardware-configuration.nix
+├── darwin/
+│   └── configuration.nix       # nix-darwin system: daemon, fonts, system.defaults
 ├── home/
 │   ├── common.nix              # cross-platform: packages + programs.{zsh,starship,...}
 │   ├── ibuki.nix               # NixOS/Linux extras (Hyprland, GTK/Qt, cursor) — imports common
@@ -82,40 +85,64 @@ Day-to-day rebuilds (also aliased as `rebuild` in zsh):
 sudo nixos-rebuild switch --flake ~/dotfiles#nixos
 ```
 
-## macOS (M1) — standalone home-manager
+## macOS (M1) — nix-darwin + home-manager
 
-The Mac runs the **Nix package manager only** (no NixOS, no nix-darwin), so the
-portable half of the rice is applied with standalone home-manager. It manages
-your user environment — shell, editor, prompt, CLI tools — and never touches
-system settings, so it's safe to run on a normal macOS install.
+The Mac runs the **Nix package manager** with **nix-darwin** managing the system
+half and **home-manager** the user half — one rebuild covers both, exactly like
+the NixOS host. The split:
 
-One-time setup (Nix already installed, flakes enabled), with this repo at
-`~/dotfiles`:
+- `darwin/configuration.nix` — system: nix daemon, fonts, and the declarative
+  `system.defaults` (dock, finder, dark mode, key repeat …).
+- `home/darwin.nix` — user: shell, editor, prompt, CLI tools (imports
+  `home/common.nix`, shared with NixOS).
+
+Both are wired together in `flake.nix` under `darwinConfigurations."mac"`.
+
+### First-time bootstrap
+
+Nix already installed, with this repo at `~/dotfiles`:
 
 ```bash
 # Enable flakes if you haven't:
 mkdir -p ~/.config/nix
 echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
 
-# First apply (no home-manager on PATH yet → run it via nix):
-nix run home-manager/master -- switch --flake ~/dotfiles#ibuki@mac
+# Bootstrap nix-darwin (installs darwin-rebuild, then applies system + user).
+# Needs sudo; system.defaults will retheme the dock/finder and switch to dark
+# mode on this first run.
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#mac
 ```
 
-After that, day-to-day applies are just `home-manager switch` (also aliased as
-`rebuild` in zsh, pointed at `#ibuki@mac`):
+If a stock file (e.g. `/etc/zshrc`, `~/.zshrc`) is "in the way", nix-darwin /
+home-manager back it up (`.before-nix-darwin`, `.hm-bak`) — that's expected.
+
+After that, day-to-day applies are just `rebuild`:
 
 ```bash
-home-manager switch --flake ~/dotfiles#ibuki@mac
+sudo darwin-rebuild switch --flake ~/dotfiles#mac   # aliased as `rebuild`
 ```
 
-Notes:
+### Notes
 
-- GUI apps (Firefox, etc.) aren't installed here — grab those from Homebrew or
-  the App Store; the two coexist fine.
-- `rebuild` → `home-manager switch`, `edit-nix` → edits `home/darwin.nix`.
-  `rm` drops to `rm -iv` (BSD has no `-I`) and `free` isn't aliased.
+- **`rebuild`** → `sudo darwin-rebuild switch` (system + user).
+  **`rebuild-home`** → `home-manager switch --flake ~/dotfiles#ibuki@mac`, the
+  no-sudo standalone path for user-only changes (same `home/darwin.nix`, still
+  exposed as `homeConfigurations."ibuki@mac"` for convenience).
+- **`edit-nix`** → edits `darwin/configuration.nix`. `rm` drops to `rm -iv`
+  (BSD has no `-I`) and `free` isn't aliased.
+- **GUI apps come from Homebrew Casks**, declared in `darwin/configuration.nix`
+  under `homebrew.casks` (currently: Google Chrome, Arc, kitty, Zed, Postman,
+  Docker Desktop). Homebrew itself is installed and managed by **nix-homebrew**
+  (a flake input) — no manual `brew` install needed; the first `rebuild` sets it
+  up under `/opt/homebrew`. Add/remove apps by editing that list and running
+  `rebuild`. `onActivation.cleanup = "uninstall"` removes Casks you delete from
+  the list (data kept) — switch to `"none"` if you also want to `brew install`
+  apps by hand.
+- kitty is the Cask build (proper Spotlight/Dock `.app`); it still reads the
+  shared `~/.config/kitty/kitty.conf` symlink. On NixOS, kitty stays a Nix
+  package (`home/ibuki.nix`).
 - Editing `nvim`/`kitty`/`fastfetch` configs is live (symlinked); changing
-  packages or zsh/git/starship needs a `rebuild`.
+  packages, zsh/git/starship, Casks, or `system.defaults` needs a `rebuild`.
 
 ## Default keybinds (`SUPER` = mod)
 
