@@ -5,7 +5,6 @@ return {
     lazy = false,
     opts = {
         style = "modus_vivendi",
-        variant = "default",
         transparent = false,
         dim_inactive = false,
         hide_inactive_statusline = false,
