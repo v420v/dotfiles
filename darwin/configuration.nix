@@ -89,7 +89,7 @@
       ApplePressAndHoldEnabled = false; # key repeat instead of accent menu
       KeyRepeat = 1; # fastest key repeat (15ms between repeats)
       InitialKeyRepeat = 10; # shortest delay before repeat (150ms)
-      "com.apple.swipescrolldirection" = false; # disable natural scroll
+      "com.apple.swipescrolldirection" = true; # enable natural scroll
     };
 
     dock = {
