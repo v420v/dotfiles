@@ -78,6 +78,38 @@
     ];
   };
 
+  # ---------- Window manager (yabai, BSP) ----------
+  # Tiling window manager. Runs as a launchd user agent (nix-darwin handles
+  # the plist). `enableScriptingAddition` requires SIP to be partially
+  # disabled — leave it off and BSP tiling still works fully, just without
+  # window-shadow/animation tweaks and a few focus niceties. To enable:
+  # boot to recovery, `csrutil enable --without fs --without debug --without nvram`,
+  # then flip the flag and rebuild.
+  services.yabai = {
+    enable = true;
+    enableScriptingAddition = false;
+    config = {
+      layout = "bsp";
+      window_placement = "second_child";
+      top_padding = 8;
+      bottom_padding = 8;
+      left_padding = 8;
+      right_padding = 8;
+      window_gap = 8;
+      mouse_modifier = "fn";
+      mouse_action1 = "move";
+      mouse_action2 = "resize";
+      mouse_drop_action = "swap";
+      focus_follows_mouse = "off";
+      mouse_follows_focus = "off";
+    };
+  };
+
+  # ---------- Hotkey daemon (skhd) ----------
+  # Bindings live in skhd/skhdrc and are symlinked into ~/.config/skhd by
+  # home/darwin.nix — live-editable, no rebuild needed for keymap changes.
+  services.skhd.enable = true;
+
   # ---------- macOS system defaults ----------
   # Declarative `defaults write`. These change real macOS behaviour on the
   # next rebuild — tweak to taste. Dark mode keeps it in line with the

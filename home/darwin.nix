@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 # macOS (Apple Silicon / aarch64-darwin) home-manager profile, used standalone
 # via `home-manager switch --flake ~/dotfiles#ibuki@mac` — no nix-darwin and no
@@ -35,4 +35,11 @@
     rebuild-home = "home-manager switch --flake ~/dotfiles#ibuki@mac";
     edit-nix = "$EDITOR ~/dotfiles/darwin/configuration.nix";
   };
+
+  # ---------- macOS-only config symlinks ----------
+  # skhd is a Mac-only hotkey daemon, so its rc lives here (not common.nix).
+  # Symlinked out-of-store: edit skhd/skhdrc in the repo and it's live after
+  # `skhd --reload` (or auto-picked-up on file save).
+  xdg.configFile."skhd/skhdrc".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
 }

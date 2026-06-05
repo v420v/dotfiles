@@ -130,6 +130,19 @@ sudo darwin-rebuild switch --flake ~/dotfiles#mac   # aliased as `rebuild`
   exposed as `homeConfigurations."ibuki@mac"` for convenience).
 - **`edit-nix`** → edits `darwin/configuration.nix`. `rm` drops to `rm -iv`
   (BSD has no `-I`) and `free` isn't aliased.
+- **Window manager: yabai (BSP)**, enabled via `services.yabai` in
+  `darwin/configuration.nix`. Runs as a launchd user agent (no manual `brew
+  services` needed). Defaults to **binary space partitioning** with 8px gaps;
+  hold `fn` + drag to move / resize windows. `enableScriptingAddition` is off
+  because it requires SIP to be partially disabled — flip it on after
+  `csrutil enable --without fs --without debug --without nvram` from recovery
+  if you want shadows/animations and the few focus tweaks it unlocks.
+- **Hotkey daemon: skhd**, enabled via `services.skhd`. Bindings live in
+  `skhd/skhdrc` (symlinked into `~/.config/skhd/skhdrc`, edit-live like the
+  hypr/kitty configs). Mod is `alt` (option) so cmd-shortcuts stay native to
+  macOS. See [yabai keybinds](#yabai--skhd-keybinds-mod--alt) below. Space
+  switching (`alt - 1..9`) needs the yabai scripting addition; moving a window
+  to another space (`shift + alt - 1..9`) works without it.
 - **GUI apps come from Homebrew Casks**, declared in `darwin/configuration.nix`
   under `homebrew.casks` (currently: Google Chrome, Arc, kitty, Zed, Postman,
   Docker Desktop). Homebrew itself is installed and managed by **nix-homebrew**
@@ -168,6 +181,32 @@ sudo darwin-rebuild switch --flake ~/dotfiles#mac   # aliased as `rebuild`
 | `mod` `Print`          | screenshot full output        |
 
 Volume / brightness / media keys are wired to pamixer / brightnessctl / playerctl.
+
+## yabai + skhd keybinds (`mod` = `alt`)
+
+macOS only — these mirror the Hyprland layout but with `alt` (option) as the
+modifier, since `cmd` is reserved for macOS-native shortcuts.
+
+| Combo                    | Action                                |
+| ------------------------ | ------------------------------------- |
+| `mod` `Return`           | kitty                                 |
+| `mod` `B`                | Google Chrome                         |
+| `mod` `Q`                | close window                          |
+| `mod` `F`                | zoom-fullscreen toggle                |
+| `mod` `T`                | float toggle                          |
+| `mod` `E`                | balance space                         |
+| `mod` `R`                | rotate layout 90°                     |
+| `mod` `Arrow` / `hjkl`   | focus                                 |
+| `mod` `Shift` `Arrow`    | swap with neighbor                    |
+| `mod` `Ctrl`  `Arrow`    | resize                                |
+| `mod` `[1-9]`            | switch space *(needs SA)*             |
+| `mod` `Shift` `[1-9]`    | move window to space                  |
+| `fn` + drag              | move / resize floating window         |
+
+Edit `skhd/skhdrc` to rebind — it's symlinked, so a save + `skhd --reload`
+(skhd auto-reloads on file change anyway) picks it up. yabai config (gaps,
+padding, layout) lives in `darwin/configuration.nix` under `services.yabai`
+and needs a `rebuild`.
 
 ## Japanese input (fcitx5 + mozc)
 
