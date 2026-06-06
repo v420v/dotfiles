@@ -71,6 +71,8 @@
       "arc"
       # Terminal
       "kitty"
+      # Launcher (binds cmd-Space by default, replacing Spotlight)
+      "raycast"
       # Dev
       "zed"
       "postman"
@@ -139,6 +141,10 @@
     };
 
     trackpad.Clicking = true; # tap to click
+
+    # Disable Spotlight's Cmd-Space (hotkey ID 64) so Raycast can bind it.
+    # symbolichotkeys is cached by cfprefsd — needs a logout or reboot to apply.
+    CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."64".enabled = false;
   };
 
   # The keyboard remapping above (defaults) applies on rebuild; this makes the

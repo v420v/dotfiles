@@ -144,8 +144,8 @@ sudo darwin-rebuild switch --flake ~/dotfiles#mac   # aliased as `rebuild`
   switching (`alt - 1..9`) needs the yabai scripting addition; moving a window
   to another space (`shift + alt - 1..9`) works without it.
 - **GUI apps come from Homebrew Casks**, declared in `darwin/configuration.nix`
-  under `homebrew.casks` (currently: Google Chrome, Arc, kitty, Zed, Postman,
-  Docker Desktop). Homebrew itself is installed and managed by **nix-homebrew**
+  under `homebrew.casks` (currently: Google Chrome, Arc, kitty, Raycast, Zed,
+  Postman, Docker Desktop). Homebrew itself is installed and managed by **nix-homebrew**
   (a flake input) — no manual `brew` install needed; the first `rebuild` sets it
   up under `/opt/homebrew`. Add/remove apps by editing that list and running
   `rebuild`. `onActivation.cleanup = "uninstall"` removes Casks you delete from
