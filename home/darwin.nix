@@ -23,6 +23,9 @@
     # on NixOS. Exposed g-prefixed (gls, gsed, ...) to avoid shadowing the BSD
     # tools macOS itself depends on.
     coreutils
+
+    # Animated pipes terminal screensaver (pipeseroni/pipes.sh).
+    pipes
   ];
 
   # ---------- macOS-only shell aliases ----------
