@@ -35,11 +35,22 @@
   programs.zsh.enable = true;
 
   # Minimal system rescue tools (the rich CLI set is in home/darwin.nix).
+  # Dev toolchains/LSPs/formatters also live here (not in home-manager) to
+  # mirror the NixOS profile — gopls+gotools both ship /bin/modernize, so
+  # the system buildEnv is the right place to tolerate the collision.
   environment.systemPackages = with pkgs; [
     vim
     git
     curl
     wget
+
+    # Go: toolchain + LSP + formatters consumed by nvim (lspconfig + conform.nvim).
+    # `go` itself is required: nvim-lspconfig's gopls root_dir resolver shells
+    # out to `go env GOMODCACHE`, and a missing `go` crashes BufReadPost.
+    go
+    gopls
+    gofumpt
+    gotools
   ];
 
   # ---------- Fonts (system-wide, so kitty & friends can discover them) ----------
