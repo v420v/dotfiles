@@ -64,7 +64,7 @@ command -v bat   >/dev/null 2>&1 && alias cat='bat --paging=never --style=plain'
 command -v bat   >/dev/null 2>&1 && alias less='bat --paging=always'
 command -v rg    >/dev/null 2>&1 && alias grep='rg'
 command -v btop  >/dev/null 2>&1 && alias top='btop'
-command -v nvim  >/dev/null 2>&1 && alias vim='nvim' && alias v='nvim' && alias vi='nvim'
+command -v nvim  >/dev/null 2>&1 && alias vim='nvim' && alias vi='nvim'
 
 alias ..='cd ..'
 alias ...='cd ../..'
