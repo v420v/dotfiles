@@ -126,12 +126,38 @@
     git = true;
   };
 
+  # ---------- direnv (per-directory env, fast nix-flake caching) ----------
+  # Auto-loads a project's .envrc on cd. nix-direnv caches `use flake`, so dev
+  # shells load instantly. Zsh integration is wired up automatically.
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # ---------- Zsh ----------
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestion.enable = true;
+    autosuggestion = {
+      enable = true;
+      # Suggest from history first, then fall back to the completion system so
+      # even never-run commands get a ghosted hint. Accept with → or End.
+      strategy = [ "history" "completion" ];
+    };
     syntaxHighlighting.enable = true;
+    # Up/Down arrows search history for whatever's already on the line.
+    historySubstringSearch.enable = true;
+
+    # fzf-tab: replaces zsh's completion menu with an fzf picker (+ previews).
+    # Loads after compinit (home-manager orders this for us).
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
+      }
+    ];
+
     history = {
       size = 100000;
       save = 100000;
@@ -194,7 +220,7 @@
       setopt INTERACTIVE_COMMENTS PROMPT_SUBST NO_BEEP
 
       # ─── Completion polish ───────────────────────────────────────
-      zstyle ':completion:*' menu select
+      zstyle ':completion:*' menu no                        # fzf-tab owns the menu
       zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*:descriptions' format '%F{cyan}── %d ──%f'
@@ -202,13 +228,27 @@
       zstyle ':completion:*' group-name ''\'\'
       zstyle ':completion:*' verbose yes
 
+      # fzf-tab: cycle result groups with < / >, preview dirs while completing.
+      zstyle ':fzf-tab:*' switch-group '<' '>'
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=auto $realpath'
+      zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always --icons=auto $realpath'
+
       # Modus Vivendi-friendly ls/eza colours (256-color ANSI indices)
       export LS_COLORS="di=38;5;75:ln=38;5;141:so=38;5;217:pi=38;5;223:ex=38;5;78:bd=38;5;215:cd=38;5;215:su=38;5;217:sg=38;5;217:tw=38;5;75:ow=38;5;75"
 
+      # ─── Autosuggestions (faint inline ghost text) ───────────────
+      # As you type, zsh-autosuggestions shows a dim prediction from history /
+      # completion. Tune how faint it looks here. Accept it with → or End (whole
+      # line), Ctrl-→ for just the next word, or Ctrl-Space.
+      ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6c7086"
+      bindkey '^ ' autosuggest-accept
+
       # ─── Keybinds ────────────────────────────────────────────────
       bindkey -e
-      bindkey '^[[A'      history-search-backward
-      bindkey '^[[B'      history-search-forward
+      bindkey '^[[A'      history-substring-search-up
+      bindkey '^[[B'      history-substring-search-down
+      bindkey '^[OA'      history-substring-search-up    # app-cursor mode
+      bindkey '^[OB'      history-substring-search-down
       bindkey '^[[1;5C'   forward-word
       bindkey '^[[1;5D'   backward-word
       bindkey '^[[3~'     delete-char
