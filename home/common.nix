@@ -1,11 +1,15 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, username ? "ibuki", ... }:
 
 # Cross-platform home-manager config — shared by NixOS (home/ibuki.nix) and
-# the M1 Mac (home/darwin.nix). Everything here must build on both
+# the M1 Macs (home/darwin.nix). Everything here must build on both
 # x86_64-linux and aarch64-darwin, so no Hyprland/GTK/X11/Wayland bits live
 # here — those are Linux-only and stay in home/ibuki.nix.
+#
+# `username` is threaded in from flake.nix — "ibuki" on the NixOS host and the
+# personal Mac, "yoshida" on the work Mac. The `? "ibuki"` is just a fallback;
+# every caller passes it explicitly (module-system arg defaults aren't honored).
 {
-  home.username = "ibuki";
+  home.username = username;
   home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;

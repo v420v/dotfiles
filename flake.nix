@@ -22,6 +22,45 @@
       linuxSystem = "x86_64-linux";
       darwinSystem = "aarch64-darwin";
       forAllSystems = nixpkgs.lib.genAttrs [ linuxSystem darwinSystem ];
+
+      # Both Macs (personal `ibuki`, work `yoshida`) build from the same
+      # modules — only the username/home dir differ. `mkDarwin` threads the
+      # username through to darwin/configuration.nix and home/darwin.nix so
+      # nothing is hardcoded. Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
+      mkDarwin = username: nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit inputs username; };
+        modules = [
+          ./darwin/configuration.nix
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              user = username; # owns the /opt/homebrew prefix
+              enableRosetta = false; # all our casks have native arm64 builds
+              autoMigrate = true; # adopt a pre-existing brew install if found
+            };
+          }
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "hm-bak";
+            home-manager.users.${username} = import ./home/darwin.nix;
+            home-manager.extraSpecialArgs = { inherit inputs username; };
+          }
+        ];
+      };
+
+      # Standalone home-manager (no-sudo, user-only) for either Mac username.
+      # Apply with: home-manager switch --flake ~/dotfiles#<username>@mac
+      mkDarwinHome = username: home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = darwinSystem;
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = { inherit inputs username; };
+        modules = [ ./home/darwin.nix ];
+      };
     in
     {
       # ---------- NixOS host (system + user via HM module) ----------
@@ -36,50 +75,30 @@
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "hm-bak";
             home-manager.users.ibuki = import ./home/ibuki.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.extraSpecialArgs = { inherit inputs; username = "ibuki"; };
           }
         ];
       };
 
-      # ---------- M1 Mac: nix-darwin + home-manager (primary) ----------
-      # System + user in one rebuild, mirroring the NixOS host.
-      # Apply with: darwin-rebuild switch --flake ~/dotfiles#mac
-      darwinConfigurations."mac" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./darwin/configuration.nix
-          nix-homebrew.darwinModules.nix-homebrew
-          {
-            nix-homebrew = {
-              enable = true;
-              user = "ibuki"; # owns the /opt/homebrew prefix
-              enableRosetta = false; # all our casks have native arm64 builds
-              autoMigrate = true; # adopt a pre-existing brew install if found
-            };
-          }
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.users.ibuki = import ./home/darwin.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-          }
-        ];
+      # ---------- M1 Macs: nix-darwin + home-manager (primary) ----------
+      # System + user in one rebuild, mirroring the NixOS host. One entry per
+      # machine, keyed by login username:
+      #   ibuki   — personal MacBook
+      #   yoshida — work MacBook
+      # Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
+      darwinConfigurations = {
+        ibuki = mkDarwin "ibuki";
+        yoshida = mkDarwin "yoshida";
       };
 
-      # ---------- M1 Mac: standalone home-manager (no-sudo alternative) ----------
+      # ---------- M1 Macs: standalone home-manager (no-sudo alternative) ----------
       # Same home/darwin.nix as above, for user-only changes without touching
-      # the system. Apply with: home-manager switch --flake ~/dotfiles#ibuki@mac
+      # the system. Apply with: home-manager switch --flake ~/dotfiles#<username>@mac
       # allowUnfree is set on the pkgs we pass in (claude-code is unfree); the
       # NixOS host and nix-darwin host set the same flag in their system config.
-      homeConfigurations."ibuki@mac" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = darwinSystem;
-          config.allowUnfree = true;
-        };
-        extraSpecialArgs = { inherit inputs; };
-        modules = [ ./home/darwin.nix ];
+      homeConfigurations = {
+        "ibuki@mac" = mkDarwinHome "ibuki";
+        "yoshida@mac" = mkDarwinHome "yoshida";
       };
 
       # `nix develop` — tooling for tests/check.sh and tests/format.sh.

@@ -41,19 +41,19 @@ mkdir -p ~/.config/nix
 echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
 
 # First run: bootstraps darwin-rebuild, then applies system + user.
-sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#mac
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<user>
 ```
 
 After the first run, re-apply with (aliased to `rebuild`):
 
 ```bash
-sudo darwin-rebuild switch --flake ~/dotfiles#mac
+sudo darwin-rebuild switch --flake ~/dotfiles#<user>
 ```
 
 User-only changes (no sudo):
 
 ```bash
-home-manager switch --flake ~/dotfiles#ibuki@mac    # aliased to `rebuild-home`
+home-manager switch --flake ~/dotfiles#<user>@mac    # aliased to `rebuild-home`
 ```
 
 ### Remove

@@ -1,31 +1,50 @@
-{ pkgs, ... }:
+{ pkgs, lib, username, ... }:
 
-# nix-darwin system configuration for the M1 MacBook Air.
+# nix-darwin system configuration for the M1 MacBooks (personal + work).
 # This is the macOS analogue of nixos/configuration.nix: it owns the
 # system-level half (nix daemon settings, system packages, fonts, and the
 # declarative `system.defaults` for macOS itself). The user-level half
 # (shell, editor, CLI tools) is home/darwin.nix, attached as the
 # home-manager module in flake.nix.
 #
-# Apply with: darwin-rebuild switch --flake ~/dotfiles#mac
+# Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
+let
+  # The work Mac (yoshida) runs Determinate Nix, which manages the Nix
+  # installation with its own daemon and refuses to let nix-darwin manage it
+  # too. On that host we hand Nix off: nix-darwin's `nix.*` options (gc,
+  # optimise, settings) become unavailable, so they're only set when we own
+  # the install. The personal Mac (ibuki) uses the nix-darwin-managed Nix.
+  manageNix = username != "yoshida";
+
+  # The work Mac is IT/MDM-managed: some GUI apps (Docker Desktop) are already
+  # installed and locked down, so Homebrew can't adopt or modify them and
+  # `brew bundle` aborts the whole rebuild. Keep those off the work cask list.
+  isWork = username == "yoshida";
+in
 {
   # ---------- Nix daemon ----------
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    interval.Weekday = 0; # Sunday
-    options = "--delete-older-than 14d";
-  };
+  nix = lib.mkMerge [
+    { enable = manageNix; }
+    (lib.mkIf manageNix {
+      settings.experimental-features = [ "nix-command" "flakes" ];
+      optimise.automatic = true;
+      gc = {
+        automatic = true;
+        interval.Weekday = 0; # Sunday
+        options = "--delete-older-than 14d";
+      };
+    })
+  ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true; # claude-code is unfree (matches NixOS)
 
   # ---------- Primary user ----------
   # Required by nix-darwin for the user-scoped `system.defaults` below.
-  system.primaryUser = "ibuki";
-  users.users.ibuki = {
-    home = "/Users/ibuki";
+  # `username` is threaded in from flake.nix (ibuki on personal, yoshida on work).
+  system.primaryUser = username;
+  users.users.${username} = {
+    home = "/Users/${username}";
     shell = pkgs.zsh;
   };
 
@@ -98,8 +117,10 @@
   # window-shadow/animation tweaks and a few focus niceties. To enable:
   # boot to recovery, `csrutil enable --without fs --without debug --without nvram`,
   # then flip the flag and rebuild.
+  #
+  # Personal Mac only — left off on the work Mac (stock macOS window mgmt).
   services.yabai = {
-    enable = true;
+    enable = !isWork;
     enableScriptingAddition = false;
     config = {
       layout = "bsp";
@@ -121,7 +142,8 @@
   # ---------- Hotkey daemon (skhd) ----------
   # Bindings live in skhd/skhdrc and are symlinked into ~/.config/skhd by
   # home/darwin.nix — live-editable, no rebuild needed for keymap changes.
-  services.skhd.enable = true;
+  # Personal Mac only — paired with yabai, so off on the work Mac too.
+  services.skhd.enable = !isWork;
 
   # ---------- macOS system defaults ----------
   # Declarative `defaults write`. These change real macOS behaviour on the

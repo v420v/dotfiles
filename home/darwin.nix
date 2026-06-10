@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, username, ... }:
 
 # macOS (Apple Silicon / aarch64-darwin) home-manager profile, used standalone
-# via `home-manager switch --flake ~/dotfiles#ibuki@mac` — no nix-darwin and no
-# system-level changes required, just the Nix package manager.
+# via `home-manager switch --flake ~/dotfiles#<username>@mac` — no nix-darwin and
+# no system-level changes required, just the Nix package manager. `username` is
+# threaded in from flake.nix (ibuki on personal, yoshida on work).
 #
 # Imports the cross-platform base from common.nix; everything Hyprland/GTK/X11
 # stays in home/ibuki.nix and never reaches the Mac. Add Mac-only desktop apps
@@ -10,7 +11,7 @@
 {
   imports = [ ./common.nix ];
 
-  home.homeDirectory = "/Users/ibuki";
+  home.homeDirectory = "/Users/${username}";
 
   # ---------- macOS-only user packages ----------
   home.packages = with pkgs; [
@@ -34,15 +35,18 @@
   # standalone home-manager fallback for user-only changes without sudo.
   programs.zsh.shellAliases = {
     rm = "rm -iv";
-    rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#mac";
-    rebuild-home = "home-manager switch --flake ~/dotfiles#ibuki@mac";
+    rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#${username}";
+    rebuild-home = "home-manager switch --flake ~/dotfiles#${username}@mac";
     edit-nix = "$EDITOR ~/dotfiles/darwin/configuration.nix";
   };
 
   # ---------- macOS-only config symlinks ----------
   # skhd is a Mac-only hotkey daemon, so its rc lives here (not common.nix).
   # Symlinked out-of-store: edit skhd/skhdrc in the repo and it's live after
-  # `skhd --reload` (or auto-picked-up on file save).
-  xdg.configFile."skhd/skhdrc".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
+  # `skhd --reload` (or auto-picked-up on file save). Personal Mac only —
+  # skhd/yabai aren't enabled on the work Mac, so the rc is skipped there.
+  xdg.configFile = lib.mkIf (username != "yoshida") {
+    "skhd/skhdrc".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
+  };
 }
