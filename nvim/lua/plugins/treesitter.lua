@@ -8,6 +8,46 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
         config = function()
+            -- ── nvim 0.12 compat shim ─────────────────────────────
+            -- nvim 0.12 dropped the legacy `all=false` wrapping in
+            -- query.add_directive/add_predicate, so directive/predicate
+            -- handlers now always receive captures in list form
+            -- (capture-id → TSNode[]). nvim-treesitter's `master` branch
+            -- still assumes the old single-node form, so its custom
+            -- directives (e.g. `set-lang-from-info-string!`, used for
+            -- markdown fenced-code injections) call `node:range()` on a
+            -- list and crash while parsing — most visibly when scrolling
+            -- or editing a markdown buffer. Wrap nvim-treesitter's
+            -- registrations to collapse the list back to a single node
+            -- (the last match, matching the old `all=false` semantics).
+            if vim.fn.has("nvim-0.12") == 1 then
+                local tsq = require("vim.treesitter.query")
+                local add_directive, add_predicate = tsq.add_directive, tsq.add_predicate
+                local function to_single(captures)
+                    local single = {}
+                    for id, nodes in pairs(captures) do
+                        single[id] = type(nodes) == "table" and nodes[#nodes] or nodes
+                    end
+                    return single
+                end
+                tsq.add_directive = function(name, handler, opts)
+                    return add_directive(name, function(captures, ...)
+                        return handler(to_single(captures), ...)
+                    end, opts)
+                end
+                tsq.add_predicate = function(name, handler, opts)
+                    return add_predicate(name, function(captures, ...)
+                        return handler(to_single(captures), ...)
+                    end, opts)
+                end
+                -- Force (re-)registration of the custom handlers under the
+                -- shim, then restore the originals so only nvim-treesitter's
+                -- handlers are wrapped (builtins already handle list form).
+                package.loaded["nvim-treesitter.query_predicates"] = nil
+                pcall(require, "nvim-treesitter.query_predicates")
+                tsq.add_directive, tsq.add_predicate = add_directive, add_predicate
+            end
+
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     -- Web stack
