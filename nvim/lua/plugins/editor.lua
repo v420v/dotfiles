@@ -29,7 +29,9 @@ return {
     {
         "refractalize/oil-git-status.nvim",
         dependencies = { "stevearc/oil.nvim" },
-        config = true,
+        -- show_ignored = false: don't show a git status for gitignored files
+        -- (otherwise they'd get the `!!` ignored marker in the status column).
+        opts = { show_ignored = false },
     },
 
     -- Comments: gcc / gc<motion>
