@@ -52,6 +52,22 @@ return {
                     map("n", "]d",         vim.diagnostic.goto_next,    "Next diagnostic")
                     map("n", "<leader>cd", vim.diagnostic.open_float,   "Show diagnostic")
                     map("n", "<leader>cl", "<cmd>LspInfo<CR>",          "LSP info")
+
+                    -- Auto-hover: when the cursor rests on a symbol (updatetime
+                    -- = 250ms), pop up its definition info without pressing K.
+                    -- focusable = false keeps the cursor in the buffer; the
+                    -- float closes itself the moment you move on. Toggle off
+                    -- per-buffer with :let b:disable_autohover = 1.
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    if client and client:supports_method("textDocument/hover") then
+                        vim.api.nvim_create_autocmd("CursorHold", {
+                            buffer = args.buf,
+                            callback = function()
+                                if vim.b.disable_autohover then return end
+                                vim.lsp.buf.hover({ focusable = false })
+                            end,
+                        })
+                    end
                 end,
             })
 
@@ -71,6 +87,20 @@ return {
                 cssls    = {},
                 jsonls   = {},
                 eslint   = {},
+                intelephense = {                -- PHP / Laravel
+                    -- Sensible Laravel defaults: bump the per-file size cap
+                    -- (Laravel ships big generated files like the IDE helper)
+                    -- and surface Blade files to the server too. Facade/magic-
+                    -- method resolution still wants `barryvdh/laravel-ide-helper`
+                    -- run in the project (generates _ide_helper.php) — that's
+                    -- project-side, not editor config.
+                    settings = {
+                        intelephense = {
+                            files       = { maxSize = 5000000 },
+                            environment = { phpVersion = "8.3" },
+                        },
+                    },
+                },
                 clangd   = {                   -- C / C++ / Objective-C
                     cmd = {
                         "clangd",
@@ -124,7 +154,10 @@ return {
                 desc = "Format buffer",
             },
         },
-        opts = {
+        -- opts is a function so `require("conform.util")` below is deferred
+        -- until conform.nvim is on the runtimepath (it isn't yet when lazy.nvim
+        -- first reads this spec).
+        opts = function() return {
             formatters_by_ft = {
                 go            = { "gofumpt", "goimports" },
                 javascript    = { "prettierd", "prettier", stop_after_first = true },
@@ -142,13 +175,26 @@ return {
                 lua           = { "stylua" },
                 nix           = { "nixpkgs_fmt" },
                 sh            = { "shfmt" },
+                -- Prefer the project's own Laravel Pint (./vendor/bin/pint, see
+                -- the formatter override below); fall back to the system
+                -- php-cs-fixer when a project doesn't vendor Pint.
+                php           = { "pint", "php_cs_fixer", stop_after_first = true },
+            },
+            formatters = {
+                -- Pint isn't packaged standalone, so resolve it from the
+                -- project's composer vendor dir, falling back to a `pint` on
+                -- PATH if one happens to be installed globally.
+                pint = {
+                    command = require("conform.util").find_executable(
+                        { "vendor/bin/pint" }, "pint"),
+                },
             },
             format_on_save = function(bufnr)
                 -- Disable with :FormatDisable on a buffer or globally.
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
                 return { timeout_ms = 1500, lsp_fallback = true }
             end,
-        },
+        } end,
         init = function()
             vim.api.nvim_create_user_command("FormatDisable", function(args)
                 if args.bang then vim.b.disable_autoformat = true

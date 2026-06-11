@@ -70,6 +70,14 @@ in
     gopls
     gofumpt
     gotools
+
+    # PHP / Laravel: LSP (intelephense), the runtime + composer (each project's
+    # own ./vendor/bin/pint, which conform.nvim prefers), and php-cs-fixer as
+    # the system formatter fallback when a project doesn't vendor Pint.
+    php
+    php.packages.composer
+    intelephense
+    phpPackages.php-cs-fixer
   ];
 
   # ---------- Fonts (system-wide, so kitty & friends can discover them) ----------

@@ -54,6 +54,7 @@ return {
                     "go", "gomod", "gosum", "gowork",
                     "html", "css", "scss",
                     "javascript", "typescript", "tsx",
+                    "php", "php_only", "phpdoc",
                     "json", "jsonc", "yaml", "toml",
                     -- Low-level
                     "c", "cpp", "asm", "make", "cmake",
