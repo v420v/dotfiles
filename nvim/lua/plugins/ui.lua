@@ -44,6 +44,21 @@ return {
                 changedelete = { text = "▎" },
                 untracked    = { text = "▎" },
             },
+            signs_staged_enable = true,
+            signcolumn          = true,
+            numhl               = false,
+            linehl              = false,
+            word_diff           = false,
+            attach_to_untracked = true,
+            current_line_blame  = true,
+            current_line_blame_opts = {
+                virt_text         = true,
+                virt_text_pos     = "eol",
+                delay             = 400,
+                ignore_whitespace = false,
+            },
+            current_line_blame_formatter = "  <author>, <author_time:%Y-%m-%d> · <summary>",
+            preview_config = { border = "rounded", style = "minimal", relative = "cursor", row = 0, col = 1 },
             on_attach = function(buf)
                 local gs = package.loaded.gitsigns
                 local map = function(mode, lhs, rhs, desc)
@@ -51,11 +66,19 @@ return {
                 end
                 map("n", "]h", function() gs.nav_hunk("next") end, "Next hunk")
                 map("n", "[h", function() gs.nav_hunk("prev") end, "Prev hunk")
-                map("n", "<leader>hp", gs.preview_hunk,  "Preview hunk")
-                map("n", "<leader>hr", gs.reset_hunk,    "Reset hunk")
-                map("n", "<leader>hs", gs.stage_hunk,    "Stage hunk")
+                map("n", "<leader>hp", gs.preview_hunk,         "Preview hunk")
+                map("n", "<leader>hP", gs.preview_hunk_inline,  "Preview hunk (inline)")
+                map("n", "<leader>hr", gs.reset_hunk,           "Reset hunk")
+                map("n", "<leader>hs", gs.stage_hunk,           "Stage hunk")
+                map("n", "<leader>hu", gs.undo_stage_hunk,      "Undo stage hunk")
+                map("n", "<leader>hS", gs.stage_buffer,         "Stage buffer")
+                map("n", "<leader>hR", gs.reset_buffer,         "Reset buffer")
                 map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Blame line")
-                map("n", "<leader>hd", gs.diffthis,      "Diff this")
+                map("n", "<leader>hB", gs.toggle_current_line_blame, "Toggle line blame")
+                map("n", "<leader>hd", gs.diffthis,             "Diff this")
+                map("n", "<leader>hD", function() gs.diffthis("~") end, "Diff this ~")
+                map("n", "<leader>hw", gs.toggle_word_diff,     "Toggle word diff")
+                map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
             end,
         },
     },

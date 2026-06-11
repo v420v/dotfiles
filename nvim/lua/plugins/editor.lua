@@ -1,4 +1,8 @@
 -- ─── Editor QoL ──────────────────────────────────────────────
+-- Tab keymaps
+vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<CR>",      { desc = "Close tab" })
+vim.keymap.set("n", "<leader>tD", "<cmd>windo bdelete<CR>", { desc = "Delete all bufs in tab" })
+
 return {
     -- File explorer in a buffer (vim-vinegar-style: edit the dir)
     {
@@ -64,6 +68,30 @@ return {
         opts = {},
         keys = {
             { "<leader>ft", "<cmd>TodoTelescope<CR>", desc = "Find TODOs" },
+        },
+    },
+
+    -- Git diff viewer (VSCode/Zed-like source control panel)
+    {
+        "sindrets/diffview.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory", "DiffviewRefresh" },
+        keys = {
+            { "<leader>gd", "<cmd>DiffviewOpen<CR>",          desc = "Diff: open changes" },
+            { "<leader>gc", "<cmd>DiffviewClose<CR>",         desc = "Diff: close" },
+            { "<leader>gh", "<cmd>DiffviewFileHistory<CR>",   desc = "Diff: repo history" },
+            { "<leader>gH", "<cmd>DiffviewFileHistory %<CR>", desc = "Diff: file history" },
+            { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>",   desc = "Diff: toggle files panel" },
+        },
+        opts = {
+            enhanced_diff_hl = true,
+            view = {
+                merge_tool = { layout = "diff3_mixed", disable_diagnostics = true },
+            },
+            file_panel = {
+                listing_style = "tree",
+                win_config = { position = "left", width = 35 },
+            },
         },
     },
 }
