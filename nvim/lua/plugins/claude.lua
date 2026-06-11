@@ -36,6 +36,10 @@ return {
             -- File / selection context
             { "<leader>cb", "<cmd>ClaudeCodeAdd %<CR>",     mode = "n", desc = "Add current buffer" },
             { "<leader>cs", "<cmd>ClaudeCodeSend<CR>",      mode = "v", desc = "Send selection" },
+            -- Normal mode: in a code buffer sends the current line; in an oil
+            -- explorer sends the file under the cursor. Visual-select rows in
+            -- oil first to send several files at once.
+            { "<leader>cs", "<cmd>ClaudeCodeSend<CR>",      mode = "n", desc = "Send line / oil file under cursor" },
             -- Diff actions inside Claude-opened diffs
             { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<CR>",mode = "n", desc = "Accept diff" },
             { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<CR>",  mode = "n", desc = "Deny diff" },

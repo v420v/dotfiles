@@ -27,6 +27,37 @@ return {
         config = function()
             local telescope = require("telescope")
             local actions   = require("telescope.actions")
+            local action_state = require("telescope.actions.state")
+
+            -- Send the picked file(s) to Claude Code as @-mentions.
+            -- Honours multi-selection (<Tab> to mark) and falls back to the
+            -- entry under the cursor. send_at_mention queues + launches Claude
+            -- if it isn't running yet.
+            local function send_to_claude(prompt_bufnr)
+                local ok, claudecode = pcall(require, "claudecode")
+                if not ok then
+                    vim.notify("claudecode.nvim not available", vim.log.levels.WARN)
+                    return
+                end
+                local picker  = action_state.get_current_picker(prompt_bufnr)
+                local entries = picker:get_multi_selection()
+                if vim.tbl_isempty(entries) then
+                    entries = { action_state.get_selected_entry() }
+                end
+                actions.close(prompt_bufnr)
+                local n = 0
+                for _, entry in ipairs(entries) do
+                    local path = entry and (entry.path or entry.filename or entry.value)
+                    if path then
+                        claudecode.send_at_mention(vim.fn.fnamemodify(path, ":p"))
+                        n = n + 1
+                    end
+                end
+                if n > 0 then
+                    vim.notify(("Sent %d file%s to Claude"):format(n, n == 1 and "" or "s"))
+                end
+            end
+
             telescope.setup({
                 defaults = {
                     prompt_prefix = "❯ ",
@@ -37,7 +68,11 @@ return {
                         i = {
                             ["<C-j>"] = actions.move_selection_next,
                             ["<C-k>"] = actions.move_selection_previous,
+                            ["<C-a>"] = send_to_claude,   -- send picked file(s) to Claude
                             ["<Esc>"] = actions.close,
+                        },
+                        n = {
+                            ["<C-a>"] = send_to_claude,   -- send picked file(s) to Claude
                         },
                     },
                 },
