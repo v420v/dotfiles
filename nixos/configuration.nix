@@ -176,7 +176,7 @@
     lua-language-server
     bash-language-server
     nil
-    intelephense          # PHP / Laravel LSP
+    intelephense # PHP / Laravel LSP
 
     # PHP / Laravel toolchain. `php` is needed at runtime (Pint/php-cs-fixer
     # shell out to it); `composer` for project deps incl. each project's own
@@ -191,7 +191,7 @@
     stylua
     nixpkgs-fmt
     shfmt
-    phpPackages.php-cs-fixer   # PHP formatter (Pint fallback)
+    phpPackages.php-cs-fixer # PHP formatter (Pint fallback)
 
     # GTK/portal plumbing referenced by user apps
     xdg-utils
