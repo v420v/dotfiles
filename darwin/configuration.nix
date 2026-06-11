@@ -90,11 +90,21 @@ in
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # "uninstall" removes Casks no longer listed here (keeps it declarative)
-      # but leaves their app data intact. Use "zap" to also wipe data, or
-      # "none" if you'd rather also `brew install` things by hand.
+      # "uninstall" removes Casks/Brews no longer listed here (keeps it
+      # declarative) but leaves their app data intact. Use "zap" to also wipe
+      # data, or "none" if you'd rather also `brew install` things by hand.
       cleanup = "uninstall";
     };
+    # Non-GUI formulae that aren't in nixpkgs (or whose nixpkgs build is a
+    # different project). `taps` pulls in the third-party formula repos they
+    # live in.
+    taps = [ "k1LoW/tap" ];
+    brews = [
+      # k1LoW/mo — Markdown viewer that opens .md files in the browser with
+      # live-reload. nixpkgs `mo` is an unrelated Bash mustache tool, so it
+      # comes from k1LoW's tap instead. Usage: `mo README.md`.
+      "k1LoW/tap/mo"
+    ];
     casks = [
       # Browsers
       "google-chrome"
