@@ -45,8 +45,17 @@
   # Symlinked out-of-store: edit skhd/skhdrc in the repo and it's live after
   # `skhd --reload` (or auto-picked-up on file save). Personal Mac only —
   # skhd/yabai aren't enabled on the work Mac, so the rc is skipped there.
-  xdg.configFile = lib.mkIf (username != "yoshida") {
-    "skhd/skhdrc".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
-  };
+  xdg.configFile = lib.mkMerge [
+    {
+      # macOS-only kitty overrides (native title bar, etc). kitty.conf pulls
+      # this in via `globinclude`; the symlink only exists on macOS, so Linux
+      # skips it. Applies to both Macs (personal + work).
+      "kitty/macos.conf".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/macos.conf";
+    }
+    (lib.mkIf (username != "yoshida") {
+      "skhd/skhdrc".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
+    })
+  ];
 }
