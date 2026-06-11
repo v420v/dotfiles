@@ -7,10 +7,32 @@ return {
         dependencies = {
             "nvim-lua/plenary.nvim",
             { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+            "nvim-telescope/telescope-live-grep-args.nvim",
         },
         keys = {
             { "<leader>ff", "<cmd>Telescope find_files<CR>",                 desc = "Find files" },
-            { "<leader>fg", "<cmd>Telescope live_grep<CR>",                  desc = "Live grep" },
+            { "<leader>fg", "<cmd>Telescope live_grep_args<CR>",             desc = "Live grep (rg flags ok)" },
+            {
+                "<leader>fG",
+                function()
+                    require("telescope").extensions.live_grep_args.live_grep_args({ default_text = "-w " })
+                end,
+                desc = "Live grep (whole word)",
+            },
+            {
+                "<leader>fi",
+                function()
+                    require("telescope").extensions.live_grep_args.live_grep_args({ default_text = "-i " })
+                end,
+                desc = "Live grep (case insensitive)",
+            },
+            {
+                "<leader>fI",
+                function()
+                    require("telescope").extensions.live_grep_args.live_grep_args({ default_text = "-s " })
+                end,
+                desc = "Live grep (case sensitive)",
+            },
             { "<leader>fb", "<cmd>Telescope buffers<CR>",                    desc = "Buffers" },
             { "<leader>fh", "<cmd>Telescope help_tags<CR>",                  desc = "Help tags" },
             { "<leader>fr", "<cmd>Telescope oldfiles<CR>",                   desc = "Recent files" },
@@ -20,6 +42,13 @@ return {
             { "<leader>fs", "<cmd>Telescope lsp_document_symbols<CR>",       desc = "Document symbols" },
             { "<leader>fS", "<cmd>Telescope lsp_workspace_symbols<CR>",      desc = "Workspace symbols" },
             { "<leader>fw", "<cmd>Telescope grep_string<CR>",                desc = "Grep word under cursor" },
+            {
+                "<leader>fW",
+                function()
+                    require("telescope.builtin").grep_string({ word_match = "-w" })
+                end,
+                desc = "Grep WORD (exact) under cursor",
+            },
             { "<leader>/",  "<cmd>Telescope current_buffer_fuzzy_find<CR>",  desc = "Fuzzy in buffer" },
             { "<leader>gc", "<cmd>Telescope git_commits<CR>",                desc = "Git commits" },
             { "<leader>gs", "<cmd>Telescope git_status<CR>",                 desc = "Git status" },
@@ -28,6 +57,7 @@ return {
             local telescope = require("telescope")
             local actions   = require("telescope.actions")
             local action_state = require("telescope.actions.state")
+            local lga_actions = require("telescope-live-grep-args.actions")
 
             -- Send the picked file(s) to Claude Code as @-mentions.
             -- Honours multi-selection (<Tab> to mark) and falls back to the
@@ -87,9 +117,21 @@ return {
                         override_file_sorter    = true,
                         case_mode        = "smart_case",
                     },
+                    live_grep_args = {
+                        auto_quoting = true,
+                        mappings = {
+                            i = {
+                                ["<C-q>"] = lga_actions.quote_prompt(),
+                                ["<C-t>"] = lga_actions.quote_prompt({ postfix = " --type=" }),
+                                ["<C-g>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+                                ["<C-space>"] = lga_actions.to_fuzzy_refine,
+                            },
+                        },
+                    },
                 },
             })
             pcall(telescope.load_extension, "fzf")
+            pcall(telescope.load_extension, "live_grep_args")
         end,
     },
 }
