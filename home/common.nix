@@ -185,7 +185,6 @@
       grep = "rg";
       top = "btop";
       vim = "nvim";
-      v = "nvim";
       vi = "nvim";
 
       # nav
