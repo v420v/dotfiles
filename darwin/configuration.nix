@@ -125,6 +125,8 @@ in
       "zed"
       "postman"
       "docker-desktop"
+      # Communication
+      "discord"
     ];
   };
 
