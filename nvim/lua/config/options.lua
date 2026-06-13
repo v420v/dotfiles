@@ -85,6 +85,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.hl.on_yank({ higroup = "IncSearch", timeout = 150 }) end,
 })
 
+-- V language: nvim's built-in ftdetect maps `.v` to Verilog, but here we use
+-- it for vlang (vsh/vv are V-only). Override before any FileType autocmds run.
+vim.filetype.add({
+    extension = { v = "v", vsh = "v", vv = "v" },
+})
+
 -- Disable unused providers (NixOS-friendly: no Python/Ruby/Perl needed)
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider    = 0

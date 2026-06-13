@@ -114,6 +114,7 @@ return {
                 asm_lsp  = {},                 -- Assembly (x86 / ARM / RISC-V intrinsics)
                 bashls   = {},
                 nil_ls   = {},                 -- Nix
+                v_analyzer = {},               -- V (binary: `v-analyzer`)
                 lua_ls   = {
                     settings = {
                         Lua = {
@@ -179,6 +180,7 @@ return {
                 -- the formatter override below); fall back to the system
                 -- php-cs-fixer when a project doesn't vendor Pint.
                 php           = { "pint", "php_cs_fixer", stop_after_first = true },
+                v             = { "v_fmt" },
             },
             formatters = {
                 -- Pint isn't packaged standalone, so resolve it from the
@@ -187,6 +189,13 @@ return {
                 pint = {
                     command = require("conform.util").find_executable(
                         { "vendor/bin/pint" }, "pint"),
+                },
+                -- `v fmt` rewrites the file in place rather than streaming to
+                -- stdout, so point conform at the buffer's path and skip stdin.
+                v_fmt = {
+                    command = "v",
+                    args    = { "fmt", "-w", "$FILENAME" },
+                    stdin   = false,
                 },
             },
             format_on_save = function(bufnr)

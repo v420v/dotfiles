@@ -58,6 +58,8 @@ return {
                     "json", "jsonc", "yaml", "toml",
                     -- Low-level
                     "c", "cpp", "asm", "make", "cmake",
+                    -- V
+                    "v",
                     -- Project / config
                     "lua", "vim", "vimdoc", "query",
                     "bash", "nix", "markdown", "markdown_inline",
