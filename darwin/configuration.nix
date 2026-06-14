@@ -202,8 +202,20 @@ in
 
   # The keyboard remapping above (defaults) applies on rebuild; this makes the
   # current login session pick it up without a logout.
+  #
+  # `nix-env --delete-generations +6` trims each profile to the latest 7
+  # generations (current + 6) on every rebuild. The weekly `nix.gc` above is
+  # the time-based backstop that actually reclaims store paths; this just caps
+  # the rollback list so it doesn't grow unboundedly. System profile is gated
+  # on `manageNix` because the work Mac's Determinate Nix owns it.
   system.activationScripts.postActivation.text = ''
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
+
+    ${lib.optionalString manageNix ''
+      nix-env --delete-generations +6 -p /nix/var/nix/profiles/system || true
+    ''}
+    sudo -u ${username} nix-env --delete-generations +6 -p /Users/${username}/.local/state/nix/profiles/profile || true
+    sudo -u ${username} nix-env --delete-generations +6 -p /Users/${username}/.local/state/nix/profiles/home-manager || true
   '';
 
   # nix-darwin release series this config was written against. Don't change
