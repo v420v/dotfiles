@@ -34,8 +34,24 @@ opt.incsearch      = true
 opt.undofile       = true
 opt.swapfile       = false
 opt.backup         = false
+opt.autoread       = true
 opt.updatetime     = 250
 opt.timeoutlen     = 400
+
+-- Auto-reload buffers when files change on disk (e.g. Claude Code edits)
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
+    callback = function()
+        if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+            vim.cmd("checktime")
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+    callback = function()
+        vim.notify("File changed on disk, buffer reloaded", vim.log.levels.INFO)
+    end,
+})
 
 -- Splits
 opt.splitright     = true
