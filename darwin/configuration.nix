@@ -127,6 +127,7 @@ in
       "raycast"
       # Dev
       "zed"
+      "coteditor"
       "postman"
       "docker-desktop"
       # Communication
