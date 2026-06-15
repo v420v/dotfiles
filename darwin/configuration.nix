@@ -112,6 +112,10 @@ in
       # live-reload. nixpkgs `mo` is an unrelated Bash mustache tool, so it
       # comes from k1LoW's tap instead. Usage: `mo README.md`.
       "k1LoW/tap/mo"
+      # MySQL 8.4 (LTS). Versioned, keg-only formula — not symlinked into the
+      # Homebrew prefix, so add its bin to PATH (or use the full path) and start
+      # it with `brew services start mysql@8.4`.
+      "mysql@8.4"
     ];
     casks = [
       # Browsers
