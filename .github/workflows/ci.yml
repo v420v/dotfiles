@@ -20,3 +20,21 @@ jobs:
 
       - name: Run check.sh inside dev shell
         run: nix develop --command bash tests/check.sh
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Verify formatting inside dev shell
+        run: |
+          nix develop --command bash -euo pipefail -c '
+            shfmt -d -i 4 -ci install.sh wallpapers/generate.sh tests/check.sh tests/format.sh
+            nixpkgs-fmt --check $(find . -name "*.nix" -not -path "./.git/*" -not -path "./nixos/hardware-configuration.nix")
+            taplo format --check starship/starship.toml
+          '
