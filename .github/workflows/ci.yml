@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 jobs:
   check:
@@ -17,6 +18,12 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+
+      - uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          save-always: true
 
       - name: Run check.sh inside dev shell
         run: nix develop --command bash tests/check.sh
