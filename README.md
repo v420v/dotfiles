@@ -36,24 +36,20 @@ rebuild, then delete `~/dotfiles`.
 ### Apply
 
 ```bash
-# Enable flakes if you haven't:
-mkdir -p ~/.config/nix
-echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
-
-# First run: bootstraps darwin-rebuild, then applies system + user.
-sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<user>
+cd ~/dotfiles
+./install-darwin.sh   # enables flakes, confirms, runs darwin-rebuild
 ```
 
 After the first run, re-apply with (aliased to `rebuild`):
 
 ```bash
-sudo darwin-rebuild switch --flake ~/dotfiles#<user>
+sudo darwin-rebuild switch --flake ~/dotfiles#"$USER"
 ```
 
 User-only changes (no sudo):
 
 ```bash
-home-manager switch --flake ~/dotfiles#<user>@mac    # aliased to `rebuild-home`
+home-manager switch --flake ~/dotfiles#"$USER"@mac    # aliased to `rebuild-home`
 ```
 
 ### Remove

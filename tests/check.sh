@@ -54,7 +54,7 @@ run() {
 
 # ───── Shell ─────
 section "Shell"
-shell_files=(install.sh wallpapers/generate.sh tests/check.sh tests/format.sh)
+shell_files=(install.sh install-darwin.sh wallpapers/generate.sh tests/check.sh tests/format.sh)
 
 for f in "${shell_files[@]}"; do
     run "bash -n  $f" bash -n "$f"
