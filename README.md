@@ -35,25 +35,29 @@ rebuild, then delete `~/dotfiles`.
 
 ### Apply
 
+Available configurations: `ibuki` (personal MacBook) and `yoshida` (work MacBook).
+Replace `<username>` below with whichever matches your machine's login name.
+
 ```bash
 # Enable flakes if you haven't:
 mkdir -p ~/.config/nix
 echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
 
 # First run: bootstraps darwin-rebuild, then applies system + user.
-sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<user>
+# Use ibuki or yoshida in place of <username>.
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<username>
 ```
 
 After the first run, re-apply with (aliased to `rebuild`):
 
 ```bash
-sudo darwin-rebuild switch --flake ~/dotfiles#<user>
+sudo darwin-rebuild switch --flake ~/dotfiles#<username>
 ```
 
 User-only changes (no sudo):
 
 ```bash
-home-manager switch --flake ~/dotfiles#<user>@mac    # aliased to `rebuild-home`
+home-manager switch --flake ~/dotfiles#<username>@mac    # aliased to `rebuild-home`
 ```
 
 ### Remove
