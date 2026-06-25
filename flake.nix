@@ -106,16 +106,20 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
           default = pkgs.mkShell {
-            packages = with pkgs; [
-              shellcheck
-              shfmt
-              nixpkgs-fmt
-              statix
-              deadnix
-              lua
-              taplo
-              jq
-            ];
+            packages = with pkgs;
+              [
+                shellcheck
+                shfmt
+                nixpkgs-fmt
+                statix
+                deadnix
+                lua
+                taplo
+                jq
+              ]
+              # hyprland (provides hyprland + hyprctl) is Linux-only; it is
+              # used by tests/check.sh to validate the hypr/ config files.
+              ++ lib.optionals stdenv.isLinux [ hyprland ];
           };
         });
 

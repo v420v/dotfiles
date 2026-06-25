@@ -138,6 +138,44 @@ else
     skip "jq"
 fi
 
+# ───── Hyprland ─────
+section "Hyprland"
+hypr_files=(hypr/hyprland.conf hypr/hyprlock.conf hypr/hypridle.conf hypr/hyprpaper.conf)
+
+if have hyprland; then
+    # No live compositor needed: run with the headless wlr-backend so the
+    # display is never opened.  Hyprland parses the config file before
+    # touching any display, so config parse errors appear in the output
+    # regardless of backend success.  A timeout exit (rc 124) means the
+    # compositor started cleanly past config-parsing → the config is valid.
+    for f in "${hypr_files[@]}"; do
+        _rtdir=$(mktemp -d)
+        _hypr_rc=0
+        _hypr_out=$(XDG_RUNTIME_DIR="$_rtdir" \
+            WLR_BACKENDS=headless WLR_RENDERER=pixman \
+            timeout 5 hyprland --config "$ROOT/$f" 2>&1) || _hypr_rc=$?
+        rm -rf "$_rtdir"
+        if [ "$_hypr_rc" -eq 124 ]; then
+            ok "hyprland --config $f"
+        elif printf '%s\n' "$_hypr_out" | grep -qiE \
+            '\[Config\].*[Ee]rror|Unknown (variable|category|keyword)|[Pp]arse [Ee]rror'; then
+            bad "hyprland --config $f"
+            printf '%s\n' "$_hypr_out" | sed 's/^/      /'
+        else
+            ok "hyprland --config $f"
+        fi
+    done
+elif have hyprctl && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    # Inside a live Hyprland session: ask the compositor to reload each file
+    # and check the response for error messages.
+    for f in "${hypr_files[@]}"; do
+        run "hyprctl configreload $f" \
+            bash -c "! hyprctl --config-path '$ROOT/$f' configreload 2>&1 | grep -qi error"
+    done
+else
+    skip "hyprctl / hyprland"
+fi
+
 echo
 if [ "${#skipped[@]}" -gt 0 ]; then
     printf "%sskipped (tool missing):%s %s\n" "$Y" "$X" "${skipped[*]}"
