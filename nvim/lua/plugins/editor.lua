@@ -78,7 +78,7 @@ return {
         cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory", "DiffviewRefresh" },
         keys = {
             { "<leader>gd", "<cmd>DiffviewOpen<CR>",          desc = "Diff: open changes" },
-            { "<leader>gc", "<cmd>DiffviewClose<CR>",         desc = "Diff: close" },
+            { "<leader>gq", "<cmd>DiffviewClose<CR>",         desc = "Diff: close" },
             { "<leader>gh", "<cmd>DiffviewFileHistory<CR>",   desc = "Diff: repo history" },
             { "<leader>gH", "<cmd>DiffviewFileHistory %<CR>", desc = "Diff: file history" },
             { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>",   desc = "Diff: toggle files panel" },
