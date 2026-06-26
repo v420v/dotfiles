@@ -86,19 +86,19 @@ in
     # Language servers (consumed by nvim-lspconfig from $PATH).
     # These mirror the LSP entries in nvim/lua/plugins/lsp.lua and must be kept
     # in sync with the equivalent list in nixos/configuration.nix.
-    clang-tools              # clangd (C/C++) + clang-format (conform.nvim)
+    clang-tools # clangd (C/C++) + clang-format (conform.nvim)
     typescript-language-server # ts_ls
     vscode-langservers-extracted # html / cssls / jsonls / eslint
-    asm-lsp                  # asm_lsp (x86/ARM/RISC-V intrinsics)
-    lua-language-server      # lua_ls
-    bash-language-server     # bashls
-    nil                      # nil_ls (Nix)
+    asm-lsp # asm_lsp (x86/ARM/RISC-V intrinsics)
+    lua-language-server # lua_ls
+    bash-language-server # bashls
+    nil # nil_ls (Nix)
 
     # Formatters (consumed by conform.nvim from $PATH).
-    prettierd   # JS/TS/HTML/CSS/JSON/YAML/Markdown
-    stylua      # Lua
+    prettierd # JS/TS/HTML/CSS/JSON/YAML/Markdown
+    stylua # Lua
     nixpkgs-fmt # Nix
-    shfmt       # shell
+    shfmt # shell
   ];
 
   # ---------- Fonts (system-wide, so kitty & friends can discover them) ----------
