@@ -45,12 +45,12 @@ return {
                     map("n", "gi",         vim.lsp.buf.implementation,  "Implementation")
                     map("n", "gt",         vim.lsp.buf.type_definition, "Type definition")
                     map("n", "K",          vim.lsp.buf.hover,           "Hover")
-                    map("n", "<C-k>",      vim.lsp.buf.signature_help,  "Signature help")
+                    map("n", "<leader>ls", vim.lsp.buf.signature_help,  "Signature help")
                     map("n", "<leader>rn", vim.lsp.buf.rename,          "Rename symbol")
-                    map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+                    map({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, "Code action")
                     map("n", "[d",         vim.diagnostic.goto_prev,    "Prev diagnostic")
                     map("n", "]d",         vim.diagnostic.goto_next,    "Next diagnostic")
-                    map("n", "<leader>cd", vim.diagnostic.open_float,   "Show diagnostic")
+                    map("n", "<leader>ld", vim.diagnostic.open_float,   "Show diagnostic")
                     map("n", "<leader>cl", "<cmd>LspInfo<CR>",          "LSP info")
 
                     -- Auto-hover: when the cursor rests on a symbol (updatetime
