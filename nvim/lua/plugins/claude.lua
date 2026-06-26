@@ -30,7 +30,7 @@ return {
         },
         keys = {
             { "<leader>cc", "<cmd>ClaudeCode<CR>",          mode = "n", desc = "Toggle Claude" },
-            { "<leader>cf", "<cmd>ClaudeCodeFocus<CR>",     mode = "n", desc = "Focus Claude window" },
+            { "<leader>cF", "<cmd>ClaudeCodeFocus<CR>",     mode = "n", desc = "Focus Claude window" },
             { "<leader>cR", "<cmd>ClaudeCode --resume<CR>", mode = "n", desc = "Resume Claude session" },
             { "<leader>cC", "<cmd>ClaudeCode --continue<CR>", mode = "n", desc = "Continue Claude session" },
             -- File / selection context
