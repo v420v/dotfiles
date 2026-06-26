@@ -20,16 +20,34 @@ local function append(lines)
 end
 
 -- Wrap vim.notify so WARN/ERROR messages also land in the log.
-local original_notify = vim.notify
-vim.notify = function(msg, level, opts)
-    level = level or vim.log.levels.INFO
-    if type(msg) == "string" and level >= vim.log.levels.WARN then
-        local label = level >= vim.log.levels.ERROR and "ERROR" or "WARN"
-        append({ string.format("[%s] [notify:%s] %s",
-            timestamp(), label, (msg:gsub("\n", " | "))) })
+-- Returns a new function that logs WARN/ERROR and delegates to `base`.
+local function make_logging_notify(base)
+    return function(msg, level, opts)
+        level = level or vim.log.levels.INFO
+        if type(msg) == "string" and level >= vim.log.levels.WARN then
+            local label = level >= vim.log.levels.ERROR and "ERROR" or "WARN"
+            append({ string.format("[%s] [notify:%s] %s",
+                timestamp(), label, (msg:gsub("\n", " | "))) })
+        end
+        return base(msg, level, opts)
     end
-    return original_notify(msg, level, opts)
 end
+
+vim.notify = make_logging_notify(vim.notify)
+
+local group = vim.api.nvim_create_augroup("ErrorLog", { clear = true })
+
+-- Re-assert the wrapper after lazy.nvim finishes loading plugins.
+-- Some plugins (e.g. nvim-notify) replace vim.notify outright in their
+-- `init` callbacks, silently dropping this logging layer.
+vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    once    = true,
+    group   = group,
+    callback = function()
+        vim.notify = make_logging_notify(vim.notify)
+    end,
+})
 
 -- Snapshot LSP diagnostics for a buffer shortly after :write,
 -- giving the language server a moment to report against the
@@ -56,7 +74,6 @@ local function snapshot_buffer(bufnr)
     append(lines)
 end
 
-local group = vim.api.nvim_create_augroup("ErrorLog", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePost", {
     group = group,
     callback = function(args)
