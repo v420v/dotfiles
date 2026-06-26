@@ -48,10 +48,8 @@
   # ---------- Native HM modules ----------
   programs.git = {
     enable = true;
-    settings.user = {
-      name = "v420v";
-      email = "ibuki420v@gmail.com";
-    };
+    userName = "v420v";
+    userEmail = "ibuki420v@gmail.com";
   };
 
   programs.starship = {
