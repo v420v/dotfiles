@@ -48,8 +48,8 @@ return {
                     map("n", "<leader>ls", vim.lsp.buf.signature_help,  "Signature help")
                     map("n", "<leader>rn", vim.lsp.buf.rename,          "Rename symbol")
                     map({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, "Code action")
-                    map("n", "[d",         vim.diagnostic.goto_prev,    "Prev diagnostic")
-                    map("n", "]d",         vim.diagnostic.goto_next,    "Next diagnostic")
+                    map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Prev diagnostic")
+                    map("n", "]d", function() vim.diagnostic.jump({ count =  1, float = true }) end, "Next diagnostic")
                     map("n", "<leader>ld", vim.diagnostic.open_float,   "Show diagnostic")
                     map("n", "<leader>cl", "<cmd>LspInfo<CR>",          "LSP info")
 
@@ -150,7 +150,7 @@ return {
         keys  = {
             {
                 "<leader>cf",
-                function() require("conform").format({ async = true, lsp_fallback = true }) end,
+                function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
                 mode = { "n", "v" },
                 desc = "Format buffer",
             },
@@ -201,7 +201,7 @@ return {
             format_on_save = function(bufnr)
                 -- Disable with :FormatDisable on a buffer or globally.
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
-                return { timeout_ms = 1500, lsp_fallback = true }
+                return { timeout_ms = 1500, lsp_format = "fallback" }
             end,
         } end,
         init = function()
