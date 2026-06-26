@@ -78,6 +78,10 @@ in
     php.packages.composer
     intelephense
     phpPackages.php-cs-fixer
+
+    # V: compiler/runtime (provides `v` for v_fmt formatter on save) + LSP.
+    vlang
+    v-analyzer
   ];
 
   # ---------- Fonts (system-wide, so kitty & friends can discover them) ----------

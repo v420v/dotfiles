@@ -166,6 +166,7 @@
     gdb
     nasm
     nodejs_20
+    vlang # V toolchain — provides `v` binary for v_fmt formatter (conform.nvim)
 
     # Language servers (consumed by nvim-lspconfig from $PATH)
     gopls
@@ -176,6 +177,7 @@
     lua-language-server
     bash-language-server
     nil
+    v-analyzer # V LSP server (binary: `v-analyzer`; matches lsp.lua v_analyzer entry)
     intelephense # PHP / Laravel LSP
 
     # PHP / Laravel toolchain. `php` is needed at runtime (Pint/php-cs-fixer
