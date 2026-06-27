@@ -57,35 +57,6 @@
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
-    settings = {
-      format = "$directory$git_branch$git_status$character";
-      add_newline = false;
-
-      directory = {
-        style = "blue";
-        format = "[$path]($style) ";
-        truncation_length = 3;
-        truncation_symbol = "…/";
-        home_symbol = "~";
-      };
-
-      git_branch = {
-        symbol = "";
-        style = "purple";
-        format = "[$branch]($style) ";
-      };
-
-      git_status = {
-        style = "yellow";
-        format = "[$all_status$ahead_behind]($style) ";
-      };
-
-      character = {
-        success_symbol = "[❯](green)";
-        error_symbol = "[❯](red)";
-        vimcmd_symbol = "[❮](purple)";
-      };
-    };
   };
 
   programs.fzf = {
@@ -279,12 +250,13 @@
   };
 
   # ---------- Dotfiles that stay as plain config files ----------
-  # Symlinked into ~/.config so editing the repo is a live edit. These three
+  # Symlinked into ~/.config so editing the repo is a live edit. These four
   # are portable; Hyprland/waybar/rofi/dunst symlinks are added in
   # home/ibuki.nix (Linux only).
   xdg.configFile = {
     "fastfetch".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch";
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
     "kitty/kitty.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/kitty.conf";
+    "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship/starship.toml";
   };
 }
