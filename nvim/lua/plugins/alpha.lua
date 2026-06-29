@@ -90,20 +90,25 @@ return {
             end,
         })
 
-        -- A live clock looks better than a frozen timestamp.
-        local timer = (vim.uv or vim.loop).new_timer()
-        timer:start(0, 1000, vim.schedule_wrap(function()
-            if vim.bo.filetype ~= "alpha" then return end
-            dashboard.section.footer.val = footer()
-            pcall(vim.cmd.AlphaRedraw)
-        end))
-
-        -- Hide cursor / end-of-buffer tildes on the dashboard.
+        -- A live clock scoped to each Alpha buffer: start on FileType, stop on BufUnload.
         vim.api.nvim_create_autocmd("FileType", {
             pattern  = "alpha",
-            callback = function()
+            callback = function(ev)
                 vim.opt_local.cursorline = false
                 vim.opt_local.fillchars  = { eob = " " }
+                local clock = (vim.uv or vim.loop).new_timer()
+                clock:start(0, 1000, vim.schedule_wrap(function()
+                    dashboard.section.footer.val = footer()
+                    pcall(vim.cmd.AlphaRedraw)
+                end))
+                vim.api.nvim_create_autocmd("BufUnload", {
+                    buffer   = ev.buf,
+                    once     = true,
+                    callback = function()
+                        clock:stop()
+                        clock:close()
+                    end,
+                })
             end,
         })
     end,
