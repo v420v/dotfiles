@@ -38,7 +38,6 @@ map("n", "<C-Right>", "<cmd>vertical resize +2<CR>",   { desc = "Grow window hor
 -- Buffer navigation
 map("n", "<S-l>", "<cmd>bnext<CR>",          { desc = "Next buffer" })
 map("n", "<S-h>", "<cmd>bprevious<CR>",      { desc = "Prev buffer" })
-map("n", "<leader>bd", "<cmd>bdelete<CR>",   { desc = "Delete buffer" })
 
 -- Black-hole register so x / paste don't clobber the clipboard
 map({ "n", "v" }, "<leader>p", [["_dP]],     { desc = "Paste without yank" })
