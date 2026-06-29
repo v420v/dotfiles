@@ -177,7 +177,8 @@
     lua-language-server
     bash-language-server
     nil
-    v-analyzer # V LSP server (binary: `v-analyzer`; matches lsp.lua v_analyzer entry)
+    # v-analyzer (V LSP) is not packaged in nixpkgs; the v_analyzer entry in
+    # lsp.lua is disabled to match. V still gets `v fmt` via vlang above.
     intelephense # PHP / Laravel LSP
 
     # PHP / Laravel toolchain. `php` is needed at runtime (Pint/php-cs-fixer

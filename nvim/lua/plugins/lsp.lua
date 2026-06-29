@@ -115,7 +115,10 @@ return {
                 asm_lsp  = {},                 -- Assembly (x86 / ARM / RISC-V intrinsics)
                 bashls   = {},
                 nil_ls   = {},                 -- Nix
-                v_analyzer = {},               -- V (binary: `v-analyzer`)
+                -- v_analyzer (V LSP) disabled: not packaged in nixpkgs, so the
+                -- `v-analyzer` binary is never on $PATH. Re-enable here and add
+                -- the package back to the nix configs together if it lands.
+                -- v_analyzer = {},            -- V (binary: `v-analyzer`)
                 lua_ls   = {
                     settings = {
                         Lua = {

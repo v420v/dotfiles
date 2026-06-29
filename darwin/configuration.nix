@@ -79,9 +79,10 @@ in
     intelephense
     phpPackages.php-cs-fixer
 
-    # V: compiler/runtime (provides `v` for v_fmt formatter on save) + LSP.
+    # V: compiler/runtime (provides `v` for v_fmt formatter on save).
+    # v-analyzer (V LSP) is not packaged in nixpkgs; the v_analyzer entry in
+    # lsp.lua is disabled to match.
     vlang
-    v-analyzer
 
     # Language servers (consumed by nvim-lspconfig from $PATH).
     # These mirror the LSP entries in nvim/lua/plugins/lsp.lua and must be kept
