@@ -61,6 +61,7 @@ return {
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
                     if client and client:supports_method("textDocument/hover") then
                         vim.api.nvim_create_autocmd("CursorHold", {
+                            group = vim.api.nvim_create_augroup("UserLspHover" .. args.buf, { clear = true }),
                             buffer = args.buf,
                             callback = function()
                                 if vim.b.disable_autohover then return end
