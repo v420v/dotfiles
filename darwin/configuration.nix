@@ -150,9 +150,12 @@ in
       "zed"
       "coteditor"
       "postman"
-      "docker-desktop"
       # Communication
       "discord"
+    ] ++ lib.optionals (!isWork) [
+      # MDM-managed on the work Mac (yoshida) — Homebrew can't adopt or modify
+      # it and `brew bundle` aborts the whole rebuild if it's in the list.
+      "docker-desktop"
     ];
   };
 
