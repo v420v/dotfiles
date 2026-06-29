@@ -20,10 +20,13 @@
     # only, so we just take the packaged aarch64-darwin build here).
     claude-code
 
-    # GNU coreutils, so the shared GNU-style aliases/flags behave the same as
-    # on NixOS. Exposed g-prefixed (gls, gsed, ...) to avoid shadowing the BSD
-    # tools macOS itself depends on.
-    coreutils
+    # GNU coreutils in g-prefixed form (gls, gcp, gdate, gstat, …) so the GNU
+    # tools coexist with the BSD userland macOS depends on — bare ls/date/stat
+    # still resolve to /usr/bin. gnused provides gsed (it is not part of
+    # coreutils). Use these prefixed names in shared scripts/aliases that need
+    # GNU flag semantics on both NixOS and macOS.
+    coreutils-prefixed
+    gnused
 
     # Animated pipes terminal screensaver (pipeseroni/pipes.sh).
     pipes
