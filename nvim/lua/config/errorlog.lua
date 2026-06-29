@@ -91,7 +91,6 @@ local function snapshot_buffer(bufnr)
         end
     end
     if same then return end
-    last_snapshot[fname] = current
 
     -- Rewrite the log: drop old entries for this file, then append fresh set.
     -- This prevents duplicate growth and ensures stale diagnostics are pruned.
@@ -127,6 +126,7 @@ local function snapshot_buffer(bufnr)
         out:write(line .. "\n")
     end
     out:close()
+    last_snapshot[fname] = current
 end
 
 vim.api.nvim_create_autocmd("BufWritePost", {
