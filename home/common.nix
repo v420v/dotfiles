@@ -35,6 +35,7 @@
     ghq
     peco
     imagemagick
+    ffmpeg
   ];
 
   # ---------- Session-wide env ----------
