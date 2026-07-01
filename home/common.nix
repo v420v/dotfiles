@@ -251,11 +251,20 @@
   };
 
   # ---------- Dotfiles that stay as plain config files ----------
-  # Symlinked into ~/.config so editing the repo is a live edit. These four
-  # are portable; Hyprland/waybar/rofi/dunst symlinks are added in
-  # home/ibuki.nix (Linux only).
+  # Symlinked into ~/.config so editing the repo is a live edit. These
+  # (fastfetch, nvim, kitty.conf, starship.toml) are portable;
+  # Hyprland/waybar/rofi/dunst symlinks are added in home/ibuki.nix
+  # (Linux only).
   xdg.configFile = {
-    "fastfetch".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch";
+    # fastfetch/config.jsonc is platform-specific (the NixOS one hardcodes
+    # nixos-logo.png via kitty-direct, which is wrong branding on macOS), so
+    # it's symlinked per-file instead of the whole directory in one go.
+    "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink (
+      "${config.home.homeDirectory}/dotfiles/fastfetch/"
+      + (if pkgs.stdenv.isDarwin then "config-darwin.jsonc" else "config.jsonc")
+    );
+    "fastfetch/nixos-logo.png".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/nixos-logo.png";
+    "fastfetch/nixos-logo.svg".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/nixos-logo.svg";
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
     "kitty/kitty.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/kitty.conf";
     "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship/starship.toml";
