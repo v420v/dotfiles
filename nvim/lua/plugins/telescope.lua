@@ -1,5 +1,60 @@
 -- ─── Telescope ── fuzzy everything ───────────────────────────
 -- Reuses fd + ripgrep already installed system-wide.
+
+-- Absolute paths of files with uncommitted git changes (modified,
+-- staged, renamed or untracked) — used to flag them in find_files.
+local function git_modified_set()
+    local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+    local set = {}
+    if vim.v.shell_error ~= 0 or not root or root == "" then
+        return set
+    end
+    local out = vim.fn.systemlist(
+        "git -C " .. vim.fn.shellescape(root) .. " status --porcelain --untracked-files=all"
+    )
+    for _, line in ipairs(out) do
+        local p = line:sub(4)                     -- strip the 3-char status column
+        local arrow = p:find(" %-> ")             -- renames come as "old -> new"
+        if arrow then p = p:sub(arrow + 4) end
+        p = p:gsub('^"', ""):gsub('"$', "")       -- unquote paths containing spaces
+        set[root .. "/" .. p] = true
+    end
+    return set
+end
+
+-- find_files, but git-changed files get a "●" marker + yellow line so the
+-- file you were just editing jumps out (VSCode git-tab vibes, inline).
+local function find_files_git_highlight()
+    local builtin    = require("telescope.builtin")
+    local make_entry = require("telescope.make_entry")
+    local modified   = git_modified_set()
+
+    local opts = { hidden = true }
+    local base = make_entry.gen_from_file(opts)
+    opts.entry_maker = function(line)
+        local entry = base(line)
+        if not entry then return entry end
+        local abs    = vim.fn.fnamemodify(entry.path or entry.value, ":p")
+        local is_mod = modified[abs] == true
+        local orig_display = entry.display
+        entry.display = function(e)
+            local text, hls = orig_display(e)
+            local prefix = is_mod and "● " or "  "
+            local shifted = {}
+            if is_mod then
+                -- colour the whole line first, so devicon colours layer on top
+                shifted[1] = { { 0, #prefix + #text }, "TelescopeGitModified" }
+            end
+            for _, h in ipairs(hls or {}) do      -- shift devicon hls past the prefix
+                table.insert(shifted, { { h[1][1] + #prefix, h[1][2] + #prefix }, h[2] })
+            end
+            return prefix .. text, shifted
+        end
+        return entry
+    end
+    builtin.find_files(opts)
+end
+
 return {
     {
         "nvim-telescope/telescope.nvim",
@@ -10,7 +65,8 @@ return {
             "nvim-telescope/telescope-live-grep-args.nvim",
         },
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<CR>",                 desc = "Find files" },
+            { "<leader>ff", find_files_git_highlight,                        desc = "Find files (git changes flagged)" },
+            { "<leader>fF", "<cmd>Telescope find_files<CR>",                 desc = "Find files (plain)" },
             { "<leader>fg", "<cmd>Telescope live_grep_args<CR>",             desc = "Live grep (rg flags ok)" },
             {
                 "<leader>fG",
@@ -54,6 +110,14 @@ return {
             { "<leader>gs", "<cmd>Telescope git_status<CR>",                 desc = "Git status" },
         },
         config = function()
+            -- Yellow (modus-vivendi) marker colour for git-changed files in find_files.
+            -- Re-applied on colorscheme changes so it survives theme reloads.
+            local function set_git_hl()
+                vim.api.nvim_set_hl(0, "TelescopeGitModified", { fg = "#d0bc00", bold = true })
+            end
+            set_git_hl()
+            vim.api.nvim_create_autocmd("ColorScheme", { callback = set_git_hl })
+
             local telescope = require("telescope")
             local actions   = require("telescope.actions")
             local action_state = require("telescope.actions.state")
