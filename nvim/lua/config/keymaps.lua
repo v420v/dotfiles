@@ -45,3 +45,13 @@ map({ "n", "v" }, "<leader>d", [["_d]],      { desc = "Delete without yank" })
 
 -- Terminal: easier escape
 map("t", "<Esc><Esc>", [[<C-\><C-n>]],       { desc = "Exit terminal mode" })
+
+-- ─── Font size (kitty remote control) ────────────────────────
+-- Requires `allow_remote_control yes` in kitty.conf. `set-font-size 0`
+-- resets to the configured default. No-ops harmlessly outside kitty.
+local function font_size(arg)
+  vim.system({ "kitty", "@", "set-font-size", arg })
+end
+map("n", "<C-=>", function() font_size("+1") end, { desc = "Font size up" })
+map("n", "<C-->", function() font_size("-1") end, { desc = "Font size down" })
+map("n", "<C-0>", function() font_size("0") end,  { desc = "Font size reset" })
