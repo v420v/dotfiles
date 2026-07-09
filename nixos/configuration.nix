@@ -172,6 +172,7 @@
     gopls
     clang-tools
     typescript-language-server
+    vue-language-server # Vue LSP (Volar); ships @vue/typescript-plugin for ts_ls
     vscode-langservers-extracted
     asm-lsp
     lua-language-server

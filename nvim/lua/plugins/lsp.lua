@@ -72,6 +72,22 @@ return {
                 end,
             })
 
+            -- Vue (Volar) runs in "hybrid mode": vue_ls handles the template /
+            -- style blocks, while ts_ls handles TypeScript inside <script> —
+            -- but only once it loads @vue/typescript-plugin. That plugin ships
+            -- inside the vue-language-server Nix store path, so resolve it from
+            -- the binary instead of hardcoding a hash-specific path. Returns nil
+            -- (Vue TS disabled, template features still work) if it can't be found.
+            local function vue_language_server_path()
+                local bin = vim.fn.exepath("vue-language-server")
+                if bin == "" then return nil end
+                local store = (vim.uv.fs_realpath(bin) or bin):match("^(/nix/store/[^/]+)")
+                if not store then return nil end
+                local hits = vim.fn.glob(store .. "/lib/node_modules/@vue/language-server", true, true)
+                return hits[1]
+            end
+            local vue_ls_path = vue_language_server_path()
+
             -- Per-server overrides (everything else uses defaults).
             local servers = {
                 gopls = {
@@ -83,7 +99,24 @@ return {
                         },
                     },
                 },
-                ts_ls    = {},                  -- typescript-language-server
+                ts_ls    = {                    -- typescript-language-server
+                    -- Also drive .vue files, loading @vue/typescript-plugin so
+                    -- <script setup lang="ts"> gets full TS intelligence.
+                    filetypes = {
+                        "javascript", "javascriptreact",
+                        "typescript", "typescriptreact", "vue",
+                    },
+                    init_options = vue_ls_path and {
+                        plugins = {
+                            {
+                                name     = "@vue/typescript-plugin",
+                                location = vue_ls_path,
+                                languages = { "vue" },
+                            },
+                        },
+                    } or nil,
+                },
+                vue_ls   = {},                  -- Vue (Volar / @vue/language-server)
                 html     = {},
                 cssls    = {},
                 jsonls   = {},
@@ -169,6 +202,7 @@ return {
                 typescript    = { "prettierd", "prettier", stop_after_first = true },
                 javascriptreact = { "prettierd", "prettier", stop_after_first = true },
                 typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+                vue           = { "prettierd", "prettier", stop_after_first = true },
                 html          = { "prettierd", "prettier", stop_after_first = true },
                 css           = { "prettierd", "prettier", stop_after_first = true },
                 scss          = { "prettierd", "prettier", stop_after_first = true },
@@ -209,6 +243,9 @@ return {
             end,
         } end,
         init = function()
+            -- Autoformat-on-save is off by default. Turn it on for a session
+            -- with :FormatEnable, or format a buffer on demand with <leader>cf.
+            vim.g.disable_autoformat = true
             vim.api.nvim_create_user_command("FormatDisable", function(args)
                 if args.bang then vim.b.disable_autoformat = true
                 else vim.g.disable_autoformat = true end

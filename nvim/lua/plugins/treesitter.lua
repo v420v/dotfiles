@@ -53,7 +53,7 @@ return {
                     -- Web stack
                     "go", "gomod", "gosum", "gowork",
                     "html", "css", "scss",
-                    "javascript", "typescript", "tsx",
+                    "javascript", "typescript", "tsx", "vue",
                     "php", "php_only", "phpdoc",
                     "json", "jsonc", "yaml", "toml",
                     -- Low-level

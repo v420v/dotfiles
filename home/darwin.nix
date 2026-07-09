@@ -30,6 +30,9 @@
 
     # Animated pipes terminal screensaver (pipeseroni/pipes.sh).
     pipes
+
+    # Rich git commit-graph TUI (lusingander/serie) — run `serie` in a repo.
+    serie
   ];
 
   # ---------- macOS-only shell aliases ----------

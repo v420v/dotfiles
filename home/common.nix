@@ -36,6 +36,10 @@
     peco
     imagemagick
     ffmpeg
+
+    # MySQL client — provides the `mysql` command globally (mysql84 also builds
+    # the server, but we only ever invoke the client to connect to remote DBs).
+    mysql84
   ];
 
   # ---------- Session-wide env ----------
@@ -52,6 +56,9 @@
     settings.user = {
       name = "v420v";
       email = "ibuki420v@gmail.com";
+    };
+    settings.alias = {
+      lg = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
     };
   };
 

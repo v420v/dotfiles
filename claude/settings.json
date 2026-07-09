@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "ponytail@ponytail": true,
+    "superpowers@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
+  },
+  "tui": "fullscreen"
+}

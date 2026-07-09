@@ -55,6 +55,45 @@ local function find_files_git_highlight()
     builtin.find_files(opts)
 end
 
+-- git_status picker, but each entry gets its filetype devicon prepended — the
+-- builtin only shows the git status column, so file kinds are otherwise
+-- indistinguishable. Mirrors the find_files display-wrap above.
+local function git_status_with_icons()
+    local builtin    = require("telescope.builtin")
+    local make_entry = require("telescope.make_entry")
+    local utils      = require("telescope.utils")
+
+    -- gen_from_git_status bakes entry.path from opts.cwd at entry-creation time,
+    -- but telescope only resolves cwd on an internal *copy* of opts — this
+    -- closure would see cwd=nil and Path:new({nil, file}) collapses to just the
+    -- repo dir, dropping the filename. So resolve the git root ourselves first.
+    local opts = {}
+    local dir  = vim.fn.expand("%:p:h")
+    local root = vim.fn.systemlist({ "git", "-C", dir ~= "" and dir or ".", "rev-parse", "--show-toplevel" })[1]
+    if vim.v.shell_error == 0 and root and root ~= "" then opts.cwd = root end
+
+    local base = make_entry.gen_from_git_status(opts)
+    opts.entry_maker = function(line)
+        local entry = base(line)
+        if not entry then return entry end
+        local orig_display = entry.display
+        entry.display = function(e)
+            local text, hls    = orig_display(e)
+            local icon, icon_hl = utils.get_devicons(e.value)
+            if not icon or icon == "" then return text, hls end
+            local prefix  = icon .. " "
+            local shifted = {}
+            if icon_hl then shifted[1] = { { 0, #icon }, icon_hl } end
+            for _, h in ipairs(hls or {}) do      -- shift git-status hls past the icon
+                table.insert(shifted, { { h[1][1] + #prefix, h[1][2] + #prefix }, h[2] })
+            end
+            return prefix .. text, shifted
+        end
+        return entry
+    end
+    builtin.git_status(opts)
+end
+
 return {
     {
         "nvim-telescope/telescope.nvim",
@@ -107,7 +146,7 @@ return {
             },
             { "<leader>/",  "<cmd>Telescope current_buffer_fuzzy_find<CR>",  desc = "Fuzzy in buffer" },
             { "<leader>gc", "<cmd>Telescope git_commits<CR>",                desc = "Git commits" },
-            { "<leader>gs", "<cmd>Telescope git_status<CR>",                 desc = "Git status" },
+            { "<leader>gs", git_status_with_icons,                           desc = "Git status (with file icons)" },
         },
         config = function()
             -- Yellow (modus-vivendi) marker colour for git-changed files in find_files.
