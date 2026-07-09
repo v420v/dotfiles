@@ -68,8 +68,17 @@ local function git_status_with_icons()
     -- closure would see cwd=nil and Path:new({nil, file}) collapses to just the
     -- repo dir, dropping the filename. So resolve the git root ourselves first.
     local opts = {}
-    local dir  = vim.fn.expand("%:p:h")
-    local root = vim.fn.systemlist({ "git", "-C", dir ~= "" and dir or ".", "rev-parse", "--show-toplevel" })[1]
+    -- In an oil buffer the name carries an `oil://` scheme (e.g.
+    -- oil:///path/dir), which `git -C` can't chdir into — root detection would
+    -- fail and cwd would fall back to nil, re-triggering the dropped-filename
+    -- bug above. Ask oil for the real directory instead.
+    local dir
+    if vim.bo.filetype == "oil" then
+        dir = require("oil").get_current_dir()
+    else
+        dir = vim.fn.expand("%:p:h")
+    end
+    local root = vim.fn.systemlist({ "git", "-C", dir ~= nil and dir ~= "" and dir or ".", "rev-parse", "--show-toplevel" })[1]
     if vim.v.shell_error == 0 and root and root ~= "" then opts.cwd = root end
 
     local base = make_entry.gen_from_git_status(opts)
