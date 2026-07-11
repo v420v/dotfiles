@@ -10,7 +10,10 @@ return {
         lazy = false,
         keys = {
             { "-",         "<cmd>Oil<CR>", desc = "Open parent directory" },
-            { "<leader>e", function() require("oil").open(vim.fn.getcwd()) end, desc = "Open cwd (oil)" },
+            -- Float: quick edit without disturbing the window layout (great in big projects)
+            { "<leader>e", function() require("oil").toggle_float() end, desc = "Open oil (float)" },
+            -- Full window at the current file's directory (no round-trip from cwd)
+            { "<leader>.", function() require("oil").open() end, desc = "Open current file dir (oil)" },
         },
         dependencies = {
             "nvim-tree/nvim-web-devicons",
@@ -21,6 +24,7 @@ return {
             keymaps = {
                 ["<C-h>"] = false,                 -- leave for window nav
                 ["<C-l>"] = false,
+                ["<C-p>"] = "actions.preview",     -- preview file under cursor before opening
                 ["q"]     = "actions.close",
             },
             win_options = {
@@ -57,6 +61,19 @@ return {
         keys = {
             { "<leader>bd", function() require("mini.bufremove").delete(0, false) end, desc = "Delete buffer" },
             { "<leader>bD", function() require("mini.bufremove").delete(0, true)  end, desc = "Delete buffer (force)" },
+        },
+    },
+
+    -- Motion hints: shows available h/j/k/l/w/b… moves as virtual text
+    -- (great while learning vim motions). Toggle off once you're fluent.
+    {
+        "tris203/precognition.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        keys = {
+            { "<leader>up", "<cmd>Precognition toggle<CR>", desc = "Toggle precognition hints" },
+        },
+        opts = {
+            startVisible = true,
         },
     },
 
