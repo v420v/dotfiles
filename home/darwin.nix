@@ -33,6 +33,10 @@
 
     # Rich git commit-graph TUI (lusingander/serie) — run `serie` in a repo.
     serie
+
+    # Terminal agent multiplexer (herdr) — run `herdr` to manage agents in a
+    # tmux-style multiplexer.
+    herdr
   ];
 
   # ---------- macOS-only shell aliases ----------
