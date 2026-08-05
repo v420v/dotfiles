@@ -2,3 +2,4 @@
 
 # Claude Code local settings
 settings.local.json
+.claude/skills
