@@ -36,10 +36,12 @@
     peco
     imagemagick
     ffmpeg
+    qemu
 
     # MySQL client — provides the `mysql` command globally (mysql84 also builds
     # the server, but we only ever invoke the client to connect to remote DBs).
     mysql84
+    sl
   ];
 
   # ---------- Session-wide env ----------
