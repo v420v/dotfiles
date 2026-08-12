@@ -68,12 +68,12 @@ return {
             dashboard.section.footer,
         }
 
-        -- ── Highlights (Modus Vivendi) ──
+        -- ── Highlights (GitHub Dark) ──
         local function paint()
-            vim.api.nvim_set_hl(0, "AlphaHeader",   { fg = "#2fafff", bold = true })  -- blue
-            vim.api.nvim_set_hl(0, "AlphaButton",   { fg = "#ffffff" })                -- fg-main
-            vim.api.nvim_set_hl(0, "AlphaShortcut",{ fg = "#79a8ff", italic = true })  -- blue-warmer italic
-            vim.api.nvim_set_hl(0, "AlphaFooter",   { fg = "#fec43f" })                -- yellow-warmer
+            vim.api.nvim_set_hl(0, "AlphaHeader",   { fg = "#58a6ff", bold = true })  -- blue
+            vim.api.nvim_set_hl(0, "AlphaButton",   { fg = "#e6edf3" })                -- fg-default
+            vim.api.nvim_set_hl(0, "AlphaShortcut",{ fg = "#79c0ff", italic = true })  -- blue-bright italic
+            vim.api.nvim_set_hl(0, "AlphaFooter",   { fg = "#d29922" })                -- yellow
         end
         paint()
         vim.api.nvim_create_autocmd("ColorScheme", { callback = paint })

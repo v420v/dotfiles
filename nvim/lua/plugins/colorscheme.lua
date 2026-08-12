@@ -1,24 +1,24 @@
--- ─── Colorscheme ── Modus Vivendi ────────────────────────────
+-- ─── Colorscheme ── GitHub Dark ──────────────────────────────
 return {
-    "miikanissi/modus-themes.nvim",
+    "projekt0n/github-nvim-theme",
+    name = "github-theme",
     priority = 1000,
     lazy = false,
     opts = {
-        style = "modus_vivendi",
-        transparent = false,
-        dim_inactive = false,
-        hide_inactive_statusline = false,
-        line_nr_column_background = false,
-        sign_column_background = false,
-        styles = {
-            comments = { italic = true },
-            keywords = { bold = true },
-            functions = {},
-            variables = {},
+        options = {
+            transparent = false,
+            dim_inactive = false,
+            hide_nvim_statusline = false,
+            styles = {
+                comments = "italic",
+                keywords = "bold",
+                functions = "NONE",
+                variables = "NONE",
+            },
         },
     },
     config = function(_, opts)
-        require("modus-themes").setup(opts)
-        vim.cmd.colorscheme("modus_vivendi")
+        require("github-theme").setup(opts)
+        vim.cmd.colorscheme("github_dark_default")
     end,
 }

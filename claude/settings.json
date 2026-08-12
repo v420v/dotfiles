@@ -4,6 +4,5 @@
     "superpowers@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
   },
-  "tui": "fullscreen",
-  "model": "claude-fable-5"
+  "tui": "fullscreen"
 }
