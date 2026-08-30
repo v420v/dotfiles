@@ -29,7 +29,7 @@ return {
         end
 
         dashboard.section.buttons.val = {
-            button("o", "", "Oil",           "<cmd>lua require('oil').open(vim.fn.getcwd())<CR>"),
+            button("o", "", "Explorer",      "<cmd>lua Snacks.explorer()<CR>"),
             button("f", "", "Find file",     "<cmd>Telescope find_files<CR>"),
             button("i", "", "New file",      "<cmd>enew | startinsert<CR>"),
             button("t", "", "Edit temp file","<cmd>lua vim.cmd('edit '..vim.fn.tempname())<CR>"),

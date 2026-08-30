@@ -79,6 +79,12 @@ in
     intelephense
     phpPackages.php-cs-fixer
 
+    # Node.js: runtime for JS/TS tooling (ts_ls and prettierd below run on it).
+    nodejs
+
+    # Python: uv manages interpreters, venvs, and project deps (uvx included).
+    uv
+
     # V: compiler/runtime (provides `v` for v_fmt formatter on save).
     # v-analyzer (V LSP) is not packaged in nixpkgs; the v_analyzer entry in
     # lsp.lua is disabled to match.

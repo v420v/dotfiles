@@ -19,7 +19,7 @@ require("lazy").setup({
         rtp = {
             disabled_plugins = {
                 "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin",
-                "netrwPlugin",   -- replaced by oil.nvim
+                "netrwPlugin",   -- replaced by snacks explorer
             },
         },
     },

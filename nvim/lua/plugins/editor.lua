@@ -4,44 +4,6 @@ vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<CR>",      { desc = "Close tab"
 vim.keymap.set("n", "<leader>tD", "<cmd>windo bdelete<CR>", { desc = "Delete all bufs in tab" })
 
 return {
-    -- File explorer in a buffer (vim-vinegar-style: edit the dir)
-    {
-        "stevearc/oil.nvim",
-        lazy = false,
-        keys = {
-            { "-",         "<cmd>Oil<CR>", desc = "Open parent directory" },
-            -- Float: quick edit without disturbing the window layout (great in big projects)
-            { "<leader>e", function() require("oil").toggle_float() end, desc = "Open oil (float)" },
-            -- Full window at the current file's directory (no round-trip from cwd)
-            { "<leader>.", function() require("oil").open() end, desc = "Open current file dir (oil)" },
-        },
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
-        opts = {
-            default_file_explorer = true,
-            view_options = { show_hidden = true },
-            keymaps = {
-                ["<C-h>"] = false,                 -- leave for window nav
-                ["<C-l>"] = false,
-                ["<C-p>"] = "actions.preview",     -- preview file under cursor before opening
-                ["q"]     = "actions.close",
-            },
-            win_options = {
-                signcolumn = "yes:2",
-            },
-        },
-    },
-
-    -- Git status column for oil.nvim
-    {
-        "refractalize/oil-git-status.nvim",
-        dependencies = { "stevearc/oil.nvim" },
-        -- show_ignored = false: don't show a git status for gitignored files
-        -- (otherwise they'd get the `!!` ignored marker in the status column).
-        opts = { show_ignored = false },
-    },
-
     -- Comments: gcc / gc<motion>
     { "numToStr/Comment.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
 
