@@ -72,6 +72,20 @@ return {
                     Snacks.explorer.open({ focus = false })  -- keep cursor in the file
                 end,
             })
+            -- Tabs have independent window layouts, so the explorer only
+            -- lives in one tab. Re-open it in whatever tab we enter
+            -- (skipped when the user closed it manually).
+            vim.api.nvim_create_autocmd("TabEnter", {
+                desc = "Keep explorer sidebar visible across tabs",
+                callback = function()
+                    if not Snacks.picker.get({ source = "explorer" })[1] then return end
+                    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                        local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+                        if ft:find("snacks_picker", 1, true) then return end  -- already here
+                    end
+                    vim.schedule(function() Snacks.explorer.open({ focus = false }) end)
+                end,
+            })
         end,
         opts = {
             terminal = { win = { border = "rounded" } },
@@ -84,6 +98,13 @@ return {
                     explorer = {
                         hidden = true,               -- show dotfiles
                         layout = { preset = "sidebar", layout = { width = 35 } },
+                        win = {
+                            list = {
+                                -- Open files in a new tab (jump to it if already open);
+                                -- dirs still toggle as usual.
+                                keys = { ["<CR>"] = "tabdrop" },
+                            },
+                        },
                         -- defaults already: left position, tree view, git status,
                         -- follow current file, stays open when opening files
                     },
