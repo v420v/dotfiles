@@ -12,9 +12,13 @@ Thumbs.db
 # Backups
 *.bak
 *.orig
+*.hm-bak
 
 # Logs
 *.log
+
+result
+result-*
 
 # Local Claude settings
 .claude/settings.local.json

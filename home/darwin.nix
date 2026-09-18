@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, pkgs, username, ... }:
 
 # macOS (Apple Silicon / aarch64-darwin) home-manager profile, used standalone
 # via `home-manager switch --flake ~/dotfiles#<username>@mac` — no nix-darwin and
@@ -51,21 +51,12 @@
   };
 
   # ---------- macOS-only config symlinks ----------
-  # skhd is a Mac-only hotkey daemon, so its rc lives here (not common.nix).
-  # Symlinked out-of-store: edit skhd/skhdrc in the repo and it's live after
-  # `skhd --reload` (or auto-picked-up on file save). Personal Mac only —
-  # skhd/yabai aren't enabled on the work Mac, so the rc is skipped there.
-  xdg.configFile = lib.mkMerge [
-    {
-      # macOS-only kitty overrides (native title bar, etc). kitty.conf pulls
-      # this in via `globinclude`; the symlink only exists on macOS, so Linux
-      # skips it. Applies to both Macs (personal + work).
-      "kitty/macos.conf".source =
-        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/macos.conf";
-    }
-    (lib.mkIf (username != "yoshida") {
-      "skhd/skhdrc".source =
-        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/skhd/skhdrc";
-    })
-  ];
+  # macOS-only kitty overrides (native title bar, etc). kitty.conf pulls this
+  # in via `globinclude`; the symlink only exists on macOS, so Linux skips it.
+  # Applies to both Macs (personal + work). Symlinked out-of-store so edits in
+  # the repo are live without a rebuild.
+  xdg.configFile = {
+    "kitty/macos.conf".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/macos.conf";
+  };
 }
