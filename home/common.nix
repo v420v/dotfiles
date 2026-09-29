@@ -44,6 +44,10 @@
     # JS runtime / package manager
     bun
 
+    # WebAssembly toolchain: wabt (wat2wasm etc.) + wasmtime runtime
+    wabt
+    wasmtime
+
     # MySQL client — provides the `mysql` command globally (mysql84 also builds
     # the server, but we only ever invoke the client to connect to remote DBs).
     mysql84
