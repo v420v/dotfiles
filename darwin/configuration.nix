@@ -1,23 +1,9 @@
 { pkgs, lib, username, ... }:
 
-# nix-darwin system configuration for the M1 MacBooks (personal + work).
-# This is the macOS analogue of nixos/configuration.nix: it owns the
-# system-level half (nix daemon settings, system packages, fonts, and the
-# declarative `system.defaults` for macOS itself). The user-level half
-# (shell, editor, CLI tools) is home/darwin.nix, attached as the
-# home-manager module in flake.nix.
-#
-# Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
 let
-  # The work Mac (yoshida) runs Determinate Nix, which manages the Nix
-  # installation with its own daemon and refuses to let nix-darwin manage it
-  # too. On that host we hand Nix off: nix-darwin's `nix.*` options (gc,
-  # optimise, settings) become unavailable, so they're only set when we own
-  # the install. The personal Mac (ibuki) uses the nix-darwin-managed Nix.
   manageNix = username != "yoshida";
 in
 {
-  # ---------- Nix daemon ----------
   nix = lib.mkMerge [
     { enable = manageNix; }
     (lib.mkIf manageNix {
@@ -25,182 +11,119 @@ in
       optimise.automatic = true;
       gc = {
         automatic = true;
-        interval.Weekday = 0; # Sunday
+        interval.Weekday = 0;
         options = "--delete-older-than 14d";
       };
     })
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
-  nixpkgs.config.allowUnfree = true; # claude-code is unfree (matches NixOS)
+  nixpkgs.config.allowUnfree = true;
 
-  # ---------- Primary user ----------
-  # Required by nix-darwin for the user-scoped `system.defaults` below.
-  # `username` is threaded in from flake.nix (ibuki on personal, yoshida on work).
   system.primaryUser = username;
   users.users.${username} = {
     home = "/Users/${username}";
     shell = pkgs.zsh;
   };
 
-  # ---------- System-wide programs ----------
-  # zsh enabled at the system level so /etc/zshrc sources the nix-darwin and
-  # daemon profiles; the user-facing zsh config lives in home/darwin.nix.
   programs.zsh.enable = true;
 
-  # Minimal system rescue tools (the rich CLI set is in home/darwin.nix).
-  # Dev toolchains/LSPs/formatters also live here (not in home-manager) to
-  # mirror the NixOS profile — gopls+gotools both ship /bin/modernize, so
-  # the system buildEnv is the right place to tolerate the collision.
   environment.systemPackages = with pkgs; [
     vim
     git
     curl
     wget
 
-    # Go: toolchain + LSP + formatters consumed by nvim (lspconfig + conform.nvim).
-    # `go` itself is required: nvim-lspconfig's gopls root_dir resolver shells
-    # out to `go env GOMODCACHE`, and a missing `go` crashes BufReadPost.
     go
     gopls
     gofumpt
     gotools
 
-    # PHP / Laravel: LSP (intelephense), the runtime + composer (each project's
-    # own ./vendor/bin/pint, which conform.nvim prefers), and php-cs-fixer as
-    # the system formatter fallback when a project doesn't vendor Pint.
     php
     php.packages.composer
     intelephense
     phpPackages.php-cs-fixer
 
-    # Node.js: runtime for JS/TS tooling (ts_ls and prettierd below run on it).
     nodejs
 
-    # Python: uv manages interpreters, venvs, and project deps (uvx included).
     uv
 
-    # V: compiler/runtime (provides `v` for v_fmt formatter on save).
-    # v-analyzer (V LSP) is not packaged in nixpkgs; the v_analyzer entry in
-    # lsp.lua is disabled to match.
     vlang
 
-    # Language servers (consumed by nvim-lspconfig from $PATH).
-    # These mirror the LSP entries in nvim/lua/plugins/lsp.lua and must be kept
-    # in sync with the equivalent list in nixos/configuration.nix.
-    clang-tools # clangd (C/C++) + clang-format (conform.nvim)
-    typescript-language-server # ts_ls
-    vscode-langservers-extracted # html / cssls / jsonls / eslint
-    asm-lsp # asm_lsp (x86/ARM/RISC-V intrinsics)
-    lua-language-server # lua_ls
-    bash-language-server # bashls
-    nil # nil_ls (Nix)
+    clang-tools
+    typescript-language-server
+    vscode-langservers-extracted
+    asm-lsp
+    lua-language-server
+    bash-language-server
+    nil
 
-    # Formatters (consumed by conform.nvim from $PATH).
-    prettierd # JS/TS/HTML/CSS/JSON/YAML/Markdown
-    stylua # Lua
-    nixpkgs-fmt # Nix
-    shfmt # shell
+    prettierd
+    stylua
+    nixpkgs-fmt
+    shfmt
   ];
 
-  # ---------- Fonts (system-wide, so kitty & friends can discover them) ----------
   fonts.packages = with pkgs; [
     nerd-fonts._0xproto
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
   ];
 
-  # ---------- Homebrew (GUI apps) ----------
-  # Homebrew itself is installed/managed by nix-homebrew (see flake.nix). GUI
-  # apps don't package well via nixpkgs on darwin, so browsers/desktop apps come
-  # from Casks declared here — `rebuild` runs `brew bundle` to converge them.
-  # kitty is a Cask too (proper Spotlight/Dock .app); it still reads the
-  # ~/.config/kitty/kitty.conf symlink that home/common.nix sets up.
   homebrew = {
     enable = true;
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # "uninstall" removes Casks/Brews no longer listed here (keeps it
-      # declarative) but leaves their app data intact. Use "zap" to also wipe
-      # data, or "none" if you'd rather also `brew install` things by hand.
       cleanup = "uninstall";
     };
-    # Non-GUI formulae that aren't in nixpkgs (or whose nixpkgs build is a
-    # different project). `taps` pulls in the third-party formula repos they
-    # live in.
     taps = [ "k1LoW/tap" ];
     brews = [
-      # k1LoW/mo — Markdown viewer that opens .md files in the browser with
-      # live-reload. nixpkgs `mo` is an unrelated Bash mustache tool, so it
-      # comes from k1LoW's tap instead. Usage: `mo README.md`.
       "k1LoW/tap/mo"
-      # MySQL 8.4 (LTS). Versioned, keg-only formula — not symlinked into the
-      # Homebrew prefix, so add its bin to PATH (or use the full path) and start
-      # it with `brew services start mysql@8.4`.
       "mysql@8.4"
     ];
     casks = [
-      # Browsers
       "google-chrome"
       "arc"
-      # Terminal
       "kitty"
-      # Launcher (binds cmd-Space by default, replacing Spotlight)
       "raycast"
-      # Dev
       "zed"
       "coteditor"
       "postman"
       "docker-desktop"
-      # Communication
       "discord"
     ];
   };
 
-  # ---------- macOS system defaults ----------
-  # Declarative `defaults write`. These change real macOS behaviour on the
-  # next rebuild — tweak to taste. Dark mode keeps it in line with the
-  # Modus Vivendi rice.
   system.defaults = {
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";
       AppleShowAllExtensions = true;
-      ApplePressAndHoldEnabled = false; # key repeat instead of accent menu
-      KeyRepeat = 1; # fastest key repeat (15ms between repeats)
-      InitialKeyRepeat = 10; # shortest delay before repeat (150ms)
-      "com.apple.swipescrolldirection" = true; # enable natural scroll
+      ApplePressAndHoldEnabled = false;
+      KeyRepeat = 1;
+      InitialKeyRepeat = 10;
+      "com.apple.swipescrolldirection" = true;
     };
 
     dock = {
       autohide = true;
       show-recents = false;
-      mru-spaces = false; # don't auto-rearrange Spaces
+      mru-spaces = false;
       tilesize = 48;
     };
 
     finder = {
-      AppleShowAllFiles = true; # show hidden files
-      FXPreferredViewStyle = "Nlsv"; # list view
+      AppleShowAllFiles = true;
+      FXPreferredViewStyle = "Nlsv";
       ShowPathbar = true;
       ShowStatusBar = true;
     };
 
-    trackpad.Clicking = true; # tap to click
+    trackpad.Clicking = true;
 
-    # Disable Spotlight's Cmd-Space (hotkey ID 64) so Raycast can bind it.
-    # symbolichotkeys is cached by cfprefsd — needs a logout or reboot to apply.
     CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."64".enabled = false;
   };
 
-  # The keyboard remapping above (defaults) applies on rebuild; this makes the
-  # current login session pick it up without a logout.
-  #
-  # `nix-env --delete-generations +6` trims each profile to the latest 7
-  # generations (current + 6) on every rebuild. The weekly `nix.gc` above is
-  # the time-based backstop that actually reclaims store paths; this just caps
-  # the rollback list so it doesn't grow unboundedly. System profile is gated
-  # on `manageNix` because the work Mac's Determinate Nix owns it.
   system.activationScripts.postActivation.text = ''
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
 
@@ -211,7 +134,5 @@ in
     sudo -u ${username} nix-env --delete-generations +6 -p /Users/${username}/.local/state/nix/profiles/home-manager || true
   '';
 
-  # nix-darwin release series this config was written against. Don't change
-  # casually — see `darwin-rebuild changelog`.
   system.stateVersion = 5;
 }

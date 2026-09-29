@@ -1,10 +1,6 @@
--- ─── UI bits ── statusline, gitsigns, indent guides, icons ───
 return {
-    -- Icons (Nerd Font already provided by NixOS fonts.packages)
     { "nvim-tree/nvim-web-devicons", lazy = true },
 
-    -- Buffer tabs (VSCode/Zed-style): open files show as tabs across the top,
-    -- inside the single tabpage that holds the explorer + Claude sidebars.
     {
         "akinsho/bufferline.nvim",
         event = "VeryLazy",
@@ -12,7 +8,6 @@ return {
         keys = {
             { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev buffer" },
             { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
-            -- Close tabs without collapsing the sidebars (Snacks keeps the layout)
             { "<leader>bd", function() Snacks.bufdelete() end, desc = "Close buffer" },
             { "<leader>bo", function() Snacks.bufdelete.other() end, desc = "Close other buffers" },
         },
@@ -22,10 +17,6 @@ return {
                 diagnostics = "nvim_lsp",
                 always_show_bufferline = true,
                 offsets = {
-                    -- Reserve the sidebars so the tab strip stays over the center
-                    -- editor only (not drawn across the explorer or Claude panel).
-                    -- The explorer's split is a `snacks_layout_box` wrapper; the
-                    -- picker list inside it is a float that bufferline can't see.
                     {
                         filetype = "snacks_layout_box",
                         text = "EXPLORER",
@@ -43,7 +34,6 @@ return {
         },
     },
 
-    -- Statusline
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
@@ -73,7 +63,6 @@ return {
         },
     },
 
-    -- Git gutter
     {
         "lewis6991/gitsigns.nvim",
         event = { "BufReadPre", "BufNewFile" },
@@ -110,7 +99,6 @@ return {
                 map("n", "<leader>hP", gs.preview_hunk_inline, "Preview hunk (inline)")
                 map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
                 map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
-                -- stage_hunk on a staged sign toggles it back (undo_stage_hunk is deprecated)
                 map("n", "<leader>hu", gs.stage_hunk, "Undo stage hunk")
                 map("n", "<leader>hS", gs.stage_buffer, "Stage buffer")
                 map("n", "<leader>hR", gs.reset_buffer, "Reset buffer")
@@ -124,7 +112,6 @@ return {
         },
     },
 
-    -- Indent guides
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
@@ -136,7 +123,6 @@ return {
         },
     },
 
-    -- Discoverable keymaps
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
@@ -153,7 +139,6 @@ return {
         },
     },
 
-    -- Nicer notifications + cmdline
     {
         "rcarriga/nvim-notify",
         lazy = true,

@@ -1,19 +1,14 @@
--- ─── Editor QoL ──────────────────────────────────────────────
 return {
-    -- Comments: gcc / gc<motion>
     { "numToStr/Comment.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
 
-    -- Surround: ysiw" / cs"' / ds"
     { "kylechui/nvim-surround", event = "BufReadPost", version = "*", opts = {} },
 
-    -- Auto-pairs that play nice with treesitter
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
         opts = { check_ts = true, fast_wrap = {} },
     },
 
-    -- Sane buffer-close that keeps window layout
     {
         "echasnovski/mini.bufremove",
         keys = {
@@ -22,8 +17,6 @@ return {
         },
     },
 
-    -- Motion hints: shows available h/j/k/l/w/b… moves as virtual text
-    -- (great while learning vim motions). Toggle off once you're fluent.
     {
         "tris203/precognition.nvim",
         event = { "BufReadPost", "BufNewFile" },
@@ -35,7 +28,6 @@ return {
         },
     },
 
-    -- Highlight TODO / FIXME / NOTE / HACK
     {
         "folke/todo-comments.nvim",
         event = { "BufReadPost", "BufNewFile" },
@@ -46,7 +38,6 @@ return {
         },
     },
 
-    -- Git diff viewer (VSCode/Zed-like source control panel)
     {
         "sindrets/diffview.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },

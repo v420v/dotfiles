@@ -1,4 +1,3 @@
--- ─── Alpha dashboard ──── Modus Vivendi rice ─────────────────
 return {
     "goolord/alpha-nvim",
     event = "VimEnter",
@@ -11,11 +10,9 @@ return {
         local alpha = require("alpha")
         local dashboard = require("alpha.themes.dashboard")
 
-        -- ── Header ── ascii.nvim "sharp" Neovim logo
         dashboard.section.header.val = require("ascii").art.text.neovim.sharp
         dashboard.section.header.opts.hl = "AlphaHeader"
 
-        -- ── Buttons ──
         local function button(sc, icon, label, cmd)
             local b = dashboard.button(sc, icon .. "  " .. label, cmd)
             b.opts.hl = "AlphaButton"
@@ -41,7 +38,6 @@ return {
         }
         dashboard.section.buttons.opts.spacing = 1
 
-        -- ── Footer ── date · time · plugin count · nvim version
         local function footer()
             local v = vim.version()
             local version = string.format("v%d.%d.%d", v.major, v.minor, v.patch)
@@ -58,7 +54,6 @@ return {
         dashboard.section.footer.val = footer()
         dashboard.section.footer.opts.hl = "AlphaFooter"
 
-        -- ── Layout ──
         dashboard.opts.layout = {
             { type = "padding", val = 2 },
             dashboard.section.header,
@@ -68,19 +63,17 @@ return {
             dashboard.section.footer,
         }
 
-        -- ── Highlights (GitHub Dark) ──
         local function paint()
-            vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#58a6ff", bold = true }) -- blue
-            vim.api.nvim_set_hl(0, "AlphaButton", { fg = "#e6edf3" }) -- fg-default
-            vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#79c0ff", italic = true }) -- blue-bright italic
-            vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#d29922" }) -- yellow
+            vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#58a6ff", bold = true })
+            vim.api.nvim_set_hl(0, "AlphaButton", { fg = "#e6edf3" })
+            vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#79c0ff", italic = true })
+            vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#d29922" })
         end
         paint()
         vim.api.nvim_create_autocmd("ColorScheme", { callback = paint })
 
         alpha.setup(dashboard.opts)
 
-        -- Refresh the footer once lazy.nvim is fully done loading.
         vim.api.nvim_create_autocmd("User", {
             once = true,
             pattern = "VeryLazy",
@@ -90,7 +83,6 @@ return {
             end,
         })
 
-        -- A live clock scoped to each Alpha buffer: start on FileType, stop on BufUnload.
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "alpha",
             callback = function(ev)

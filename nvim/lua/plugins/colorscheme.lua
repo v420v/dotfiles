@@ -1,4 +1,3 @@
--- ─── Colorscheme ── GitHub Dark ──────────────────────────────
 return {
     "projekt0n/github-nvim-theme",
     name = "github-theme",
@@ -18,8 +17,6 @@ return {
         },
         groups = {
             all = {
-                -- Snacks explorer dims untracked files (links NonText); show them
-                -- green like VSCode/Zed. `git.add` = the gitsigns gutter green.
                 SnacksPickerGitStatusUntracked = { fg = "git.add" },
             },
         },

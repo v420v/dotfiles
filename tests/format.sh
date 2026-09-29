@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# In-place formatters. Run inside `nix develop` so every tool is on PATH.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"

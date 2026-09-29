@@ -1,5 +1,2 @@
-# Global gitignore (~/.config/git/ignore)
-
-# Claude Code local settings
 settings.local.json
 .claude/skills

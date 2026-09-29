@@ -1,6 +1,3 @@
--- ─── Neovim ── Modus Vivendi rice ────────────────────────────
--- Entry point: load core config, then hand off to lazy.nvim.
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 

@@ -195,6 +195,8 @@ Git の状態がないドットファイルもグレーで表示されます。
 
 todo-comments がハイライトするキーワード: `TODO`、`FIX`（`FIXME` / `BUG` / `FIXIT` / `ISSUE`）、`HACK`、`WARN`（`WARNING` / `XXX`）、`PERF`（`OPTIM` / `PERFORMANCE` / `OPTIMIZE`）、`NOTE`（`INFO`）、`TEST`（`TESTING` / `PASSED` / `FAILED`）
 
+claudecode.nvim が起動するコマンド: `claude` が PATH にあればそれ、なければ `~/.local/bin/claude`（ネイティブインストーラー版）。rebuild で PATH が変わった直後の古いシェルでも動くようにするためです。
+
 ## LSP サーバー
 
 定義: `lua/plugins/lsp.lua`。サーバーは Nix でインストールし、`$PATH` にあるものを使います。

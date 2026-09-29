@@ -1,31 +1,15 @@
 { config, pkgs, lib, username ? "ibuki", ... }:
 
-# Cross-platform home-manager config — shared by NixOS (home/ibuki.nix) and
-# the M1 Macs (home/darwin.nix). Everything here must build on both
-# x86_64-linux and aarch64-darwin, so no Hyprland/GTK/X11/Wayland bits live
-# here — those are Linux-only and stay in home/ibuki.nix.
-#
-# `username` is threaded in from flake.nix — "ibuki" on the NixOS host and the
-# personal Mac, "yoshida" on the work Mac. The `? "ibuki"` is just a fallback;
-# every caller passes it explicitly (module-system arg defaults aren't honored).
 {
   home.username = username;
   home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;
 
-  # ---------- User packages (portable CLI tooling) ----------
-  # Desktop apps and the Hyprland ecosystem are Linux-only and live in
-  # home/ibuki.nix; this list is everything that makes sense on both hosts.
   home.packages = with pkgs; [
-    # Editor + git helpers
     neovim
     lazygit
 
-    # Terminal companions
-    # (kitty itself: nix pkg on Linux/NixOS, Homebrew Cask on macOS — see
-    #  home/ibuki.nix and darwin/configuration.nix. The kitty.conf symlink
-    #  below is shared by both.)
     fastfetch
     btop
     ripgrep
@@ -38,23 +22,17 @@
     ffmpeg
     qemu
 
-    # Google Cloud CLI — provides `gcloud` (plus gsutil/bq).
     google-cloud-sdk
 
-    # JS runtime / package manager
     bun
 
-    # WebAssembly toolchain: wabt (wat2wasm etc.) + wasmtime runtime
     wabt
     wasmtime
 
-    # MySQL client — provides the `mysql` command globally (mysql84 also builds
-    # the server, but we only ever invoke the client to connect to remote DBs).
     mysql84
     sl
   ];
 
-  # ---------- Session-wide env ----------
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
@@ -62,7 +40,6 @@
     BAT_THEME = "ansi";
   };
 
-  # ---------- Native HM modules ----------
   programs.git = {
     enable = true;
     settings.user = {
@@ -112,35 +89,26 @@
 
   programs.eza = {
     enable = true;
-    enableZshIntegration = false; # we set the aliases ourselves below
+    enableZshIntegration = false;
     icons = "auto";
     git = true;
   };
 
-  # ---------- direnv (per-directory env, fast nix-flake caching) ----------
-  # Auto-loads a project's .envrc on cd. nix-direnv caches `use flake`, so dev
-  # shells load instantly. Zsh integration is wired up automatically.
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
   };
 
-  # ---------- Zsh ----------
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestion = {
       enable = true;
-      # Suggest from history first, then fall back to the completion system so
-      # even never-run commands get a ghosted hint. Accept with → or End.
       strategy = [ "history" "completion" ];
     };
     syntaxHighlighting.enable = true;
-    # Up/Down arrows search history for whatever's already on the line.
     historySubstringSearch.enable = true;
 
-    # fzf-tab: replaces zsh's completion menu with an fzf picker (+ previews).
-    # Loads after compinit (home-manager orders this for us).
     plugins = [
       {
         name = "fzf-tab";
@@ -160,17 +128,13 @@
       ignoreSpace = true;
     };
 
-    # Portable aliases only. `rm`/`free`/`rebuild`/`edit-nix` differ between
-    # GNU (NixOS) and BSD (macOS) userlands, so each host file adds its own.
     shellAliases = {
-      # eza
       ls = "eza --group-directories-first --icons=auto";
       ll = "eza -lh --group-directories-first --icons=auto --git";
       la = "eza -lah --group-directories-first --icons=auto --git";
       lt = "eza --tree --level=2 --icons=auto";
       tree = "eza --tree --icons=auto";
 
-      # bat / rg / btop / nvim
       cat = "bat --paging=never --style=plain";
       less = "bat --paging=always";
       grep = "rg";
@@ -178,19 +142,16 @@
       vim = "nvim";
       vi = "nvim";
 
-      # nav
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
 
-      # fs (flags below are common to GNU and BSD coreutils)
       mkdir = "mkdir -pv";
       cp = "cp -iv";
       mv = "mv -iv";
       df = "df -h";
       du = "du -h";
 
-      # git
       gs = "git status";
       gd = "git diff";
       gl = "git log --oneline --graph --decorate --all";
@@ -199,18 +160,15 @@
       gc = "git commit";
       ga = "git add";
 
-      # nav to repo
       dots = "cd ~/dotfiles";
     };
 
     initContent = ''
-      # ─── Behaviour ───────────────────────────────────────────────
       setopt HIST_REDUCE_BLANKS HIST_VERIFY INC_APPEND_HISTORY
       setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
       setopt INTERACTIVE_COMMENTS PROMPT_SUBST NO_BEEP
 
-      # ─── Completion polish ───────────────────────────────────────
-      zstyle ':completion:*' menu no                        # fzf-tab owns the menu
+      zstyle ':completion:*' menu no
       zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*:descriptions' format '%F{cyan}── %d ──%f'
@@ -218,26 +176,19 @@
       zstyle ':completion:*' group-name ''\'\'
       zstyle ':completion:*' verbose yes
 
-      # fzf-tab: cycle result groups with < / >, preview dirs while completing.
       zstyle ':fzf-tab:*' switch-group '<' '>'
       zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=auto $realpath'
       zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always --icons=auto $realpath'
 
-      # Modus Vivendi-friendly ls/eza colours (256-color ANSI indices)
       export LS_COLORS="di=38;5;75:ln=38;5;141:so=38;5;217:pi=38;5;223:ex=38;5;78:bd=38;5;215:cd=38;5;215:su=38;5;217:sg=38;5;217:tw=38;5;75:ow=38;5;75"
 
-      # ─── Autosuggestions (faint inline ghost text) ───────────────
-      # As you type, zsh-autosuggestions shows a dim prediction from history /
-      # completion. Tune how faint it looks here. Accept it with → or End (whole
-      # line), Ctrl-→ for just the next word, or Ctrl-Space.
       ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6c7086"
       bindkey '^ ' autosuggest-accept
 
-      # ─── Keybinds ────────────────────────────────────────────────
       bindkey -e
       bindkey '^[[A'      history-substring-search-up
       bindkey '^[[B'      history-substring-search-down
-      bindkey '^[OA'      history-substring-search-up    # app-cursor mode
+      bindkey '^[OA'      history-substring-search-up
       bindkey '^[OB'      history-substring-search-down
       bindkey '^[[1;5C'   forward-word
       bindkey '^[[1;5D'   backward-word
@@ -245,7 +196,6 @@
       bindkey '^[[H'      beginning-of-line
       bindkey '^[[F'      end-of-line
 
-      # ghq + peco — Ctrl-G to fuzzy-jump into any cloned repo
       if command -v ghq >/dev/null 2>&1 && command -v peco >/dev/null 2>&1; then
         peco-ghq-src() {
           local src
@@ -260,9 +210,6 @@
         bindkey '^G' peco-ghq-src
       fi
 
-      # ─── Greeter ─────────────────────────────────────────────────
-      # fastfetch only in the first interactive shell; nested shells stay clean.
-      # Gate on SHLVL, not `-o login`: kitty on Linux starts a non-login shell.
       if [[ -z "$ZSH_RICED_GREETED" && "$SHLVL" -le 1 ]]; then
         export ZSH_RICED_GREETED=1
         command -v fastfetch >/dev/null 2>&1 && fastfetch
@@ -270,15 +217,10 @@
     '';
   };
 
-  # ---------- Dotfiles that stay as plain config files ----------
-  # Symlinked into ~/.config so editing the repo is a live edit. These
-  # (fastfetch, nvim, kitty.conf, starship.toml) are portable;
-  # Hyprland/waybar/rofi/dunst symlinks are added in home/ibuki.nix
-  # (Linux only).
+  home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/dotfiles/claude/settings.json";
+
   xdg.configFile = {
-    # fastfetch/config.jsonc is platform-specific (the NixOS one hardcodes
-    # nixos-logo.png via kitty-direct, which is wrong branding on macOS), so
-    # it's symlinked per-file instead of the whole directory in one go.
     "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink (
       "${config.home.homeDirectory}/dotfiles/fastfetch/"
       + (if pkgs.stdenv.isDarwin then "config-darwin.jsonc" else "config.jsonc")

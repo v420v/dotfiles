@@ -1,4 +1,3 @@
-/* Modus Vivendi */
 @define-color base    #000000;
 @define-color mantle  #1e1e1e;
 @define-color crust   #000000;
@@ -36,7 +35,6 @@ window#waybar {
     border: 1px solid alpha(@overlay, 0.30);
 }
 
-/* ---- left ---- */
 #custom-launcher {
     color: @blue;
     font-size: 15px;
@@ -75,7 +73,6 @@ window#waybar {
     font-style: normal;
 }
 
-/* ---- center ---- */
 #clock {
     color: @text;
     padding: 0 16px;
@@ -83,7 +80,6 @@ window#waybar {
     letter-spacing: 0.3px;
 }
 
-/* ---- right cluster (flat, separated by whitespace only) ---- */
 #cpu,
 #memory,
 #network,

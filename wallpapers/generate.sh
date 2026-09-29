@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# Generate a macOS-style mountain wallpaper.
-# Dusk sky gradient with layered mountain silhouettes (Big Sur vibes),
-# tuned for a dark desktop. Requires ImageMagick (`magick` or `convert`).
 
 set -euo pipefail
 out="$(dirname "$(readlink -f "$0")")/wall.png"
@@ -18,11 +15,6 @@ fi
 W=2560
 H=1440
 
-# Sky = three stacked vertical gradients with matched endpoints (seamless):
-#   deep indigo  -> mauve         (upper sky)
-#   mauve        -> warm peach    (dusk band)
-#   warm peach   -> deep blue     (down to the mountains)
-# Then 4 layers of jagged ridge polygons, lightest/hazier in back.
 $IM \
     \( \
     \( -size ${W}x600 gradient:'#0f1430-#3a2655' \) \

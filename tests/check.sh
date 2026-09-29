@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# Lint + parse every config in this rice.
-#
-# Inside `nix develop` every tool is on PATH; outside it, missing tools
-# are skipped with a warning so the script stays useful on a bare shell.
 
 set -uo pipefail
 
@@ -52,7 +48,6 @@ run() {
     fi
 }
 
-# ───── Shell ─────
 section "Shell"
 shell_files=(install.sh wallpapers/generate.sh tests/check.sh tests/format.sh)
 
@@ -72,7 +67,6 @@ else
     skip "shfmt"
 fi
 
-# ───── Nix ─────
 section "Nix"
 mapfile -t nix_files < <(find . -name "*.nix" \
     -not -path "./nixos/hardware-configuration.nix" \
@@ -89,21 +83,17 @@ else
 fi
 
 if have statix; then
-    # See statix.toml for disabled rules and ignored paths.
     run "statix check" statix check .
 else
     skip "statix"
 fi
 
 if have deadnix; then
-    # --no-lambda-pattern-names keeps conventional `{ config, pkgs, lib, ... }`
-    # headers; --no-lambda-arg keeps unused single args (e.g. flake `self`).
     run "deadnix" deadnix --no-lambda-arg --no-lambda-pattern-names --fail "${nix_files[@]}"
 else
     skip "deadnix"
 fi
 
-# ───── Lua ─────
 section "Lua"
 mapfile -t lua_files < <(find nvim -name "*.lua" | sort)
 
@@ -116,13 +106,11 @@ else
 fi
 
 if have stylua; then
-    # Style rules live in stylua.toml at the repo root.
     run "stylua --check nvim" stylua --check nvim
 else
     skip "stylua"
 fi
 
-# ───── TOML ─────
 section "TOML"
 toml_files=(starship/starship.toml statix.toml)
 
@@ -133,7 +121,6 @@ else
     skip "taplo"
 fi
 
-# ───── JSON ─────
 section "JSON"
 json_files=(nvim/lazy-lock.json flake.lock)
 
@@ -145,9 +132,6 @@ else
     skip "jq"
 fi
 
-# ───── JSONC ─────
-# jq can't parse comments, so the .jsonc UI configs get a JSONC-aware
-# parse via biome (lint = parse + a few sanity rules like duplicate keys).
 section "JSONC"
 jsonc_files=(waybar/config.jsonc fastfetch/config.jsonc fastfetch/config-darwin.jsonc)
 

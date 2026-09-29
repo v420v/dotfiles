@@ -1,7 +1,5 @@
--- ─── Editor options ──────────────────────────────────────────
 local opt = vim.opt
 
--- Display
 opt.number = true
 opt.relativenumber = true
 opt.signcolumn = "yes"
@@ -10,27 +8,24 @@ opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.wrap = false
 opt.termguicolors = true
-opt.showmode = false -- lualine handles it
+opt.showmode = false
 opt.cmdheight = 1
 opt.pumheight = 12
 opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 opt.fillchars = { eob = " " }
 
--- Indentation (4-space default; ftplugin overrides per language)
 opt.expandtab = true
 opt.shiftwidth = 4
 opt.tabstop = 4
 opt.softtabstop = 4
 opt.smartindent = true
 
--- Search
 opt.ignorecase = true
 opt.smartcase = true
 opt.hlsearch = true
 opt.incsearch = true
 
--- Files / persistence
 opt.undofile = true
 opt.swapfile = false
 opt.backup = false
@@ -38,7 +33,6 @@ opt.autoread = true
 opt.updatetime = 250
 opt.timeoutlen = 400
 
--- Auto-reload buffers when files change on disk (e.g. Claude Code edits)
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
     callback = function()
         if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then vim.cmd("checktime") end
@@ -49,24 +43,18 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     callback = function() vim.notify("File changed on disk, buffer reloaded", vim.log.levels.INFO) end,
 })
 
--- Splits
 opt.splitright = true
 opt.splitbelow = true
 
--- Wayland clipboard (wl-clipboard already in PATH)
 opt.clipboard = "unnamedplus"
 
--- Mouse
 opt.mouse = "a"
 
--- Completion behaviour
 opt.completeopt = { "menu", "menuone", "noselect" }
 
--- Faster macros / smoother scrolling
 opt.lazyredraw = false
 opt.synmaxcol = 300
 
--- Per-language indent overrides (web stack prefers 2 spaces)
 local two_space = vim.api.nvim_create_augroup("TwoSpaceIndent", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
     group = two_space,
@@ -91,7 +79,6 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- Go uses real tabs (gofmt convention)
 vim.api.nvim_create_autocmd("FileType", {
     group = two_space,
     pattern = "go",
@@ -103,18 +90,14 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function() vim.hl.on_yank({ higroup = "IncSearch", timeout = 150 }) end,
 })
 
--- V language: nvim's built-in ftdetect maps `.v` to Verilog, but here we use
--- it for vlang (vsh/vv are V-only). Override before any FileType autocmds run.
 vim.filetype.add({
     extension = { v = "v", vsh = "v", vv = "v" },
 })
 
--- Disable unused providers (NixOS-friendly: no Python/Ruby/Perl needed)
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0

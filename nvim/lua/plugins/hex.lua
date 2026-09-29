@@ -1,7 +1,3 @@
--- ─── Hex editor for binaries ─────────────────────────────────
--- Object files, executables and other binary buffers get auto-converted
--- to an `xxd` dump on open and converted back on write. Useful for
--- compiler/assembler output (a.out, *.o, *.elf, *.bin, ...).
 return {
     {
         "RaafatTurki/hex.nvim",
@@ -14,10 +10,6 @@ return {
         opts = {},
         config = function(_, opts)
             require("hex").setup(opts)
-            -- Upstream dump_to_hex pipes the buffer to xxd while ALSO passing
-            -- the filename as an argument. xxd reads the file and closes stdin
-            -- before nvim finishes writing → EPIPE. Override to read from
-            -- stdin only (the buffer already holds the file contents).
             local u = require("hex.utils")
             u.dump_to_hex = function(hex_dump_cmd)
                 vim.bo.bin = true

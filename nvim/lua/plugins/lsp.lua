@@ -1,19 +1,14 @@
--- ─── LSP ─────────────────────────────────────────────────────
--- We rely on system-installed language servers (managed by NixOS),
--- not Mason — Mason downloads dynamically-linked binaries that don't
--- run on Nix. Make sure the servers below are in configuration.nix.
 return {
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
-            { "j-hui/fidget.nvim", opts = {} }, -- LSP progress UI
+            { "j-hui/fidget.nvim", opts = {} },
         },
         config = function()
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-            -- Diagnostics presentation
             vim.diagnostic.config({
                 virtual_text = { spacing = 4, prefix = "●" },
                 severity_sort = true,
@@ -29,10 +24,8 @@ return {
                 },
             })
 
-            -- Rounded borders for every floating window (0.11+ API).
             vim.o.winborder = "rounded"
 
-            -- Buffer-local keymaps wired up the moment a server attaches.
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
                 callback = function(args)
@@ -53,11 +46,6 @@ return {
                     map("n", "<leader>ld", vim.diagnostic.open_float, "Show diagnostic")
                     map("n", "<leader>cl", "<cmd>LspInfo<CR>", "LSP info")
 
-                    -- Auto-hover: when the cursor rests on a symbol (updatetime
-                    -- = 250ms), pop up its definition info without pressing K.
-                    -- focusable = false keeps the cursor in the buffer; the
-                    -- float closes itself the moment you move on. Toggle off
-                    -- per-buffer with :let b:disable_autohover = 1.
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
                     if client and client:supports_method("textDocument/hover") then
                         vim.api.nvim_create_autocmd("CursorHold", {
@@ -72,12 +60,6 @@ return {
                 end,
             })
 
-            -- Vue (Volar) runs in "hybrid mode": vue_ls handles the template /
-            -- style blocks, while ts_ls handles TypeScript inside <script> —
-            -- but only once it loads @vue/typescript-plugin. That plugin ships
-            -- inside the vue-language-server Nix store path, so resolve it from
-            -- the binary instead of hardcoding a hash-specific path. Returns nil
-            -- (Vue TS disabled, template features still work) if it can't be found.
             local function vue_language_server_path()
                 local bin = vim.fn.exepath("vue-language-server")
                 if bin == "" then return nil end
@@ -88,7 +70,6 @@ return {
             end
             local vue_ls_path = vue_language_server_path()
 
-            -- Per-server overrides (everything else uses defaults).
             local servers = {
                 gopls = {
                     settings = {
@@ -99,9 +80,7 @@ return {
                         },
                     },
                 },
-                ts_ls = { -- typescript-language-server
-                    -- Also drive .vue files, loading @vue/typescript-plugin so
-                    -- <script setup lang="ts"> gets full TS intelligence.
+                ts_ls = {
                     filetypes = {
                         "javascript",
                         "javascriptreact",
@@ -119,20 +98,12 @@ return {
                         },
                     } or nil,
                 },
-                vue_ls = {}, -- Vue (Volar / @vue/language-server)
+                vue_ls = {},
                 html = {},
                 cssls = {},
                 jsonls = {},
                 eslint = {},
-                intelephense = { -- PHP / Laravel
-                    -- Sensible Laravel defaults: bump the per-file size cap
-                    -- (Laravel ships big generated files like the IDE helper)
-                    -- and surface Blade files to the server too. Facade/magic-
-                    -- method resolution still wants `barryvdh/laravel-ide-helper`
-                    -- run in the project (generates _ide_helper.php) — that's
-                    -- project-side, not editor config.
-                    -- php.lua maps *.blade.php to the `blade` filetype, so attach
-                    -- to it explicitly (intelephense only claims `php` by default).
+                intelephense = {
                     filetypes = { "php", "blade" },
                     settings = {
                         intelephense = {
@@ -144,7 +115,7 @@ return {
                         },
                     },
                 },
-                clangd = { -- C / C++ / Objective-C
+                clangd = {
                     cmd = {
                         "clangd",
                         "--background-index",
@@ -154,13 +125,9 @@ return {
                         "--function-arg-placeholders",
                     },
                 },
-                asm_lsp = {}, -- Assembly (x86 / ARM / RISC-V intrinsics)
+                asm_lsp = {},
                 bashls = {},
-                nil_ls = {}, -- Nix
-                -- v_analyzer (V LSP) disabled: not packaged in nixpkgs, so the
-                -- `v-analyzer` binary is never on $PATH. Re-enable here and add
-                -- the package back to the nix configs together if it lands.
-                -- v_analyzer = {},            -- V (binary: `v-analyzer`)
+                nil_ls = {},
                 lua_ls = {
                     settings = {
                         Lua = {
@@ -176,7 +143,6 @@ return {
                 },
             }
 
-            -- Apply our cmp capabilities to every server (0.11 API).
             vim.lsp.config("*", { capabilities = capabilities })
 
             for name, cfg in pairs(servers) do
@@ -186,9 +152,6 @@ return {
         end,
     },
 
-    -- ─── Formatting ──────────────────────────────────────────
-    -- conform.nvim drives system-installed formatters: gofmt, prettierd,
-    -- clang-format, stylua. Format on save, fall back to LSP otherwise.
     {
         "stevearc/conform.nvim",
         event = { "BufWritePre" },
@@ -201,9 +164,6 @@ return {
                 desc = "Format buffer",
             },
         },
-        -- opts is a function so `require("conform.util")` below is deferred
-        -- until conform.nvim is on the runtimepath (it isn't yet when lazy.nvim
-        -- first reads this spec).
         opts = function()
             return {
                 formatters_by_ft = {
@@ -224,21 +184,13 @@ return {
                     lua = { "stylua" },
                     nix = { "nixpkgs_fmt" },
                     sh = { "shfmt" },
-                    -- Prefer the project's own Laravel Pint (./vendor/bin/pint, see
-                    -- the formatter override below); fall back to the system
-                    -- php-cs-fixer when a project doesn't vendor Pint.
                     php = { "pint", "php_cs_fixer", stop_after_first = true },
                     v = { "v_fmt" },
                 },
                 formatters = {
-                    -- Pint isn't packaged standalone, so resolve it from the
-                    -- project's composer vendor dir, falling back to a `pint` on
-                    -- PATH if one happens to be installed globally.
                     pint = {
                         command = require("conform.util").find_executable({ "vendor/bin/pint" }, "pint"),
                     },
-                    -- `v fmt` rewrites the file in place rather than streaming to
-                    -- stdout, so point conform at the buffer's path and skip stdin.
                     v_fmt = {
                         command = "v",
                         args = { "fmt", "-w", "$FILENAME" },
@@ -246,15 +198,12 @@ return {
                     },
                 },
                 format_on_save = function(bufnr)
-                    -- Disable with :FormatDisable on a buffer or globally.
                     if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
                     return { timeout_ms = 1500, lsp_format = "fallback" }
                 end,
             }
         end,
         init = function()
-            -- Autoformat-on-save is off by default. Turn it on for a session
-            -- with :FormatEnable, or format a buffer on demand with <leader>cf.
             vim.g.disable_autoformat = true
             vim.api.nvim_create_user_command("FormatDisable", function(args)
                 if args.bang then

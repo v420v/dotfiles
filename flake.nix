@@ -11,11 +11,6 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Declaratively installs & manages Homebrew itself (for GUI app casks).
-    # Pin brew ahead of nix-homebrew's default (6.0.13): the live formula API
-    # uses the `symlink :overwrite` DSL added in brew 7.x, so an older brew
-    # crashes postinstall with `unknown keyword: :overwrite`. Bump this tag
-    # when brew and the formula API drift again.
     homebrew-brew = {
       url = "github:Homebrew/brew/7.0.7";
       flake = false;
@@ -28,16 +23,10 @@
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, ... }@inputs:
     let
-      # The NixOS box is x86_64-linux; the Mac is aarch64-darwin. devShell and
-      # formatter are exposed for both (CI runs the x86_64-linux one).
       linuxSystem = "x86_64-linux";
       darwinSystem = "aarch64-darwin";
       forAllSystems = nixpkgs.lib.genAttrs [ linuxSystem darwinSystem ];
 
-      # Both Macs (personal `ibuki`, work `yoshida`) build from the same
-      # modules — only the username/home dir differ. `mkDarwin` threads the
-      # username through to darwin/configuration.nix and home/darwin.nix so
-      # nothing is hardcoded. Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
       mkDarwin = username: nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs username; };
         modules = [
@@ -46,9 +35,9 @@
           {
             nix-homebrew = {
               enable = true;
-              user = username; # owns the /opt/homebrew prefix
-              enableRosetta = false; # all our casks have native arm64 builds
-              autoMigrate = true; # adopt a pre-existing brew install if found
+              user = username;
+              enableRosetta = false;
+              autoMigrate = true;
             };
           }
           home-manager.darwinModules.home-manager
@@ -62,8 +51,6 @@
         ];
       };
 
-      # Standalone home-manager (no-sudo, user-only) for either Mac username.
-      # Apply with: home-manager switch --flake ~/dotfiles#<username>@mac
       mkDarwinHome = username: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = darwinSystem;
@@ -74,7 +61,6 @@
       };
     in
     {
-      # ---------- NixOS host (system + user via HM module) ----------
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         system = linuxSystem;
         specialArgs = { inherit inputs; };
@@ -91,28 +77,16 @@
         ];
       };
 
-      # ---------- M1 Macs: nix-darwin + home-manager (primary) ----------
-      # System + user in one rebuild, mirroring the NixOS host. One entry per
-      # machine, keyed by login username:
-      #   ibuki   — personal MacBook
-      #   yoshida — work MacBook
-      # Apply with: darwin-rebuild switch --flake ~/dotfiles#<username>
       darwinConfigurations = {
         ibuki = mkDarwin "ibuki";
         yoshida = mkDarwin "yoshida";
       };
 
-      # ---------- M1 Macs: standalone home-manager (no-sudo alternative) ----------
-      # Same home/darwin.nix as above, for user-only changes without touching
-      # the system. Apply with: home-manager switch --flake ~/dotfiles#<username>@mac
-      # allowUnfree is set on the pkgs we pass in (claude-code is unfree); the
-      # NixOS host and nix-darwin host set the same flag in their system config.
       homeConfigurations = {
         "ibuki@mac" = mkDarwinHome "ibuki";
         "yoshida@mac" = mkDarwinHome "yoshida";
       };
 
-      # `nix develop` — tooling for tests/check.sh and tests/format.sh.
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
@@ -127,12 +101,11 @@
               stylua
               taplo
               jq
-              biome # JSONC-aware parse check for waybar/fastfetch configs
+              biome
             ];
           };
         });
 
-      # `nix fmt` — formats every .nix file in the tree.
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
     };
 }

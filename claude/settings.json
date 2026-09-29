@@ -1,4 +1,5 @@
 {
+  "model": "fable",
   "enabledPlugins": {
     "ponytail@ponytail": true,
     "superpowers@claude-plugins-official": true,

@@ -1,4 +1,3 @@
--- ─── Completion ── nvim-cmp + LuaSnip ────────────────────────
 return {
     {
         "hrsh7th/nvim-cmp",
@@ -13,7 +12,7 @@ return {
                 "L3MON4D3/LuaSnip",
                 version = "v2.*",
                 dependencies = { "rafamadriz/friendly-snippets" },
-                build = nil, -- skip jsregexp on NixOS
+                build = nil,
                 config = function() require("luasnip.loaders.from_vscode").lazy_load() end,
             },
         },
@@ -105,12 +104,10 @@ return {
                 experimental = { ghost_text = true },
             })
 
-            -- `/` & `?` use buffer source for in-file search completion.
             cmp.setup.cmdline({ "/", "?" }, {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = { { name = "buffer" } },
             })
-            -- `:` completes paths + commands.
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),

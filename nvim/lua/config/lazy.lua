@@ -1,4 +1,3 @@
--- ─── lazy.nvim bootstrap ─────────────────────────────────────
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     vim.fn.system({
@@ -26,7 +25,7 @@ require("lazy").setup({
                 "tohtml",
                 "tutor",
                 "zipPlugin",
-                "netrwPlugin", -- replaced by snacks explorer
+                "netrwPlugin",
             },
         },
     },

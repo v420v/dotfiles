@@ -1,10 +1,5 @@
--- ─── Error / warning log ─────────────────────────────────────
--- Mirrors nvim runtime errors (vim.notify WARN+ERROR) and LSP
--- diagnostics into a flat log file, so external tools like
--- Claude Code can read them without opening nvim.
-
 local log_path = vim.fn.stdpath("cache") .. "/error.log"
-local MAX_LINES = 10000 -- hard cap; oldest lines are dropped when exceeded
+local MAX_LINES = 10000
 
 local function timestamp() return os.date("%Y-%m-%dT%H:%M:%S") end
 
@@ -18,8 +13,6 @@ local function append(lines)
     file:close()
 end
 
--- Wrap vim.notify so WARN/ERROR messages also land in the log.
--- Returns a new function that logs WARN/ERROR and delegates to `base`.
 local function make_logging_notify(base)
     return function(msg, level, opts)
         level = level or vim.log.levels.INFO
@@ -35,9 +28,6 @@ vim.notify = make_logging_notify(vim.notify)
 
 local group = vim.api.nvim_create_augroup("ErrorLog", { clear = true })
 
--- Re-assert the wrapper after lazy.nvim finishes loading plugins.
--- Some plugins (e.g. nvim-notify) replace vim.notify outright in their
--- `init` callbacks, silently dropping this logging layer.
 vim.api.nvim_create_autocmd("User", {
     pattern = "LazyDone",
     once = true,
@@ -45,16 +35,11 @@ vim.api.nvim_create_autocmd("User", {
     callback = function() vim.notify = make_logging_notify(vim.notify) end,
 })
 
--- Snapshot LSP diagnostics for a buffer shortly after :write,
--- giving the language server a moment to report against the
--- new contents.
 local severity_label = {
     [vim.diagnostic.severity.ERROR] = "ERROR",
     [vim.diagnostic.severity.WARN] = "WARN",
 }
 
--- Last-written diagnostic set per file (keyed by content without timestamp,
--- so repeated saves with identical diagnostics do not grow the log).
 local last_snapshot = {}
 
 local function snapshot_buffer(bufnr)
@@ -62,7 +47,6 @@ local function snapshot_buffer(bufnr)
     local fname = vim.api.nvim_buf_get_name(bufnr)
     if fname == "" then return end
 
-    -- Build current diagnostic set as content strings (no timestamp).
     local current = {}
     for _, d in ipairs(vim.diagnostic.get(bufnr)) do
         local label = severity_label[d.severity]
@@ -79,7 +63,6 @@ local function snapshot_buffer(bufnr)
         end
     end
 
-    -- Skip rewrite when diagnostics haven't changed since the last save.
     local prev = last_snapshot[fname] or {}
     local same = true
     for k in pairs(current) do
@@ -98,8 +81,6 @@ local function snapshot_buffer(bufnr)
     end
     if same then return end
 
-    -- Rewrite the log: drop old entries for this file, then append fresh set.
-    -- This prevents duplicate growth and ensures stale diagnostics are pruned.
     local kept = {}
     local lsp_prefix = "] " .. fname .. ":"
     local f = io.open(log_path, "r")
@@ -115,7 +96,6 @@ local function snapshot_buffer(bufnr)
         table.insert(kept, string.format("[%s] %s", ts, key))
     end
 
-    -- Apply hard size cap: keep the most recent MAX_LINES lines.
     if #kept > MAX_LINES then
         local trimmed = {}
         for i = #kept - MAX_LINES + 1, #kept do
@@ -141,15 +121,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     end,
 })
 
--- :ErrorLogPath  — print the log path
--- :ErrorLogClear — truncate the log
--- :ErrorLogDump  — append a snapshot of all current diagnostics
 vim.api.nvim_create_user_command("ErrorLogPath", function() vim.notify(log_path) end, {})
 
 vim.api.nvim_create_user_command("ErrorLogClear", function()
     local file = io.open(log_path, "w")
     if file then file:close() end
-    -- Reset per-file cache so subsequent saves re-log diagnostics.
     last_snapshot = {}
     vim.notify("Cleared " .. log_path)
 end, {})
