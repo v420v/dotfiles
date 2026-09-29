@@ -3,6 +3,36 @@ return {
     -- Icons (Nerd Font already provided by NixOS fonts.packages)
     { "nvim-tree/nvim-web-devicons", lazy = true },
 
+    -- Buffer tabs (VSCode/Zed-style): open files show as tabs across the top,
+    -- inside the single tabpage that holds the explorer + Claude sidebars.
+    {
+        "akinsho/bufferline.nvim",
+        event = "VeryLazy",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        keys = {
+            { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev buffer" },
+            { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
+            -- Close tabs without collapsing the sidebars (Snacks keeps the layout)
+            { "<leader>bd", function() Snacks.bufdelete() end,       desc = "Close buffer" },
+            { "<leader>bo", function() Snacks.bufdelete.other() end, desc = "Close other buffers" },
+        },
+        opts = {
+            options = {
+                mode = "buffers",
+                diagnostics = "nvim_lsp",
+                always_show_bufferline = true,
+                offsets = {
+                    -- Reserve the sidebars so the tab strip stays over the center
+                    -- editor only (not drawn across the explorer or Claude panel).
+                    -- The explorer's split is a `snacks_layout_box` wrapper; the
+                    -- picker list inside it is a float that bufferline can't see.
+                    { filetype = "snacks_layout_box",  text = "EXPLORER",    highlight = "Directory", separator = true },
+                    { filetype = "snacks_terminal",    text = "CLAUDE CODE", highlight = "Directory", separator = true },
+                },
+            },
+        },
+    },
+
     -- Statusline
     {
         "nvim-lualine/lualine.nvim",

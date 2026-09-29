@@ -12,7 +12,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Declaratively installs & manages Homebrew itself (for GUI app casks).
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    # Pin brew ahead of nix-homebrew's default (6.0.13): the live formula API
+    # uses the `symlink :overwrite` DSL added in brew 7.x, so an older brew
+    # crashes postinstall with `unknown keyword: :overwrite`. Bump this tag
+    # when brew and the formula API drift again.
+    homebrew-brew = {
+      url = "github:Homebrew/brew/7.0.7";
+      flake = false;
+    };
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+      inputs.brew-src.follows = "homebrew-brew";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, ... }@inputs:

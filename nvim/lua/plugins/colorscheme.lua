@@ -16,6 +16,13 @@ return {
                 variables = "NONE",
             },
         },
+        groups = {
+            all = {
+                -- Snacks explorer dims untracked files (links NonText); show them
+                -- green like VSCode/Zed. `git.add` = the gitsigns gutter green.
+                SnacksPickerGitStatusUntracked = { fg = "git.add" },
+            },
+        },
     },
     config = function(_, opts)
         require("github-theme").setup(opts)
