@@ -7,8 +7,8 @@ return {
         "RaafatTurki/hex.nvim",
         cmd = { "HexToggle", "HexDump", "HexAssemble" },
         keys = {
-            { "<leader>xx", "<cmd>HexToggle<CR>",   desc = "Hex: toggle dump" },
-            { "<leader>xd", "<cmd>HexDump<CR>",     desc = "Hex: dump (bin → xxd)" },
+            { "<leader>xx", "<cmd>HexToggle<CR>", desc = "Hex: toggle dump" },
+            { "<leader>xd", "<cmd>HexDump<CR>", desc = "Hex: dump (bin → xxd)" },
             { "<leader>xa", "<cmd>HexAssemble<CR>", desc = "Hex: assemble (xxd → bin)" },
         },
         opts = {},

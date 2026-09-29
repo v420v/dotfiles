@@ -2,97 +2,104 @@
 local opt = vim.opt
 
 -- Display
-opt.number         = true
+opt.number = true
 opt.relativenumber = true
-opt.signcolumn     = "yes"
-opt.cursorline     = true
-opt.scrolloff      = 8
-opt.sidescrolloff  = 8
-opt.wrap           = false
-opt.termguicolors  = true
-opt.showmode       = false   -- lualine handles it
-opt.cmdheight      = 1
-opt.pumheight      = 12
-opt.list           = true
-opt.listchars      = { tab = "» ", trail = "·", nbsp = "␣" }
-opt.fillchars      = { eob = " " }
+opt.signcolumn = "yes"
+opt.cursorline = true
+opt.scrolloff = 8
+opt.sidescrolloff = 8
+opt.wrap = false
+opt.termguicolors = true
+opt.showmode = false -- lualine handles it
+opt.cmdheight = 1
+opt.pumheight = 12
+opt.list = true
+opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+opt.fillchars = { eob = " " }
 
 -- Indentation (4-space default; ftplugin overrides per language)
-opt.expandtab      = true
-opt.shiftwidth     = 4
-opt.tabstop        = 4
-opt.softtabstop    = 4
-opt.smartindent    = true
+opt.expandtab = true
+opt.shiftwidth = 4
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.smartindent = true
 
 -- Search
-opt.ignorecase     = true
-opt.smartcase      = true
-opt.hlsearch       = true
-opt.incsearch      = true
+opt.ignorecase = true
+opt.smartcase = true
+opt.hlsearch = true
+opt.incsearch = true
 
 -- Files / persistence
-opt.undofile       = true
-opt.swapfile       = false
-opt.backup         = false
-opt.autoread       = true
-opt.updatetime     = 250
-opt.timeoutlen     = 400
+opt.undofile = true
+opt.swapfile = false
+opt.backup = false
+opt.autoread = true
+opt.updatetime = 250
+opt.timeoutlen = 400
 
 -- Auto-reload buffers when files change on disk (e.g. Claude Code edits)
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
     callback = function()
-        if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-            vim.cmd("checktime")
-        end
+        if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then vim.cmd("checktime") end
     end,
 })
 
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
-    callback = function()
-        vim.notify("File changed on disk, buffer reloaded", vim.log.levels.INFO)
-    end,
+    callback = function() vim.notify("File changed on disk, buffer reloaded", vim.log.levels.INFO) end,
 })
 
 -- Splits
-opt.splitright     = true
-opt.splitbelow     = true
+opt.splitright = true
+opt.splitbelow = true
 
 -- Wayland clipboard (wl-clipboard already in PATH)
-opt.clipboard      = "unnamedplus"
+opt.clipboard = "unnamedplus"
 
 -- Mouse
-opt.mouse          = "a"
+opt.mouse = "a"
 
 -- Completion behaviour
-opt.completeopt    = { "menu", "menuone", "noselect" }
+opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Faster macros / smoother scrolling
-opt.lazyredraw     = false
-opt.synmaxcol      = 300
+opt.lazyredraw = false
+opt.synmaxcol = 300
 
 -- Per-language indent overrides (web stack prefers 2 spaces)
 local two_space = vim.api.nvim_create_augroup("TwoSpaceIndent", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
-    group   = two_space,
-    pattern = { "html", "css", "scss", "javascript", "typescript",
-                "javascriptreact", "typescriptreact", "json", "jsonc",
-                "yaml", "lua", "nix" },
+    group = two_space,
+    pattern = {
+        "html",
+        "css",
+        "scss",
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "json",
+        "jsonc",
+        "yaml",
+        "lua",
+        "nix",
+    },
     callback = function()
-        vim.bo.shiftwidth  = 2
-        vim.bo.tabstop     = 2
+        vim.bo.shiftwidth = 2
+        vim.bo.tabstop = 2
         vim.bo.softtabstop = 2
     end,
 })
 
 -- Go uses real tabs (gofmt convention)
 vim.api.nvim_create_autocmd("FileType", {
-    group   = two_space,
+    group = two_space,
     pattern = "go",
     callback = function()
-        vim.bo.expandtab    = false
-        vim.bo.shiftwidth   = 4
-        vim.bo.tabstop      = 4
-        vim.bo.softtabstop  = 0
+        vim.bo.expandtab = false
+        vim.bo.shiftwidth = 4
+        vim.bo.tabstop = 4
+        vim.bo.softtabstop = 0
     end,
 })
 
@@ -109,6 +116,6 @@ vim.filetype.add({
 
 -- Disable unused providers (NixOS-friendly: no Python/Ruby/Perl needed)
 vim.g.loaded_python3_provider = 0
-vim.g.loaded_ruby_provider    = 0
-vim.g.loaded_perl_provider    = 0
-vim.g.loaded_node_provider    = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0

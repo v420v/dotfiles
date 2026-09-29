@@ -49,5 +49,6 @@ jobs:
           nix develop --command bash -euo pipefail -c '
             shfmt -d -i 4 -ci install.sh wallpapers/generate.sh tests/check.sh tests/format.sh
             nixpkgs-fmt --check $(find . -name "*.nix" -not -path "./.git/*" -not -path "./nixos/hardware-configuration.nix")
-            taplo format --check starship/starship.toml
+            stylua --check nvim
+            taplo format --check starship/starship.toml statix.toml
           '

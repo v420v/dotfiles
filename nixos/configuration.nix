@@ -169,6 +169,9 @@
     vlang # V toolchain — provides `v` binary for v_fmt formatter (conform.nvim)
 
     # Language servers (consumed by nvim-lspconfig from $PATH)
+    # `go` itself is required: nvim-lspconfig's gopls root_dir resolver shells
+    # out to `go env GOMODCACHE`, and a missing `go` crashes BufReadPost.
+    go
     gopls
     clang-tools
     typescript-language-server

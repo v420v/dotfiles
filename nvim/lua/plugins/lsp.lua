@@ -8,23 +8,23 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
-            { "j-hui/fidget.nvim", opts = {} },     -- LSP progress UI
+            { "j-hui/fidget.nvim", opts = {} }, -- LSP progress UI
         },
         config = function()
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             -- Diagnostics presentation
             vim.diagnostic.config({
-                virtual_text     = { spacing = 4, prefix = "●" },
-                severity_sort    = true,
+                virtual_text = { spacing = 4, prefix = "●" },
+                severity_sort = true,
                 update_in_insert = false,
-                float            = { border = "rounded", source = "if_many" },
+                float = { border = "rounded", source = "if_many" },
                 signs = {
                     text = {
                         [vim.diagnostic.severity.ERROR] = "",
-                        [vim.diagnostic.severity.WARN]  = "",
-                        [vim.diagnostic.severity.INFO]  = "",
-                        [vim.diagnostic.severity.HINT]  = "",
+                        [vim.diagnostic.severity.WARN] = "",
+                        [vim.diagnostic.severity.INFO] = "",
+                        [vim.diagnostic.severity.HINT] = "",
                     },
                 },
             })
@@ -39,19 +39,19 @@ return {
                     local map = function(mode, lhs, rhs, desc)
                         vim.keymap.set(mode, lhs, rhs, { buffer = args.buf, desc = desc })
                     end
-                    map("n", "gd",         vim.lsp.buf.definition,      "Go to definition")
-                    map("n", "gD",         vim.lsp.buf.declaration,     "Go to declaration")
-                    map("n", "gr",         vim.lsp.buf.references,      "References")
-                    map("n", "gi",         vim.lsp.buf.implementation,  "Implementation")
-                    map("n", "gt",         vim.lsp.buf.type_definition, "Type definition")
-                    map("n", "K",          vim.lsp.buf.hover,           "Hover")
-                    map("n", "<leader>ls", vim.lsp.buf.signature_help,  "Signature help")
-                    map("n", "<leader>rn", vim.lsp.buf.rename,          "Rename symbol")
+                    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+                    map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+                    map("n", "gr", vim.lsp.buf.references, "References")
+                    map("n", "gi", vim.lsp.buf.implementation, "Implementation")
+                    map("n", "gt", vim.lsp.buf.type_definition, "Type definition")
+                    map("n", "K", vim.lsp.buf.hover, "Hover")
+                    map("n", "<leader>ls", vim.lsp.buf.signature_help, "Signature help")
+                    map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
                     map({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, "Code action")
                     map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Prev diagnostic")
-                    map("n", "]d", function() vim.diagnostic.jump({ count =  1, float = true }) end, "Next diagnostic")
-                    map("n", "<leader>ld", vim.diagnostic.open_float,   "Show diagnostic")
-                    map("n", "<leader>cl", "<cmd>LspInfo<CR>",          "LSP info")
+                    map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, "Next diagnostic")
+                    map("n", "<leader>ld", vim.diagnostic.open_float, "Show diagnostic")
+                    map("n", "<leader>cl", "<cmd>LspInfo<CR>", "LSP info")
 
                     -- Auto-hover: when the cursor rests on a symbol (updatetime
                     -- = 250ms), pop up its definition info without pressing K.
@@ -95,47 +95,56 @@ return {
                         gopls = {
                             analyses = { unusedparams = true, shadow = true },
                             staticcheck = true,
-                            gofumpt     = true,
+                            gofumpt = true,
                         },
                     },
                 },
-                ts_ls    = {                    -- typescript-language-server
+                ts_ls = { -- typescript-language-server
                     -- Also drive .vue files, loading @vue/typescript-plugin so
                     -- <script setup lang="ts"> gets full TS intelligence.
                     filetypes = {
-                        "javascript", "javascriptreact",
-                        "typescript", "typescriptreact", "vue",
+                        "javascript",
+                        "javascriptreact",
+                        "typescript",
+                        "typescriptreact",
+                        "vue",
                     },
                     init_options = vue_ls_path and {
                         plugins = {
                             {
-                                name     = "@vue/typescript-plugin",
+                                name = "@vue/typescript-plugin",
                                 location = vue_ls_path,
                                 languages = { "vue" },
                             },
                         },
                     } or nil,
                 },
-                vue_ls   = {},                  -- Vue (Volar / @vue/language-server)
-                html     = {},
-                cssls    = {},
-                jsonls   = {},
-                eslint   = {},
-                intelephense = {                -- PHP / Laravel
+                vue_ls = {}, -- Vue (Volar / @vue/language-server)
+                html = {},
+                cssls = {},
+                jsonls = {},
+                eslint = {},
+                intelephense = { -- PHP / Laravel
                     -- Sensible Laravel defaults: bump the per-file size cap
                     -- (Laravel ships big generated files like the IDE helper)
                     -- and surface Blade files to the server too. Facade/magic-
                     -- method resolution still wants `barryvdh/laravel-ide-helper`
                     -- run in the project (generates _ide_helper.php) — that's
                     -- project-side, not editor config.
+                    -- php.lua maps *.blade.php to the `blade` filetype, so attach
+                    -- to it explicitly (intelephense only claims `php` by default).
+                    filetypes = { "php", "blade" },
                     settings = {
                         intelephense = {
-                            files       = { maxSize = 5000000 },
+                            files = {
+                                maxSize = 5000000,
+                                associations = { "*.php", "*.blade.php" },
+                            },
                             environment = { phpVersion = "8.3" },
                         },
                     },
                 },
-                clangd   = {                   -- C / C++ / Objective-C
+                clangd = { -- C / C++ / Objective-C
                     cmd = {
                         "clangd",
                         "--background-index",
@@ -145,23 +154,23 @@ return {
                         "--function-arg-placeholders",
                     },
                 },
-                asm_lsp  = {},                 -- Assembly (x86 / ARM / RISC-V intrinsics)
-                bashls   = {},
-                nil_ls   = {},                 -- Nix
+                asm_lsp = {}, -- Assembly (x86 / ARM / RISC-V intrinsics)
+                bashls = {},
+                nil_ls = {}, -- Nix
                 -- v_analyzer (V LSP) disabled: not packaged in nixpkgs, so the
                 -- `v-analyzer` binary is never on $PATH. Re-enable here and add
                 -- the package back to the nix configs together if it lands.
                 -- v_analyzer = {},            -- V (binary: `v-analyzer`)
-                lua_ls   = {
+                lua_ls = {
                     settings = {
                         Lua = {
-                            runtime     = { version = "LuaJIT" },
-                            workspace   = {
+                            runtime = { version = "LuaJIT" },
+                            workspace = {
                                 checkThirdParty = false,
                                 library = vim.api.nvim_get_runtime_file("", true),
                             },
                             diagnostics = { globals = { "vim" } },
-                            telemetry   = { enable = false },
+                            telemetry = { enable = false },
                         },
                     },
                 },
@@ -183,8 +192,8 @@ return {
     {
         "stevearc/conform.nvim",
         event = { "BufWritePre" },
-        cmd   = { "ConformInfo" },
-        keys  = {
+        cmd = { "ConformInfo" },
+        keys = {
             {
                 "<leader>cf",
                 function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
@@ -195,60 +204,64 @@ return {
         -- opts is a function so `require("conform.util")` below is deferred
         -- until conform.nvim is on the runtimepath (it isn't yet when lazy.nvim
         -- first reads this spec).
-        opts = function() return {
-            formatters_by_ft = {
-                go            = { "gofumpt", "goimports" },
-                javascript    = { "prettierd", "prettier", stop_after_first = true },
-                typescript    = { "prettierd", "prettier", stop_after_first = true },
-                javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-                typescriptreact = { "prettierd", "prettier", stop_after_first = true },
-                vue           = { "prettierd", "prettier", stop_after_first = true },
-                html          = { "prettierd", "prettier", stop_after_first = true },
-                css           = { "prettierd", "prettier", stop_after_first = true },
-                scss          = { "prettierd", "prettier", stop_after_first = true },
-                json          = { "prettierd", "prettier", stop_after_first = true },
-                yaml          = { "prettierd", "prettier", stop_after_first = true },
-                markdown      = { "prettierd", "prettier", stop_after_first = true },
-                c             = { "clang_format" },
-                cpp           = { "clang_format" },
-                lua           = { "stylua" },
-                nix           = { "nixpkgs_fmt" },
-                sh            = { "shfmt" },
-                -- Prefer the project's own Laravel Pint (./vendor/bin/pint, see
-                -- the formatter override below); fall back to the system
-                -- php-cs-fixer when a project doesn't vendor Pint.
-                php           = { "pint", "php_cs_fixer", stop_after_first = true },
-                v             = { "v_fmt" },
-            },
-            formatters = {
-                -- Pint isn't packaged standalone, so resolve it from the
-                -- project's composer vendor dir, falling back to a `pint` on
-                -- PATH if one happens to be installed globally.
-                pint = {
-                    command = require("conform.util").find_executable(
-                        { "vendor/bin/pint" }, "pint"),
+        opts = function()
+            return {
+                formatters_by_ft = {
+                    go = { "gofumpt", "goimports" },
+                    javascript = { "prettierd", "prettier", stop_after_first = true },
+                    typescript = { "prettierd", "prettier", stop_after_first = true },
+                    javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+                    typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+                    vue = { "prettierd", "prettier", stop_after_first = true },
+                    html = { "prettierd", "prettier", stop_after_first = true },
+                    css = { "prettierd", "prettier", stop_after_first = true },
+                    scss = { "prettierd", "prettier", stop_after_first = true },
+                    json = { "prettierd", "prettier", stop_after_first = true },
+                    yaml = { "prettierd", "prettier", stop_after_first = true },
+                    markdown = { "prettierd", "prettier", stop_after_first = true },
+                    c = { "clang_format" },
+                    cpp = { "clang_format" },
+                    lua = { "stylua" },
+                    nix = { "nixpkgs_fmt" },
+                    sh = { "shfmt" },
+                    -- Prefer the project's own Laravel Pint (./vendor/bin/pint, see
+                    -- the formatter override below); fall back to the system
+                    -- php-cs-fixer when a project doesn't vendor Pint.
+                    php = { "pint", "php_cs_fixer", stop_after_first = true },
+                    v = { "v_fmt" },
                 },
-                -- `v fmt` rewrites the file in place rather than streaming to
-                -- stdout, so point conform at the buffer's path and skip stdin.
-                v_fmt = {
-                    command = "v",
-                    args    = { "fmt", "-w", "$FILENAME" },
-                    stdin   = false,
+                formatters = {
+                    -- Pint isn't packaged standalone, so resolve it from the
+                    -- project's composer vendor dir, falling back to a `pint` on
+                    -- PATH if one happens to be installed globally.
+                    pint = {
+                        command = require("conform.util").find_executable({ "vendor/bin/pint" }, "pint"),
+                    },
+                    -- `v fmt` rewrites the file in place rather than streaming to
+                    -- stdout, so point conform at the buffer's path and skip stdin.
+                    v_fmt = {
+                        command = "v",
+                        args = { "fmt", "-w", "$FILENAME" },
+                        stdin = false,
+                    },
                 },
-            },
-            format_on_save = function(bufnr)
-                -- Disable with :FormatDisable on a buffer or globally.
-                if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
-                return { timeout_ms = 1500, lsp_format = "fallback" }
-            end,
-        } end,
+                format_on_save = function(bufnr)
+                    -- Disable with :FormatDisable on a buffer or globally.
+                    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
+                    return { timeout_ms = 1500, lsp_format = "fallback" }
+                end,
+            }
+        end,
         init = function()
             -- Autoformat-on-save is off by default. Turn it on for a session
             -- with :FormatEnable, or format a buffer on demand with <leader>cf.
             vim.g.disable_autoformat = true
             vim.api.nvim_create_user_command("FormatDisable", function(args)
-                if args.bang then vim.b.disable_autoformat = true
-                else vim.g.disable_autoformat = true end
+                if args.bang then
+                    vim.b.disable_autoformat = true
+                else
+                    vim.g.disable_autoformat = true
+                end
             end, { bang = true, desc = "Disable autoformat (! = buffer only)" })
             vim.api.nvim_create_user_command("FormatEnable", function()
                 vim.b.disable_autoformat, vim.g.disable_autoformat = false, false

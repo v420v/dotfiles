@@ -257,8 +257,9 @@
       fi
 
       # ─── Greeter ─────────────────────────────────────────────────
-      # fastfetch only on first interactive login; nested shells stay clean.
-      if [[ -o login && -z "$ZSH_RICED_GREETED" ]]; then
+      # fastfetch only in the first interactive shell; nested shells stay clean.
+      # Gate on SHLVL, not `-o login`: kitty on Linux starts a non-login shell.
+      if [[ -z "$ZSH_RICED_GREETED" && "$SHLVL" -le 1 ]]; then
         export ZSH_RICED_GREETED=1
         command -v fastfetch >/dev/null 2>&1 && fastfetch
       fi

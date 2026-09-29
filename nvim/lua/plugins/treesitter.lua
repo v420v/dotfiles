@@ -31,14 +31,18 @@ return {
                     return single
                 end
                 tsq.add_directive = function(name, handler, opts)
-                    return add_directive(name, function(captures, ...)
-                        return handler(to_single(captures), ...)
-                    end, opts)
+                    return add_directive(
+                        name,
+                        function(captures, ...) return handler(to_single(captures), ...) end,
+                        opts
+                    )
                 end
                 tsq.add_predicate = function(name, handler, opts)
-                    return add_predicate(name, function(captures, ...)
-                        return handler(to_single(captures), ...)
-                    end, opts)
+                    return add_predicate(
+                        name,
+                        function(captures, ...) return handler(to_single(captures), ...) end,
+                        opts
+                    )
                 end
                 -- Force (re-)registration of the custom handlers under the
                 -- shim, then restore the originals so only nvim-treesitter's
@@ -51,20 +55,48 @@ return {
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     -- Web stack
-                    "go", "gomod", "gosum", "gowork",
-                    "html", "css", "scss",
-                    "javascript", "typescript", "tsx", "vue",
-                    "php", "php_only", "phpdoc",
-                    "json", "jsonc", "yaml", "toml",
+                    "go",
+                    "gomod",
+                    "gosum",
+                    "gowork",
+                    "html",
+                    "css",
+                    "scss",
+                    "javascript",
+                    "typescript",
+                    "tsx",
+                    "vue",
+                    "php",
+                    "php_only",
+                    "phpdoc",
+                    "json",
+                    "jsonc",
+                    "yaml",
+                    "toml",
                     -- Low-level
-                    "c", "cpp", "asm", "make", "cmake",
+                    "c",
+                    "cpp",
+                    "asm",
+                    "make",
+                    "cmake",
                     -- V
                     "v",
                     -- Project / config
-                    "lua", "vim", "vimdoc", "query",
-                    "bash", "nix", "markdown", "markdown_inline",
-                    "diff", "git_config", "gitcommit", "gitignore", "gitattributes",
-                    "regex", "comment",
+                    "lua",
+                    "vim",
+                    "vimdoc",
+                    "query",
+                    "bash",
+                    "nix",
+                    "markdown",
+                    "markdown_inline",
+                    "diff",
+                    "git_config",
+                    "gitcommit",
+                    "gitignore",
+                    "gitattributes",
+                    "regex",
+                    "comment",
                 },
                 -- Off: NixOS doesn't always have a C compiler on PATH outside
                 -- the dev shell, and we don't want a failing :TSInstall on every
@@ -72,14 +104,14 @@ return {
                 -- is on-demand via :TSInstall.
                 auto_install = false,
                 highlight = { enable = true, additional_vim_regex_highlighting = false },
-                indent    = { enable = true },
+                indent = { enable = true },
                 incremental_selection = {
                     enable = true,
                     keymaps = {
-                        init_selection    = "<C-Space>",
-                        node_incremental  = "<C-Space>",
+                        init_selection = "<C-Space>",
+                        node_incremental = "<C-Space>",
                         scope_incremental = false,
-                        node_decremental  = "<BS>",
+                        node_decremental = "<BS>",
                     },
                 },
                 textobjects = {
@@ -98,7 +130,7 @@ return {
                     move = {
                         enable = true,
                         set_jumps = true,
-                        goto_next_start     = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
+                        goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
                         goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
                     },
                 },

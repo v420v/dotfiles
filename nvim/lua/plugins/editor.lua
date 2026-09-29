@@ -1,8 +1,4 @@
 -- ─── Editor QoL ──────────────────────────────────────────────
--- Tab keymaps
-vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<CR>",      { desc = "Close tab" })
-vim.keymap.set("n", "<leader>tD", "<cmd>windo bdelete<CR>", { desc = "Delete all bufs in tab" })
-
 return {
     -- Comments: gcc / gc<motion>
     { "numToStr/Comment.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
@@ -14,7 +10,7 @@ return {
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
-        opts  = { check_ts = true, fast_wrap = {} },
+        opts = { check_ts = true, fast_wrap = {} },
     },
 
     -- Sane buffer-close that keeps window layout
@@ -22,7 +18,7 @@ return {
         "echasnovski/mini.bufremove",
         keys = {
             { "<leader>bd", function() require("mini.bufremove").delete(0, false) end, desc = "Delete buffer" },
-            { "<leader>bD", function() require("mini.bufremove").delete(0, true)  end, desc = "Delete buffer (force)" },
+            { "<leader>bD", function() require("mini.bufremove").delete(0, true) end, desc = "Delete buffer (force)" },
         },
     },
 
@@ -56,11 +52,11 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory", "DiffviewRefresh" },
         keys = {
-            { "<leader>gd", "<cmd>DiffviewOpen<CR>",          desc = "Diff: open changes" },
-            { "<leader>gq", "<cmd>DiffviewClose<CR>",         desc = "Diff: close" },
-            { "<leader>gh", "<cmd>DiffviewFileHistory<CR>",   desc = "Diff: repo history" },
+            { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Diff: open changes" },
+            { "<leader>gq", "<cmd>DiffviewClose<CR>", desc = "Diff: close" },
+            { "<leader>gh", "<cmd>DiffviewFileHistory<CR>", desc = "Diff: repo history" },
             { "<leader>gH", "<cmd>DiffviewFileHistory %<CR>", desc = "Diff: file history" },
-            { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>",   desc = "Diff: toggle files panel" },
+            { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>", desc = "Diff: toggle files panel" },
         },
         opts = {
             enhanced_diff_hl = true,

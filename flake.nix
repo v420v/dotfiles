@@ -124,8 +124,10 @@
               statix
               deadnix
               lua
+              stylua
               taplo
               jq
+              biome # JSONC-aware parse check for waybar/fastfetch configs
             ];
           };
         });

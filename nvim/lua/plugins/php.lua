@@ -15,8 +15,6 @@ return {
         -- Register the filetype ourselves so lazy's `ft` trigger fires before
         -- the plugin (whose own ftdetect would otherwise never get a chance
         -- to load) is needed.
-        init = function()
-            vim.filetype.add({ pattern = { [".*%.blade%.php"] = "blade" } })
-        end,
+        init = function() vim.filetype.add({ pattern = { [".*%.blade%.php"] = "blade" } }) end,
     },
 }

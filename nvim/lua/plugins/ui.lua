@@ -13,7 +13,7 @@ return {
             { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Prev buffer" },
             { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
             -- Close tabs without collapsing the sidebars (Snacks keeps the layout)
-            { "<leader>bd", function() Snacks.bufdelete() end,       desc = "Close buffer" },
+            { "<leader>bd", function() Snacks.bufdelete() end, desc = "Close buffer" },
             { "<leader>bo", function() Snacks.bufdelete.other() end, desc = "Close other buffers" },
         },
         opts = {
@@ -26,8 +26,18 @@ return {
                     -- editor only (not drawn across the explorer or Claude panel).
                     -- The explorer's split is a `snacks_layout_box` wrapper; the
                     -- picker list inside it is a float that bufferline can't see.
-                    { filetype = "snacks_layout_box",  text = "EXPLORER",    highlight = "Directory", separator = true },
-                    { filetype = "snacks_terminal",    text = "CLAUDE CODE", highlight = "Directory", separator = true },
+                    {
+                        filetype = "snacks_layout_box",
+                        text = "EXPLORER",
+                        highlight = "Directory",
+                        separator = true,
+                    },
+                    {
+                        filetype = "snacks_terminal",
+                        text = "CLAUDE CODE",
+                        highlight = "Directory",
+                        separator = true,
+                    },
                 },
             },
         },
@@ -43,11 +53,13 @@ return {
                 theme = "github_dark_default",
                 globalstatus = true,
                 component_separators = { left = "", right = "" },
-                section_separators   = { left = "", right = "" },
+                section_separators = { left = "", right = "" },
             },
             sections = {
                 lualine_a = { "mode" },
-                lualine_b = { "branch", "diff",
+                lualine_b = {
+                    "branch",
+                    "diff",
                     {
                         "diagnostics",
                         symbols = { error = " ", warn = " ", info = " ", hint = " " },
@@ -67,47 +79,46 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         opts = {
             signs = {
-                add          = { text = "▎" },
-                change       = { text = "▎" },
-                delete       = { text = "" },
-                topdelete    = { text = "" },
+                add = { text = "▎" },
+                change = { text = "▎" },
+                delete = { text = "" },
+                topdelete = { text = "" },
                 changedelete = { text = "▎" },
-                untracked    = { text = "▎" },
+                untracked = { text = "▎" },
             },
             signs_staged_enable = true,
-            signcolumn          = true,
-            numhl               = false,
-            linehl              = false,
-            word_diff           = false,
+            signcolumn = true,
+            numhl = false,
+            linehl = false,
+            word_diff = false,
             attach_to_untracked = true,
-            current_line_blame  = true,
+            current_line_blame = true,
             current_line_blame_opts = {
-                virt_text         = true,
-                virt_text_pos     = "eol",
-                delay             = 400,
+                virt_text = true,
+                virt_text_pos = "eol",
+                delay = 400,
                 ignore_whitespace = false,
             },
             current_line_blame_formatter = "  <author>, <author_time:%Y-%m-%d> · <summary>",
             preview_config = { border = "rounded", style = "minimal", relative = "cursor", row = 0, col = 1 },
             on_attach = function(buf)
                 local gs = package.loaded.gitsigns
-                local map = function(mode, lhs, rhs, desc)
-                    vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc })
-                end
+                local map = function(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc }) end
                 map("n", "]h", function() gs.nav_hunk("next") end, "Next hunk")
                 map("n", "[h", function() gs.nav_hunk("prev") end, "Prev hunk")
-                map("n", "<leader>hp", gs.preview_hunk,         "Preview hunk")
-                map("n", "<leader>hP", gs.preview_hunk_inline,  "Preview hunk (inline)")
-                map("n", "<leader>hr", gs.reset_hunk,           "Reset hunk")
-                map("n", "<leader>hs", gs.stage_hunk,           "Stage hunk")
-                map("n", "<leader>hu", gs.undo_stage_hunk,      "Undo stage hunk")
-                map("n", "<leader>hS", gs.stage_buffer,         "Stage buffer")
-                map("n", "<leader>hR", gs.reset_buffer,         "Reset buffer")
+                map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+                map("n", "<leader>hP", gs.preview_hunk_inline, "Preview hunk (inline)")
+                map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
+                map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
+                -- stage_hunk on a staged sign toggles it back (undo_stage_hunk is deprecated)
+                map("n", "<leader>hu", gs.stage_hunk, "Undo stage hunk")
+                map("n", "<leader>hS", gs.stage_buffer, "Stage buffer")
+                map("n", "<leader>hR", gs.reset_buffer, "Reset buffer")
                 map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Blame line")
                 map("n", "<leader>hB", gs.toggle_current_line_blame, "Toggle line blame")
-                map("n", "<leader>hd", gs.diffthis,             "Diff this")
+                map("n", "<leader>hd", gs.diffthis, "Diff this")
                 map("n", "<leader>hD", function() gs.diffthis("~") end, "Diff this ~")
-                map("n", "<leader>hw", gs.toggle_word_diff,     "Toggle word diff")
+                map("n", "<leader>hw", gs.toggle_word_diff, "Toggle word diff")
                 map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
             end,
         },
@@ -116,11 +127,11 @@ return {
     -- Indent guides
     {
         "lukas-reineke/indent-blankline.nvim",
-        main  = "ibl",
+        main = "ibl",
         event = { "BufReadPost", "BufNewFile" },
-        opts  = {
+        opts = {
             indent = { char = "▏" },
-            scope  = { enabled = true, show_start = false, show_end = false },
+            scope = { enabled = true, show_start = false, show_end = false },
             exclude = { filetypes = { "help", "alpha", "dashboard", "lazy", "mason", "notify" } },
         },
     },
@@ -132,11 +143,12 @@ return {
         opts = {
             preset = "modern",
             spec = {
-                { "<leader>f", group = "find / format" },
+                { "<leader>f", group = "find" },
                 { "<leader>g", group = "git" },
                 { "<leader>h", group = "hunk" },
                 { "<leader>c", group = "code / claude" },
                 { "<leader>b", group = "buffer" },
+                { "<leader>t", group = "tab" },
             },
         },
     },
@@ -146,6 +158,8 @@ return {
         "rcarriga/nvim-notify",
         lazy = true,
         opts = { background_colour = "#000000", render = "compact", stages = "fade", timeout = 2500 },
-        init = function() vim.notify = function(...) require("notify")(...) end end,
+        init = function()
+            vim.notify = function(...) require("notify")(...) end
+        end,
     },
 }

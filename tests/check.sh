@@ -89,7 +89,7 @@ else
 fi
 
 if have statix; then
-    # See .statix.toml for disabled rules and ignored paths.
+    # See statix.toml for disabled rules and ignored paths.
     run "statix check" statix check .
 else
     skip "statix"
@@ -115,9 +115,16 @@ else
     skip "luac"
 fi
 
+if have stylua; then
+    # Style rules live in stylua.toml at the repo root.
+    run "stylua --check nvim" stylua --check nvim
+else
+    skip "stylua"
+fi
+
 # ───── TOML ─────
 section "TOML"
-toml_files=(starship/starship.toml)
+toml_files=(starship/starship.toml statix.toml)
 
 if have taplo; then
     run "taplo format --check" taplo format --check "${toml_files[@]}"
@@ -136,6 +143,18 @@ if have jq; then
     done
 else
     skip "jq"
+fi
+
+# ───── JSONC ─────
+# jq can't parse comments, so the .jsonc UI configs get a JSONC-aware
+# parse via biome (lint = parse + a few sanity rules like duplicate keys).
+section "JSONC"
+jsonc_files=(waybar/config.jsonc fastfetch/config.jsonc fastfetch/config-darwin.jsonc)
+
+if have biome; then
+    run "biome lint (jsonc)" biome lint "${jsonc_files[@]}"
+else
+    skip "biome"
 fi
 
 echo

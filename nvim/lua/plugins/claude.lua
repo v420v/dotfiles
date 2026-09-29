@@ -6,41 +6,46 @@
 return {
     {
         "coder/claudecode.nvim",
-        dependencies = { "folke/snacks.nvim" },          -- terminal provider
+        dependencies = { "folke/snacks.nvim" }, -- terminal provider
         cmd = {
-            "ClaudeCode", "ClaudeCodeFocus", "ClaudeCodeSend",
-            "ClaudeCodeOpen", "ClaudeCodeAdd", "ClaudeCodeDiffAccept",
-            "ClaudeCodeDiffDeny", "ClaudeCodeStatus",
+            "ClaudeCode",
+            "ClaudeCodeFocus",
+            "ClaudeCodeSend",
+            "ClaudeCodeOpen",
+            "ClaudeCodeAdd",
+            "ClaudeCodeDiffAccept",
+            "ClaudeCodeDiffDeny",
+            "ClaudeCodeStatus",
         },
         opts = {
-            terminal_cmd = "claude",                     -- NixOS claude-code binary name
-            auto_start   = true,
-            log_level    = "info",
-            terminal     = {
-                split_side       = "right",
+            terminal_cmd = "claude", -- NixOS claude-code binary name
+            auto_start = true,
+            log_level = "info",
+            terminal = {
+                split_side = "right",
                 split_width_percentage = 0.35,
-                provider         = "snacks",             -- nicer than the native term split
-                auto_close       = false,
+                provider = "snacks", -- nicer than the native term split
+                auto_close = false,
             },
             diff_opts = {
                 auto_close_on_accept = true,
-                vertical_split       = true,
-                open_in_current_tab  = true,
+                vertical_split = true,
+                open_in_current_tab = true,
             },
         },
         keys = {
-            { "<leader>cc", "<cmd>ClaudeCode<CR>",          mode = "n", desc = "Toggle Claude" },
-            { "<leader>cF", "<cmd>ClaudeCodeFocus<CR>",     mode = "n", desc = "Focus Claude window" },
+            { "<leader>cc", "<cmd>ClaudeCode<CR>", mode = "n", desc = "Toggle Claude" },
+            { "<leader>cF", "<cmd>ClaudeCodeFocus<CR>", mode = "n", desc = "Focus Claude window" },
             { "<leader>cR", "<cmd>ClaudeCode --resume<CR>", mode = "n", desc = "Resume Claude session" },
             { "<leader>cC", "<cmd>ClaudeCode --continue<CR>", mode = "n", desc = "Continue Claude session" },
             -- File / selection context
-            { "<leader>cb", "<cmd>ClaudeCodeAdd %<CR>",     mode = "n", desc = "Add current buffer" },
-            { "<leader>cs", "<cmd>ClaudeCodeSend<CR>",      mode = "v", desc = "Send selection" },
+            { "<leader>cb", "<cmd>ClaudeCodeAdd %<CR>", mode = "n", desc = "Add current buffer" },
+            { "<leader>cs", "<cmd>ClaudeCodeSend<CR>", mode = "v", desc = "Send selection" },
             -- Normal mode: sends the current line in a code buffer.
-            { "<leader>cs", "<cmd>ClaudeCodeSend<CR>",      mode = "n", desc = "Send current line" },
+            { "<leader>cs", "<cmd>ClaudeCodeSend<CR>", mode = "n", desc = "Send current line" },
             -- Diff actions inside Claude-opened diffs
-            { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<CR>",mode = "n", desc = "Accept diff" },
-            { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<CR>",  mode = "n", desc = "Deny diff" },
+            { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<CR>", mode = "n", desc = "Accept diff" },
+            { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<CR>", mode = "n", desc = "Deny diff" },
         },
     },
 
@@ -54,7 +59,11 @@ return {
                 "<leader>e",
                 function()
                     local picker = Snacks.picker.get({ source = "explorer" })[1]
-                    if picker then picker:close() else Snacks.explorer() end
+                    if picker then
+                        picker:close()
+                    else
+                        Snacks.explorer()
+                    end
                 end,
                 desc = "Toggle explorer sidebar",
             },
@@ -69,20 +78,20 @@ return {
                 callback = function()
                     if vim.fn.argc() == 0 then return end
                     if vim.fn.isdirectory(vim.fn.argv(0)) == 1 then return end
-                    Snacks.explorer.open({ focus = false })  -- keep cursor in the file
+                    Snacks.explorer.open({ focus = false }) -- keep cursor in the file
                 end,
             })
         end,
         opts = {
             terminal = { win = { border = "rounded" } },
-            input    = { enabled = true },
-            notifier = { enabled = false },          -- nvim-notify already wired
-            image    = { enabled = true },           -- inline image previews via kitty graphics protocol
-            explorer = { replace_netrw = true },     -- `nvim .` opens the explorer, not netrw
-            picker   = {
+            input = { enabled = true },
+            notifier = { enabled = false }, -- nvim-notify already wired
+            image = { enabled = true }, -- inline image previews via kitty graphics protocol
+            explorer = { replace_netrw = true }, -- `nvim .` opens the explorer, not netrw
+            picker = {
                 sources = {
                     explorer = {
-                        hidden = true,               -- show dotfiles
+                        hidden = true, -- show dotfiles
                         layout = { preset = "sidebar", layout = { width = 35 } },
                         -- <CR> uses the default `confirm`: files open as a buffer
                         -- in the middle editing window (no new tabpage), dirs toggle.
