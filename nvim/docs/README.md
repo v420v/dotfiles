@@ -91,6 +91,7 @@ VSCode / Zed 風の 3 カラムです。
 対応言語のファイルを開くと LSP が自動で起動します（対応言語は [settings.md](settings.md#lsp-サーバー)）。
 
 - `gd` 定義へ、`gr` 参照、`K` ホバー（カーソルを止めるだけでも自動表示）、`<leader>rn` リネーム、`<leader>la` コードアクション、`]d` / `[d` 診断へ移動
+- VSCode のように `Cmd+クリック`（Linux では `Ctrl+クリック`）で定義へジャンプ、`<C-o>` で戻る
 - 補完は入力中に自動で出ます。`Tab` / `Shift-Tab` で選択、`Enter` で確定
 - フォーマットは `<leader>cf`。保存時の自動フォーマットは**既定で無効**（`:FormatEnable` で有効化）
 
