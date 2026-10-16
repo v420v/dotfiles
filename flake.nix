@@ -1,5 +1,5 @@
 {
-  description = "ibuki's NixOS + Hyprland rice (Modus Vivendi) + M1 Mac home-manager";
+  description = "ibuki's M1 Mac nix-darwin + home-manager config (Modus Vivendi)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -61,22 +61,6 @@
       };
     in
     {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        system = linuxSystem;
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./nixos/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.users.ibuki = import ./home/ibuki.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; username = "ibuki"; };
-          }
-        ];
-      };
-
       darwinConfigurations = {
         ibuki = mkDarwin "ibuki";
         yoshida = mkDarwin "yoshida";

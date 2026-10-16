@@ -49,7 +49,7 @@ run() {
 }
 
 section "Shell"
-shell_files=(install.sh wallpapers/generate.sh tests/check.sh tests/format.sh)
+shell_files=(tests/check.sh tests/format.sh)
 
 for f in "${shell_files[@]}"; do
     run "bash -n  $f" bash -n "$f"
@@ -69,7 +69,6 @@ fi
 
 section "Nix"
 mapfile -t nix_files < <(find . -name "*.nix" \
-    -not -path "./nixos/hardware-configuration.nix" \
     -not -path "./.git/*" | sort)
 
 for f in "${nix_files[@]}"; do
@@ -133,7 +132,7 @@ else
 fi
 
 section "JSONC"
-jsonc_files=(waybar/config.jsonc fastfetch/config.jsonc fastfetch/config-darwin.jsonc)
+jsonc_files=(fastfetch/config-darwin.jsonc)
 
 if have biome; then
     run "biome lint (jsonc)" biome lint "${jsonc_files[@]}"

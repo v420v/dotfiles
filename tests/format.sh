@@ -4,9 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 cd "$ROOT" || exit 1
 
-shell_files=(install.sh wallpapers/generate.sh tests/check.sh tests/format.sh)
+shell_files=(tests/check.sh tests/format.sh)
 mapfile -t nix_files < <(find . -name "*.nix" \
-    -not -path "./nixos/hardware-configuration.nix" \
     -not -path "./.git/*" | sort)
 toml_files=(starship/starship.toml statix.toml)
 

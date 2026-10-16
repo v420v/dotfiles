@@ -221,12 +221,7 @@
     "${config.home.homeDirectory}/dotfiles/claude/settings.json";
 
   xdg.configFile = {
-    "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink (
-      "${config.home.homeDirectory}/dotfiles/fastfetch/"
-      + (if pkgs.stdenv.isDarwin then "config-darwin.jsonc" else "config.jsonc")
-    );
-    "fastfetch/nixos-logo.png".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/nixos-logo.png";
-    "fastfetch/nixos-logo.svg".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/nixos-logo.svg";
+    "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/config-darwin.jsonc";
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
     "kitty/kitty.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/kitty.conf";
     "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship/starship.toml";

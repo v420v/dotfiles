@@ -14,7 +14,7 @@
 - **Neovim 0.12**（0.12.4 で確認）
 - **設定の場所**: home-manager（`home/common.nix`）が `~/.config/nvim` → `~/dotfiles/nvim` のシンボリックリンクを張っています。リポジトリを編集して nvim を再起動すれば反映されます（`home-manager switch` は不要）。
 - **プラグイン管理**: [lazy.nvim](https://github.com/folke/lazy.nvim)。バージョンは `nvim/lazy-lock.json` で固定。
-- **LSP サーバー・フォーマッター**: Mason は使わず Nix でインストール（`darwin/configuration.nix` / `nixos/configuration.nix`）。
+- **LSP サーバー・フォーマッター**: Mason は使わず Nix でインストール（`darwin/configuration.nix`）。
 - **フォント**: Nerd Font（アイコン表示に必要）
 - **ターミナル**: kitty 推奨（フォントサイズ変更キーと画像プレビューが kitty の機能を使います）
 - **リーダーキー**: `Space`（以降 `<leader>` と表記）
@@ -128,5 +128,5 @@ Claude Code などの外部ツールが nvim を開かずにエラーを読め�
 | 基本キーマップ | `lua/config/keymaps.lua` |
 | プラグインのキーマップ | 各プラグイン spec の `keys`（`lua/plugins/*.lua`） |
 | プラグインの追加 | `lua/plugins/` に spec を追加 → nvim を再起動すると自動でインストール |
-| LSP サーバーの追加 | `lua/plugins/lsp.lua` の `servers` と、Nix 側（`darwin/configuration.nix` / `nixos/configuration.nix`）の両方 |
+| LSP サーバーの追加 | `lua/plugins/lsp.lua` の `servers` と、Nix 側（`darwin/configuration.nix`）の両方 |
 | プラグインの更新 | `:Lazy update` → 更新された `lazy-lock.json` をコミット |

@@ -61,13 +61,6 @@ the offending output indented under the failing check.
 
 After editing Nix files, rebuild to apply them.
 
-**NixOS**
-
-```sh
-rebuild
-# expands to: sudo nixos-rebuild switch --flake ~/dotfiles#nixos
-```
-
 **macOS (nix-darwin)**
 
 ```sh
@@ -79,8 +72,7 @@ rebuild-home   # user-only changes, no sudo
 ```
 
 Both `rebuild` and `rebuild-home` are shell aliases defined in
-`home/ibuki.nix` (NixOS) and `home/darwin.nix` (macOS). They are available
-after the first successful rebuild.
+`home/darwin.nix`. They are available after the first successful rebuild.
 
 ## What CI checks
 

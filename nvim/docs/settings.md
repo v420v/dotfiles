@@ -216,7 +216,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 
 - すべてのサーバーに nvim-cmp の補完機能を渡しています。
 - V 言語の `v_analyzer` は nixpkgs にないため無効です（フォーマットの `v fmt` は使えます）。
-- サーバーを追加するときは、`lsp.lua` の `servers` と、Nix のパッケージ（`darwin/configuration.nix` / `nixos/configuration.nix`）の両方に追加します。
+- サーバーを追加するときは、`lsp.lua` の `servers` と、Nix のパッケージ（`darwin/configuration.nix`）の両方に追加します。
 
 ### 診断の表示
 

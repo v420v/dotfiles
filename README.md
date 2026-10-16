@@ -1,35 +1,6 @@
 # dotfiles
 
-NixOS + Hyprland config, plus an M1 macOS (nix-darwin) variant. Both share the
-same flake and home-manager modules.
-
-## NixOS
-
-### Apply
-
-```bash
-cd ~/dotfiles
-./install.sh        # imports hardware-config, generates wallpaper, runs nixos-rebuild
-```
-
-Or by hand:
-
-```bash
-sudo cp /etc/nixos/hardware-configuration.nix ~/dotfiles/nixos/
-sudo nixos-rebuild switch --flake ~/dotfiles#nixos
-```
-
-Re-apply after any change with the same command (aliased to `rebuild` in zsh).
-
-### Remove
-
-```bash
-sudo nixos-rebuild switch --rollback   # go back to the previous generation
-nix-collect-garbage -d                 # drop old generations
-```
-
-To fully drop it, point `nixos-rebuild` at a different `configuration.nix` and
-rebuild, then delete `~/dotfiles`.
+M1 macOS (nix-darwin) config, managed with a flake and home-manager.
 
 ## macOS (M1) — nix-darwin
 
