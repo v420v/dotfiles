@@ -24,7 +24,7 @@ return {
             { "<leader>up", "<cmd>Precognition toggle<CR>", desc = "Toggle precognition hints" },
         },
         opts = {
-            startVisible = true,
+            startVisible = false,
         },
     },
 
