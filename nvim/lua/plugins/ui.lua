@@ -70,9 +70,9 @@ return {
             signs = {
                 add = { text = "▎" },
                 change = { text = "▎" },
-                delete = { text = "" },
-                topdelete = { text = "" },
-                changedelete = { text = "▎" },
+                delete = { text = "_" },
+                topdelete = { text = "‾" },
+                changedelete = { text = "~" },
                 untracked = { text = "▎" },
             },
             signs_staged_enable = true,
@@ -107,6 +107,7 @@ return {
                 map("n", "<leader>hd", gs.diffthis, "Diff this")
                 map("n", "<leader>hD", function() gs.diffthis("~") end, "Diff this ~")
                 map("n", "<leader>hw", gs.toggle_word_diff, "Toggle word diff")
+                map("n", "<leader>ht", gs.toggle_deleted, "Toggle deleted lines")
                 map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
             end,
         },
