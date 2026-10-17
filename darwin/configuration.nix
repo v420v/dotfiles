@@ -80,7 +80,6 @@ in
     taps = [ "k1LoW/tap" ];
     brews = [
       "k1LoW/tap/mo"
-      "mysql@8.4"
     ];
     casks = [
       "google-chrome"
