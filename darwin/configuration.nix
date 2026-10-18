@@ -68,6 +68,7 @@ in
     stylua
     nixpkgs-fmt
     shfmt
+    awscli2
   ];
 
   fonts.packages = with pkgs; [
