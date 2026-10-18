@@ -69,6 +69,8 @@ in
     nixpkgs-fmt
     shfmt
     awscli2
+    terraform
+    terraform-ls
   ];
 
   fonts.packages = with pkgs; [
