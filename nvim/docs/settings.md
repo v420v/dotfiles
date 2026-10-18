@@ -24,7 +24,7 @@ nvim/
         ├── php.lua          Blade テンプレート
         ├── telescope.lua    あいまい検索
         ├── treesitter.lua   構文解析
-        └── ui.lua           バッファタブ・ステータスライン・gitsigns・which-key など
+        └── ui.lua           バッファタブ・ステータスライン・gitsigns・パンくず・Sticky scroll・which-key など
 ```
 
 ## エディタオプション
@@ -156,7 +156,9 @@ Git の状態がないドットファイルもグレーで表示されます。
 | インデントガイド | `▏` で表示、カーソル位置のスコープを強調。help / alpha / dashboard / lazy / mason / notify では非表示 |
 | 通知（nvim-notify） | コンパクト表示、フェード、2.5 秒で消える |
 | which-key | `modern` プリセット |
-| モーションヒント（precognition） | 起動時から表示 |
+| モーションヒント（precognition） | 起動時は非表示（`<leader>up` で表示） |
+| パンくず（dropbar） | ファイルを開いたウィンドウの上部（winbar）に表示。エクスプローラー・ターミナル・ダッシュボードには出ない |
+| Sticky scroll（treesitter-context） | 画面上部に現在のスコープ（関数・クラスなど）の宣言行を最大 4 行固定表示。カーソル位置を基準にし、はみ出すときは外側のスコープから省く。最下行に下線（`#30363d`）を引く |
 | ダッシュボード | Neovim のロゴ、ボタン、日付・時刻（1 秒ごとに更新）・プラグイン数・バージョン |
 
 ## プラグイン一覧
@@ -180,6 +182,8 @@ Git の状態がないドットファイルもグレーで表示されます。
 | lualine.nvim | ステータスライン | 起動後 | `ui.lua` |
 | gitsigns.nvim | Git の差分表示、hunk 操作、blame | ファイルを開いたとき | `ui.lua` |
 | indent-blankline.nvim | インデントガイド | ファイルを開いたとき | `ui.lua` |
+| dropbar.nvim | パンくずリスト（winbar） | ファイルを開いたとき | `ui.lua` |
+| nvim-treesitter-context | Sticky scroll（スコープの宣言行を固定表示） | ファイルを開いたとき | `ui.lua` |
 | which-key.nvim | キーのヒント | 起動後 | `ui.lua` |
 | nvim-notify | 通知 | 最初の通知 | `ui.lua` |
 | nvim-web-devicons | ファイルアイコン | 必要なとき | `ui.lua` |

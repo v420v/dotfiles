@@ -91,6 +91,7 @@
 | --- | --- |
 | `:IBLToggle` / `:IBLToggleScope` | インデントガイド / スコープ表示の切り替え |
 | `:Precognition toggle` | モーションヒントの表示切り替え |
+| `:TSContext enable` / `:TSContext disable` / `:TSContext toggle` | Sticky scroll の有効 / 無効 / 切り替え（引数なしで実行すると選択メニュー） |
 | `:HexToggle` / `:HexDump` / `:HexAssemble` | Hex 表示の切り替え / xxd 形式にする / バイナリに戻す |
 | `:GithubThemeCompile` | カラースキームを再コンパイル（テーマ設定が反映されないとき） |
 | `:Open <パス or URL>` | OS の既定アプリで開く（Neovim 標準） |

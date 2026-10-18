@@ -125,6 +125,49 @@ return {
     },
 
     {
+        "Bekaboo/dropbar.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
+        keys = {
+            { "<leader>;", function() require("dropbar.api").pick() end, desc = "Breadcrumbs: pick symbol" },
+            {
+                "[;",
+                function() require("dropbar.api").goto_context_start() end,
+                desc = "Breadcrumbs: go to context start",
+            },
+            {
+                "];",
+                function() require("dropbar.api").select_next_context() end,
+                desc = "Breadcrumbs: select next context",
+            },
+        },
+        opts = {},
+    },
+
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        keys = {
+            { "<leader>ut", "<cmd>TSContext toggle<CR>", desc = "Toggle sticky scroll (treesitter-context)" },
+        },
+        opts = {
+            max_lines = 4,
+            multiline_threshold = 1,
+            trim_scope = "outer",
+            mode = "cursor",
+        },
+        config = function(_, opts)
+            require("treesitter-context").setup(opts)
+            local function paint()
+                vim.api.nvim_set_hl(0, "TreesitterContextBottom", { underline = true, sp = "#30363d" })
+            end
+            paint()
+            vim.api.nvim_create_autocmd("ColorScheme", { callback = paint })
+        end,
+    },
+
+    {
         "folke/which-key.nvim",
         event = "VeryLazy",
         opts = {
@@ -136,6 +179,7 @@ return {
                 { "<leader>c", group = "code / claude" },
                 { "<leader>b", group = "buffer" },
                 { "<leader>t", group = "tab" },
+                { "<leader>u", group = "ui" },
             },
         },
     },

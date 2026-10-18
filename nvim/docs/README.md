@@ -49,8 +49,9 @@ VSCode / Zed 風の 3 カラムです。
 +-------------+---------------------------------+---------------+
 | EXPLORER    | [a.lua] [b.lua] [c.lua]         | CLAUDE CODE   |  <- bufferline
 +-------------+---------------------------------+---------------+
-| file tree   |                                 | claude        |
-| (Snacks)    |            editor               | (terminal)    |
+| file tree   | lua > plugins > ui.lua > setup  | claude        |  <- breadcrumbs (dropbar)
+| (Snacks)    | function M.setup(opts)          | (terminal)    |  <- sticky scroll (treesitter-context)
+|             |            editor               |               |
 |             |                                 |               |
 +-------------+---------------------------------+---------------+
 | statusline (lualine)                                          |
@@ -59,6 +60,8 @@ VSCode / Zed 風の 3 カラムです。
 
 - **エクスプローラー**（左、幅 35）: `<leader>e` で表示/非表示、`-` で現在のファイルの位置を表示
 - **バッファタブ**（上）: 開いたファイルがタブとして並ぶ。`Shift-h` / `Shift-l` で切り替え、`<leader>bd` で閉じる
+- **パンくずリスト**（エディタ上部）: `ディレクトリ > ファイル > クラス > 関数` を表示。`<leader>;` でドロップダウンを開いてシンボルへ移動、クリックでも可
+- **Sticky scroll**（エディタ上部、パンくずの下）: スクロールで見えなくなった関数やクラスの宣言行を最大 4 行固定表示。`<leader>ut` で表示/非表示
 - **Claude Code**（右、幅 35%）: `<leader>cc` で表示/非表示
 - **ステータスライン**: モード / ブランチ・差分・診断 / ファイルパス / エンコーディング・改行コード・ファイルタイプ / 進捗 / 行:列
 
@@ -91,6 +94,7 @@ VSCode / Zed 風の 3 カラムです。
 対応言語のファイルを開くと LSP が自動で起動します（対応言語は [settings.md](settings.md#lsp-サーバー)）。
 
 - `gd` 定義へ、`gr` 参照、`K` ホバー（カーソルを止めるだけでも自動表示）、`<leader>rn` リネーム、`<leader>la` コードアクション、`]d` / `[d` 診断へ移動
+- `<leader>;` でパンくずのドロップダウンを開き、ファイル内のシンボルへ移動。`[;` で現在の関数やクラスの先頭へ
 - VSCode のように `Cmd+クリック`（Linux では `Ctrl+クリック`）で定義へジャンプ、`<C-o>` で戻る
 - 補完は入力中に自動で出ます。`Tab` / `Shift-Tab` で選択、`Enter` で確定
 - フォーマットは `<leader>cf`。保存時の自動フォーマットは**既定で無効**（`:FormatEnable` で有効化）
