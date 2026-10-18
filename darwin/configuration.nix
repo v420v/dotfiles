@@ -43,6 +43,7 @@ in
     php.packages.composer
     intelephense
     phpPackages.php-cs-fixer
+    mago
 
     nodejs
 

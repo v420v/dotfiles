@@ -20,6 +20,7 @@ nvim/
         ├── completion.lua   補完・スニペット
         ├── editor.lua       コメント・囲み文字・括弧補完・Diffview など
         ├── hex.lua          バイナリ編集
+        ├── lint.lua         リンター
         ├── lsp.lua          LSP・フォーマッター
         ├── php.lua          Blade テンプレート
         ├── telescope.lua    あいまい検索
@@ -176,6 +177,7 @@ Git の状態がないドットファイルもグレーで表示されます。
 | LuaSnip + friendly-snippets | スニペット | 補完と一緒 | `completion.lua` |
 | nvim-lspconfig + fidget.nvim | LSP の設定、進捗表示 | ファイルを開いたとき | `lsp.lua` |
 | conform.nvim | フォーマッター | 保存時 / `<leader>cf` / `:ConformInfo` | `lsp.lua` |
+| nvim-lint | リンター | ファイルを開いたとき / 保存時 | `lint.lua` |
 | nvim-treesitter + nvim-treesitter-textobjects | 構文ハイライト、インデント、選択 | ファイルを開いたとき | `treesitter.lua` |
 | telescope.nvim + telescope-fzf-native / telescope-live-grep-args | あいまい検索 | キー / コマンド | `telescope.lua` |
 | bufferline.nvim | バッファタブ | 起動後 | `ui.lua` |
@@ -248,6 +250,18 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 
 - 手動: `<leader>cf`（非同期。フォーマッターがなければ LSP でフォーマット）
 - 保存時: **既定では無効**。`:FormatEnable` で有効にすると、保存時に最大 1.5 秒でフォーマットします（フォーマッターがなければ LSP）
+
+## リンター
+
+定義: `lua/plugins/lint.lua`（nvim-lint）
+
+| 言語 | リンター |
+| --- | --- |
+| PHP | `mago lint`（プロジェクトの `vendor/bin/mago`、なければ `$PATH` の `mago`） |
+
+- ファイルを開いたときと保存したときに実行します（mago はディスク上のファイルを読むため、入力中は実行しません）
+- 手動: `<leader>cL`
+- ルールはプロジェクトの `mago.toml` に従います
 
 ## Treesitter
 
