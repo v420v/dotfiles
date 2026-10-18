@@ -26,14 +26,16 @@ you are inside the dev shell (or that the tools are otherwise available).
 
 ## Auto-format before checking
 
-Run the in-place formatters before committing:
+All formatters are declared once in `treefmt.nix` and run through the flake's
+`formatter` output:
 
 ```sh
-bash tests/format.sh
+nix fmt
 ```
 
-This formats shell scripts with `shfmt`, Nix files with `nixpkgs-fmt`, and
-TOML files with `taplo`.
+This formats shell scripts with `shfmt`, Nix files with `nixpkgs-fmt`, Lua with
+`stylua`, TOML with `taplo`, and re-sorts any list wrapped in
+`# keep-sorted start` / `# keep-sorted end`. Works outside the dev shell too.
 
 ## Check before committing
 
@@ -41,17 +43,19 @@ TOML files with `taplo`.
 bash tests/check.sh
 ```
 
-The script lints and parses every config in the repo:
+The script first verifies formatting, then lints and parses every config in
+the repo:
 
 | Section | Tools |
 |---------|-------|
-| Shell   | `bash -n` (syntax), `shellcheck` (lint), `shfmt -d` (format diff) |
-| Nix     | `nix-instantiate --parse` (syntax), `nixpkgs-fmt --check`, `statix check`, `deadnix` |
+| Format  | `nix fmt -- --fail-on-change` (rewrites unformatted files and fails) |
+| Shell   | `bash -n` (syntax), `shellcheck` (lint) |
+| Nix     | `nix-instantiate --parse` (syntax), `statix check`, `deadnix` |
 | Lua     | `luac -p` (syntax) |
-| TOML    | `taplo format --check` + `taplo lint` |
+| TOML    | `taplo lint` |
 | JSON    | `jq -e` (valid JSON) |
 
-If a tool is missing it is skipped with a `∼ skip` line. Inside `nix develop`
+If a linter is missing it is skipped with a `∼ skip` line. Inside `nix develop`
 all tools are present and no checks are skipped.
 
 The script exits 0 (`OK`) on success and 1 (`FAILED`) on any failure, printing
@@ -79,8 +83,8 @@ Both `rebuild` and `rebuild-home` are shell aliases defined in
 CI (`.github/workflows/ci.yml`) runs two jobs on every push and pull request:
 
 - **check** — runs `bash tests/check.sh` inside `nix develop` (no skipped tools).
-- **format** — verifies that `shfmt`, `nixpkgs-fmt`, and `taplo` produce no
-  diff (i.e. files are already formatted).
+- **format** — builds `checks.x86_64-linux.formatting`, treefmt's sandboxed
+  check that every file is already formatted.
 
-PRs must pass both jobs. Run `bash tests/format.sh` then `bash tests/check.sh`
-locally before pushing to avoid CI failures.
+PRs must pass both jobs. Run `nix fmt` then `bash tests/check.sh` locally
+before pushing to avoid CI failures.

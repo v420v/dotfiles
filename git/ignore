@@ -1,2 +1,8 @@
-settings.local.json
+# macOS
+.DS_Store
+
+# Claude Code (per-machine / per-user files that never belong in a repo)
+**/.claude/settings.local.json
+CLAUDE.local.md
 .claude/skills
+tmp-agents

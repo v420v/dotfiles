@@ -1,4 +1,4 @@
-{ pkgs, lib, username, ... }:
+{ pkgs, lib, inputs, username, ... }:
 
 let
   manageNix = username != "yoshida";
@@ -8,6 +8,11 @@ in
     { enable = manageNix; }
     (lib.mkIf manageNix {
       settings.experimental-features = [ "nix-command" "flakes" ];
+      # Pin `nixpkgs` in the flake registry and NIX_PATH to the exact nixpkgs
+      # this flake is locked to, so `nix shell nixpkgs#foo` / `nix-shell -p foo`
+      # reuse what is already in the store instead of fetching a channel.
+      registry.nixpkgs.flake = inputs.nixpkgs;
+      nixPath = [ "nixpkgs=flake:nixpkgs" ];
       optimise.automatic = true;
       gc = {
         automatic = true;
@@ -83,15 +88,17 @@ in
       "k1LoW/tap/mo"
     ];
     casks = [
-      "google-chrome"
+      # keep-sorted start
       "arc"
+      "coteditor"
+      "discord"
+      "docker-desktop"
+      "google-chrome"
       "kitty"
+      "postman"
       "raycast"
       "zed"
-      "coteditor"
-      "postman"
-      "docker-desktop"
-      "discord"
+      # keep-sorted end
     ];
   };
 
@@ -121,7 +128,21 @@ in
 
     trackpad.Clicking = true;
 
-    CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."64".enabled = false;
+    # Give Cmd+Space to input-source switching instead of Spotlight.
+    #   64: Spotlight search        -> off
+    #   60: previous input source   -> Cmd+Space (space=32, keycode=49, cmd=1048576)
+    #   61: next input source       -> off (one toggle key is enough)
+    CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
+      "64".enabled = false;
+      "60" = {
+        enabled = true;
+        value = {
+          type = "standard";
+          parameters = [ 32 49 1048576 ];
+        };
+      };
+      "61".enabled = false;
+    };
   };
 
   system.activationScripts.postActivation.text = ''

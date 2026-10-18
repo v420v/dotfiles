@@ -1,14 +1,31 @@
 {
+  "permissions": {
+    "deny": [
+      "Bash(aws:*)",
+      "Bash(sudo:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/*token*)",
+      "Edit(**/.env*)",
+      "Edit(**/secrets/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(rm -rf:*)",
+      "Bash(mysql:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
   "enabledPlugins": {
     "ponytail@ponytail": true,
     "superpowers@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
   },
-  "permissions": {
-    "deny": [
-      "Bash(aws:*)"
-    ]
-  },
   "tui": "fullscreen",
-  "switchModelsOnFlag": true
+  "switchModelsOnFlag": true,
+  "model": "fable"
 }

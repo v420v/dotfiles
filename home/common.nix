@@ -49,6 +49,15 @@
     settings.alias = {
       lg = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'";
     };
+    settings.diff = {
+      algorithm = "histogram";
+      colorMoved = "default";
+    };
+    settings.merge.conflictstyle = "zdiff3";
+    settings.rerere.enabled = true;
+    settings.branch.sort = "-committerdate";
+    settings.push.autoSetupRemote = true;
+    settings.commit.verbose = true;
   };
 
   programs.starship = {
@@ -222,6 +231,7 @@
 
   xdg.configFile = {
     "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/config-darwin.jsonc";
+    "git/ignore".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/git/ignore";
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
     "kitty/kitty.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/kitty/kitty.conf";
     "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/starship/starship.toml";

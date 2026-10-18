@@ -19,13 +19,22 @@
       url = "github:zhaofengli/nix-homebrew";
       inputs.brew-src.follows = "homebrew-brew";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, treefmt-nix, ... }@inputs:
     let
       linuxSystem = "x86_64-linux";
       darwinSystem = "aarch64-darwin";
       forAllSystems = nixpkgs.lib.genAttrs [ linuxSystem darwinSystem ];
+
+      # `nix fmt` runs every formatter declared in ./treefmt.nix.
+      treefmtEval = forAllSystems (system:
+        treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./treefmt.nix
+      );
 
       mkDarwin = username: nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs username; };
@@ -76,13 +85,13 @@
         in {
           default = pkgs.mkShell {
             packages = with pkgs; [
+              # formatters (one wrapper = everything in treefmt.nix)
+              treefmtEval.${system}.config.build.wrapper
+              # linters used by tests/check.sh
               shellcheck
-              shfmt
-              nixpkgs-fmt
               statix
               deadnix
               lua
-              stylua
               taplo
               jq
               biome
@@ -90,6 +99,11 @@
           };
         });
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
+      formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
+
+      # `nix build .#checks.<system>.formatting` fails if any file is unformatted.
+      checks = forAllSystems (system: {
+        formatting = treefmtEval.${system}.config.build.check self;
+      });
     };
 }

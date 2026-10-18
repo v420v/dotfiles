@@ -48,8 +48,13 @@ run() {
     fi
 }
 
+section "Format"
+# Formatting is owned by treefmt (./treefmt.nix). This rewrites unformatted
+# files in place and fails, so the diff is visible in `git status`.
+run "nix fmt -- --fail-on-change" nix fmt -- --fail-on-change
+
 section "Shell"
-shell_files=(tests/check.sh tests/format.sh)
+shell_files=(tests/check.sh)
 
 for f in "${shell_files[@]}"; do
     run "bash -n  $f" bash -n "$f"
@@ -61,12 +66,6 @@ else
     skip "shellcheck"
 fi
 
-if have shfmt; then
-    run "shfmt -d (4-space, indent-case)" shfmt -d -i 4 -ci "${shell_files[@]}"
-else
-    skip "shfmt"
-fi
-
 section "Nix"
 mapfile -t nix_files < <(find . -name "*.nix" \
     -not -path "./.git/*" | sort)
@@ -74,12 +73,6 @@ mapfile -t nix_files < <(find . -name "*.nix" \
 for f in "${nix_files[@]}"; do
     run "nix-instantiate --parse $f" nix-instantiate --parse "$f"
 done
-
-if have nixpkgs-fmt; then
-    run "nixpkgs-fmt --check" nixpkgs-fmt --check "${nix_files[@]}"
-else
-    skip "nixpkgs-fmt"
-fi
 
 if have statix; then
     run "statix check" statix check .
@@ -104,17 +97,10 @@ else
     skip "luac"
 fi
 
-if have stylua; then
-    run "stylua --check nvim" stylua --check nvim
-else
-    skip "stylua"
-fi
-
 section "TOML"
-toml_files=(starship/starship.toml statix.toml)
+toml_files=(starship/starship.toml statix.toml stylua.toml)
 
 if have taplo; then
-    run "taplo format --check" taplo format --check "${toml_files[@]}"
     run "taplo lint" taplo lint "${toml_files[@]}"
 else
     skip "taplo"
