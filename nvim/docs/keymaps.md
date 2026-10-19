@@ -57,9 +57,9 @@
 | `<S-h>` / `<S-l>` | n | 前 / 次のバッファ（bufferline の並び順）。標準の `H` / `L`（画面上端 / 下端へ移動）を上書き |
 | `<leader>bd` | n | バッファを閉じる（サイドバーのレイアウトを崩さない） |
 | `<leader>bo` | n | 現在以外のバッファをすべて閉じる |
-| `<leader>bD` | n | バッファを強制的に閉じる（未保存の変更は破棄） |
+| `<leader>bx` | n | バッファを強制的に閉じる（未保存の変更は破棄） |
 | `<leader>tc` | n | タブページを閉じる |
-| `<leader>tD` | n | タブ内の各ウィンドウのバッファを削除 `:windo bdelete` |
+| `<leader>td` | n | タブ内の各ウィンドウのバッファを削除 `:windo bdelete` |
 | `<leader>tt` | n | ターミナルを下に開く / 閉じる（画面下 30%） |
 
 バッファタブ（bufferline）のマウス操作: 左クリックで切り替え、右クリックまたは閉じるアイコンで閉じる（`bdelete!` なので**未保存の変更は破棄**されます）。
@@ -79,13 +79,13 @@ kitty の remote control（`allow_remote_control yes`）が必要です。kitty 
 | キー | モード | 動作 |
 | --- | --- | --- |
 | `<leader>ff` | n | ファイル検索（隠しファイルを含む。Git で変更のあるファイルに `●` と黄色表示） |
-| `<leader>fF` | n | ファイル検索（通常版） |
+| `<leader>fp` | n | ファイル検索（通常版） |
 | `<leader>fg` | n | 文字列検索。rg のオプションを付けられる（例: `foo -tlua`、`"foo bar" -g "*.nix"`） |
-| `<leader>fG` | n | 文字列検索（単語一致 `-w`） |
+| `<leader>fe` | n | 文字列検索（単語一致 `-w`） |
 | `<leader>fi` | n | 文字列検索（大文字小文字を区別しない `-i`） |
-| `<leader>fI` | n | 文字列検索（大文字小文字を区別する `-s`） |
+| `<leader>fm` | n | 文字列検索（大文字小文字を区別する `-s`） |
 | `<leader>fw` | n | カーソル下の単語で検索 |
-| `<leader>fW` | n | カーソル下の単語で検索（単語一致） |
+| `<leader>fx` | n | カーソル下の単語で検索（単語一致） |
 | `<leader>/` | n | 現在のバッファ内をあいまい検索 |
 | `<leader>fb` | n | 開いているバッファ |
 | `<leader>fr` | n | 最近開いたファイル |
@@ -94,7 +94,7 @@ kitty の remote control（`allow_remote_control yes`）が必要です。kitty 
 | `<leader>fk` | n | キーマップ |
 | `<leader>fd` | n | 診断（エラー・警告） |
 | `<leader>fs` | n | シンボル（現在のファイル） |
-| `<leader>fS` | n | シンボル（ワークスペース全体） |
+| `<leader>fy` | n | シンボル（ワークスペース全体） |
 | `<leader>ft` | n | TODO / FIXME などのコメント |
 | `<leader>gc` | n | Git コミット |
 | `<leader>gs` | n | Git status（ファイルアイコン付き） |
@@ -225,7 +225,7 @@ LSP が接続されたバッファだけで有効です。定義: `lua/plugins/l
 
 | キー | モード | 動作 |
 | --- | --- | --- |
-| `<leader>cL` | n | 現在のバッファをリントする |
+| `<leader>ck` | n | 現在のバッファをリントする |
 
 ファイルを開いたときと保存したときにも自動でリントします。
 
@@ -288,16 +288,16 @@ LSP が接続されたバッファだけで有効です。定義: `lua/plugins/l
 | --- | --- | --- |
 | `]h` / `[h` | n | 次 / 前の変更箇所（hunk）へ |
 | `<leader>hp` | n | hunk をプレビュー |
-| `<leader>hP` | n | hunk をインライン表示 |
+| `<leader>hi` | n | hunk をインライン表示 |
 | `<leader>hs` | n | hunk をステージ |
 | `<leader>hu` | n | hunk のステージを取り消す |
 | `<leader>hr` | n | hunk の変更を元に戻す |
-| `<leader>hS` | n | ファイル全体をステージ |
-| `<leader>hR` | n | ファイル全体の変更を元に戻す |
+| `<leader>ha` | n | ファイル全体をステージ |
+| `<leader>hx` | n | ファイル全体の変更を元に戻す |
 | `<leader>hb` | n | カーソル行の blame（詳細） |
-| `<leader>hB` | n | 行末の blame 表示を切り替え |
+| `<leader>hl` | n | 行末の blame 表示を切り替え |
 | `<leader>hd` | n | インデックスとの差分を表示 |
-| `<leader>hD` | n | 直前のコミット（`~`）との差分を表示 |
+| `<leader>hc` | n | 直前のコミット（`~`）との差分を表示 |
 | `<leader>hw` | n | 単語単位の差分表示を切り替え |
 | `ih` | o, v | hunk のテキストオブジェクト（例: `vih`、`dih`） |
 
@@ -308,7 +308,7 @@ LSP が接続されたバッファだけで有効です。定義: `lua/plugins/l
 | `<leader>gd` | n | 作業ツリーの変更一覧と差分を開く |
 | `<leader>gq` | n | Diffview を閉じる |
 | `<leader>gh` | n | リポジトリのコミット履歴 |
-| `<leader>gH` | n | 現在のファイルの履歴 |
+| `<leader>gl` | n | 現在のファイルの履歴 |
 | `<leader>gf` | n | ファイルパネルの表示切り替え |
 
 Diffview の中（主なもの。`g?` で全キーを表示）:
@@ -339,14 +339,16 @@ Diffview の中では `<leader>e`・`<leader>b`・`<leader>cb`・`<leader>ca` �
 | キー | モード | 動作 |
 | --- | --- | --- |
 | `<leader>cc` | n | Claude Code の表示 / 非表示（右側 35%） |
-| `<leader>cF` | n | Claude のウィンドウへフォーカス（フォーカス中なら隠す） |
-| `<leader>cR` | n | 過去のセッションを選んで再開（`--resume`） |
-| `<leader>cC` | n | 直前のセッションを続ける（`--continue`） |
+| `<leader>co` | n | Claude のウィンドウへフォーカス（フォーカス中なら隠す） |
+| `<leader>cr` | n | 過去のセッションを選んで再開（`--resume`） |
+| `<leader>cp` | n | 直前のセッションを続ける（`--continue`） |
 | `<leader>cb` | n | 現在のファイルをコンテキストに追加 |
 | `<leader>cs` | v | 選択範囲を送る |
 | `<leader>cs` | n | 現在の行を送る（エクスプローラーではファイルを送る） |
 | `<leader>ca` | n | Claude が提案した差分を承認 |
 | `<leader>cd` | n | Claude が提案した差分を拒否 |
+| `<leader>cn` | n | 新しいスレッド（別の Claude）を右側に開く |
+| `<leader>ct` | n | スレッドを選んで切り替える（「+ New thread」で新規作成） |
 
 Claude のウィンドウの中:
 
@@ -363,6 +365,15 @@ Claude のウィンドウの中:
 - Claude が編集を提案すると、今のタブに縦分割で差分が開きます
 - 承認: `<leader>ca` または差分バッファで `:w`（承認すると差分は自動で閉じます）
 - 拒否: `<leader>cd`、または差分のウィンドウを閉じる
+
+スレッド（Zed のように複数の Claude を並行して使う）:
+
+- `<leader>cn` で開くたびに新しいスレッドが増えます。ウィンドウ上部に「Claude thread 番号」と表示されます
+- 切り替えると表示中の別スレッドは隠れるだけで、裏で動き続けます
+- どのスレッドでも差分の表示・承認（`<leader>ca` / `<leader>cd`）が使えます
+- `<leader>cs` や `<leader>cb` で送った内容は、開いている全スレッドに届きます。特定のスレッドだけに渡すときは、そのスレッドで `@` を使います
+- `<leader>cc` の Claude はスレッド一覧には含まれず、別に動きます
+- スレッド一覧は Neovim を終了すると消えます。前の会話を続けるときはスレッド内で `/resume`
 
 ## その他
 

@@ -34,7 +34,7 @@ map({ "n", "v" }, "<leader>p", [["_dP]], { desc = "Paste without yank" })
 map({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete without yank" })
 
 map("n", "<leader>tc", "<cmd>tabclose<CR>", { desc = "Close tab" })
-map("n", "<leader>tD", "<cmd>windo bdelete<CR>", { desc = "Delete all bufs in tab" })
+map("n", "<leader>td", "<cmd>windo bdelete<CR>", { desc = "Delete all bufs in tab" })
 
 map("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 

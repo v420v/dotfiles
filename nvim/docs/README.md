@@ -103,9 +103,9 @@ VSCode / Zed 風の 3 カラムです。
 ### Git
 
 - 変更行の左端にサインが出ます。`]h` / `[h` で移動、`<leader>hp` でプレビュー、`<leader>hs` でステージ、`<leader>hr` で元に戻す
-- カーソル行の blame が行末に表示されます（`<leader>hB` で切り替え）
+- カーソル行の blame が行末に表示されます（`<leader>hl` で切り替え）
 - `<leader>gd` で変更一覧と差分（Diffview）。ファイルパネルで `-` でステージ、`<leader>gq` で閉じる
-- `<leader>gs` Git status、`<leader>gc` コミット一覧、`<leader>gH` 現在のファイルの履歴
+- `<leader>gs` Git status、`<leader>gc` コミット一覧、`<leader>gl` 現在のファイルの履歴
 
 ### Claude Code
 

@@ -21,7 +21,7 @@ return {
                 callback = function() lint.try_lint() end,
             })
 
-            vim.keymap.set("n", "<leader>cL", function() lint.try_lint() end, { desc = "Lint buffer" })
+            vim.keymap.set("n", "<leader>ck", function() lint.try_lint() end, { desc = "Lint buffer" })
         end,
     },
 }

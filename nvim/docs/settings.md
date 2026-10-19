@@ -260,7 +260,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | PHP | `mago lint`（プロジェクトの `vendor/bin/mago`、なければ `$PATH` の `mago`） |
 
 - ファイルを開いたときと保存したときに実行します（mago はディスク上のファイルを読むため、入力中は実行しません）
-- 手動: `<leader>cL`
+- 手動: `<leader>ck`
 - ルールはプロジェクトの `mago.toml` に従います
 
 ## Treesitter

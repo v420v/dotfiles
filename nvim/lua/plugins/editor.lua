@@ -13,7 +13,7 @@ return {
         "echasnovski/mini.bufremove",
         keys = {
             { "<leader>bd", function() require("mini.bufremove").delete(0, false) end, desc = "Delete buffer" },
-            { "<leader>bD", function() require("mini.bufremove").delete(0, true) end, desc = "Delete buffer (force)" },
+            { "<leader>bx", function() require("mini.bufremove").delete(0, true) end, desc = "Delete buffer (force)" },
         },
     },
 
@@ -46,7 +46,7 @@ return {
             { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Diff: open changes" },
             { "<leader>gq", "<cmd>DiffviewClose<CR>", desc = "Diff: close" },
             { "<leader>gh", "<cmd>DiffviewFileHistory<CR>", desc = "Diff: repo history" },
-            { "<leader>gH", "<cmd>DiffviewFileHistory %<CR>", desc = "Diff: file history" },
+            { "<leader>gl", "<cmd>DiffviewFileHistory %<CR>", desc = "Diff: file history" },
             { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>", desc = "Diff: toggle files panel" },
         },
         opts = {
