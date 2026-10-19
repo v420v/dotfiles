@@ -22,7 +22,7 @@ nvim/
         ├── hex.lua          バイナリ編集
         ├── lint.lua         リンター
         ├── lsp.lua          LSP・フォーマッター
-        ├── php.lua          Blade テンプレート
+        ├── php.lua          Blade テンプレート・PHPDoc 生成
         ├── telescope.lua    あいまい検索
         ├── treesitter.lua   構文解析
         └── ui.lua           バッファタブ・ステータスライン・gitsigns・パンくず・Sticky scroll・which-key など
@@ -198,6 +198,7 @@ Git の状態がないドットファイルもグレーで表示されます。
 | diffview.nvim | Git の差分ビュー | キー / コマンド | `editor.lua` |
 | hex.nvim | バイナリの Hex 編集 | キー / コマンド | `hex.lua` |
 | vim-blade | Blade のハイライトとインデント | Blade ファイルを開いたとき | `php.lua` |
+| neogen | PHPDoc などのドキュメントコメント生成 | キー / コマンド | `php.lua` |
 
 todo-comments がハイライトするキーワード: `TODO`、`FIX`（`FIXME` / `BUG` / `FIXIT` / `ISSUE`）、`HACK`、`WARN`（`WARNING` / `XXX`）、`PERF`（`OPTIM` / `PERFORMANCE` / `OPTIMIZE`）、`NOTE`（`INFO`）、`TEST`（`TESTING` / `PASSED` / `FAILED`）
 
