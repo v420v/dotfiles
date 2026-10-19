@@ -170,7 +170,7 @@ Git の状態がないドットファイルもグレーで表示されます。
 | --- | --- | --- | --- |
 | lazy.nvim | プラグイン管理 | 起動時 | `config/lazy.lua` |
 | github-nvim-theme | カラースキーム | 起動時 | `colorscheme.lua` |
-| snacks.nvim | エクスプローラー、ターミナル、入力 UI、画像表示、バッファ削除 | 起動時 | `claude.lua` |
+| snacks.nvim | エクスプローラー、ターミナル（`<leader>tt`）、入力 UI、画像表示、バッファ削除 | 起動時 | `claude.lua` |
 | claudecode.nvim | Claude Code 連携 | キー / コマンド | `claude.lua` |
 | alpha-nvim + ascii.nvim | ダッシュボード | 起動直後 | `alpha.lua` |
 | nvim-cmp + cmp-nvim-lsp / cmp-buffer / cmp-path / cmp-cmdline / cmp_luasnip | 補完 | 挿入モードに入ったとき | `completion.lua` |
@@ -312,7 +312,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | 機能 | 設定 |
 | --- | --- |
 | エクスプローラー | 左のサイドバー（幅 35）、隠しファイルを表示、Git 状態と診断を表示、現在のファイルに追従、ファイルを開いても閉じない、netrw の代わりに使う |
-| ターミナル | Claude Code の表示に使用。フロートで開くときは角丸の枠 |
+| ターミナル | Claude Code の表示と `<leader>tt`（画面下 30%）に使用。フロートで開くときは角丸の枠 |
 | 入力 UI | 有効（名前変更などの入力欄） |
 | 画像 | 有効（kitty のグラフィックプロトコルで画像を表示） |
 | 通知 | 無効（nvim-notify を使う） |

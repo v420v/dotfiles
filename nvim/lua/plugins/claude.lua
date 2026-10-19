@@ -59,6 +59,11 @@ return {
                 desc = "Toggle explorer sidebar",
             },
             { "-", function() Snacks.explorer.reveal() end, desc = "Reveal current file in explorer" },
+            {
+                "<leader>tt",
+                function() Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } }) end,
+                desc = "Toggle terminal (bottom split)",
+            },
         },
         init = function()
             vim.api.nvim_create_autocmd("VimEnter", {
