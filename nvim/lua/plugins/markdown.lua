@@ -6,6 +6,9 @@ return {
         keys = {
             { "<leader>um", "<cmd>RenderMarkdown toggle<CR>", desc = "Toggle markdown render" },
         },
-        opts = {},
+        opts = {
+            -- snacks.image renders mermaid blocks; render-markdown must leave them alone
+            code = { disable = { "mermaid" } },
+        },
     },
 }

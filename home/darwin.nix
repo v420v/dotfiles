@@ -16,7 +16,13 @@
     serie
 
     herdr
+
+    mermaid-cli
   ];
+
+  # mermaid-cli (puppeteer) has no bundled chromium on darwin; use the Homebrew cask Chrome
+  home.sessionVariables.PUPPETEER_EXECUTABLE_PATH =
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
   programs.zsh.shellAliases = {
     rm = "rm -iv";
