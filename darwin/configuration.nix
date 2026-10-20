@@ -131,9 +131,9 @@ in
 
     trackpad.Clicking = true;
 
-    # Give Cmd+Space to input-source switching instead of Spotlight.
+    # Spotlight off (Raycast owns Cmd+Space); input-source toggle stays on Ctrl+Space.
     #   64: Spotlight search        -> off
-    #   60: previous input source   -> Cmd+Space (space=32, keycode=49, cmd=1048576)
+    #   60: previous input source   -> Ctrl+Space (space=32, keycode=49, ctrl=262144)
     #   61: next input source       -> off (one toggle key is enough)
     CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
       "64".enabled = false;
@@ -141,7 +141,7 @@ in
         enabled = true;
         value = {
           type = "standard";
-          parameters = [ 32 49 1048576 ];
+          parameters = [ 32 49 262144 ];
         };
       };
       "61".enabled = false;
