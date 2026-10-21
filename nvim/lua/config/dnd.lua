@@ -31,9 +31,7 @@ end
 
 local function explorer()
     local picker = Snacks.picker.get({ source = "explorer" })[1]
-    if picker and not picker.closed and picker.list.win:valid() then
-        return picker
-    end
+    if picker and not picker.closed and picker.list.win:valid() then return picker end
 end
 
 --- Explorer item under a screen cell (0-based kitty coordinates).
@@ -122,7 +120,9 @@ local function on_response(seq)
     if not meta then return end
     payload = payload:gsub("\27\\$", ""):gsub("\7$", "")
     local kv = {}
-    for k, v in meta:gmatch("(%w)=([^:]*)") do kv[k] = v end
+    for k, v in meta:gmatch("(%w)=([^:]*)") do
+        kv[k] = v
+    end
     local picker = explorer()
 
     if kv.t == "m" then -- drag moved (x=y=-1: left the window)
@@ -164,8 +164,7 @@ function M.setup()
     vim.paste = function(lines, phase)
         local picker = vim.bo.filetype == "snacks_picker_list" and explorer()
         local files = vim.tbl_filter(function(l) return l ~= "" end, lines)
-        local all_exist = #files > 0
-            and vim.iter(files):all(function(l) return vim.uv.fs_stat(l) ~= nil end)
+        local all_exist = #files > 0 and vim.iter(files):all(function(l) return vim.uv.fs_stat(l) ~= nil end)
         if not (picker and all_exist) then return paste(lines, phase) end
         M.copy_into(picker, files, picker:dir())
         return true
