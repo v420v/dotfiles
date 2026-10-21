@@ -228,6 +228,8 @@
 
   home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/dotfiles/claude/settings.json";
+  home.file.".claude/hooks/status.sh".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/dotfiles/claude/hooks/status.sh";
 
   xdg.configFile = {
     "fastfetch/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/fastfetch/config-darwin.jsonc";

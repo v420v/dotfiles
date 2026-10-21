@@ -12,6 +12,7 @@ nvim/
     │   ├── options.lua   エディタオプション・autocmd・ファイルタイプ判定
     │   ├── keymaps.lua   基本キーマップ
     │   ├── errorlog.lua  エラーログ（:ErrorLog* コマンド）
+    │   ├── claude_status.lua  Claude Code の状態をステータスラインに表示
     │   └── lazy.lua      lazy.nvim の起動と設定
     └── plugins/          プラグインの spec（ファイルごとに自動で読み込まれる）
         ├── alpha.lua        ダッシュボード
@@ -120,6 +121,24 @@ Python3 / Ruby / Perl / Node のプロバイダーは無効です。
 [2026-09-29T12:34:56] [notify:ERROR] メッセージ
 [2026-09-29T12:34:56] [lsp:WARN] /path/to/file.lua:10:5: メッセージ
 ```
+
+### Claude Code の状態表示
+
+定義: `lua/config/claude_status.lua`、`dotfiles/claude/hooks/status.sh`（`~/.claude/hooks/status.sh` にリンク）
+
+Claude Code の hooks（`claude/settings.json`）が `~/.cache/claude-status/<key>.json` に状態を書き、ステータスライン右側に `1● 2◉ 3✓` のように常時表示します。key は nvim 内スレッドならスレッド番号、nvim の外（Herdr など）で起動した Claude なら cwd のディレクトリ名です。
+
+| 記号 | 状態 | 発火元 |
+| --- | --- | --- |
+| `●` 青 | 作業中 | UserPromptSubmit / PreToolUse |
+| `◉` 黄 | 入力待ち（許可・質問。あなたの番） | Notification: permission_prompt / elicitation_dialog / agent_needs_input |
+| `✓` 緑 | 完了 | Stop |
+| `○` 灰 | 待機中 | SessionStart / Notification: idle_prompt |
+| （消える） | 終了 | SessionEnd |
+
+- `◉` に変わった瞬間だけ `vim.notify` で通知します
+- nvim 内の Claude は hook から `nvim --server $NVIM --remote-expr` で即時反映、それ以外は 3 秒ごとのポーリングで拾います
+- Claude を kill などで強制終了すると SessionEnd が走らず表示が残ることがあります。`rm ~/.cache/claude-status/*.json` で消えます
 
 ## 見た目
 

@@ -21,6 +21,7 @@ local function new_thread()
             ENABLE_IDE_INTEGRATION = "true",
             FORCE_CODE_TERMINAL = "true",
             CLAUDE_CODE_SSE_PORT = tostring(require("claudecode.server.init").state.port),
+            CLAUDE_THREAD = tostring(n),
         },
         win = { position = "right", width = 0.35, wo = { winbar = " Claude thread " .. n } },
     })
