@@ -57,7 +57,7 @@ function M.component()
     for _, s in ipairs(cache) do
         local ic = icons[s.state] or icons.idle
         local label = tonumber(s.key) and tostring(s.key) or vim.fn.fnamemodify(s.cwd or "?", ":t")
-        parts[#parts + 1] = string.format("%%#%s#%s%s%%*", ic[2], label, ic[1])
+        parts[#parts + 1] = string.format("%%#%s#%s %s%%*", ic[2], label, ic[1])
     end
     return " " .. table.concat(parts, " ")
 end
