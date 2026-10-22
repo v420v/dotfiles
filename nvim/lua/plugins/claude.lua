@@ -2,6 +2,35 @@ local claude_cmd = vim.fn.executable("claude") == 1 and "claude" or vim.fn.expan
 
 local threads = {}
 local thread_seq = 0
+local status_dir = (vim.env.XDG_CACHE_HOME or (vim.env.HOME .. "/.cache")) .. "/claude-status"
+
+-- 最後の返答（status.sh が <key>.txt に書く）をクリップボードへ
+local function copy_reply(key)
+    local fh = io.open(string.format("%s/%s.txt", status_dir, key), "r")
+    local text = fh and fh:read("*a") or ""
+    if fh then fh:close() end
+    if text == "" then return vim.notify("コピーできる返答がありません", vim.log.levels.WARN) end
+    vim.fn.setreg("+", text)
+    vim.notify(string.format("返答をコピーしました（%d 行）", select(2, text:gsub("\n", "")) + 1))
+end
+
+-- winbar の [⧉ Copy] クリック用（minwid にスレッド番号、0 は <leader>cc の Claude）
+function _G.ClaudeCopyReply(minwid) copy_reply(minwid == 0 and "main" or tostring(minwid)) end
+
+local function winbar(label, minwid)
+    return string.format(" %s  %%%d@v:lua.ClaudeCopyReply@[⧉ Copy]%%X", label, minwid)
+end
+
+vim.api.nvim_create_autocmd("TermOpen", {
+    pattern = "term://*claude*",
+    desc = "Y で Claude の最後の返答をコピー",
+    callback = function(ev)
+        vim.keymap.set("n", "Y", function() copy_reply(vim.b[ev.buf].claude_thread or "main") end, {
+            buffer = ev.buf,
+            desc = "Copy last Claude reply",
+        })
+    end,
+})
 
 local function show_thread(term)
     for _, t in ipairs(threads) do
@@ -23,7 +52,7 @@ local function new_thread()
             CLAUDE_CODE_SSE_PORT = tostring(require("claudecode.server.init").state.port),
             CLAUDE_THREAD = tostring(n),
         },
-        win = { position = "right", width = 0.35, wo = { winbar = " Claude thread " .. n } },
+        win = { position = "right", width = 0.35, wo = { winbar = winbar("Claude thread " .. n, n) } },
     })
     vim.b[term.buf].claude_thread = n
     table.insert(threads, term)
@@ -64,11 +93,13 @@ return {
             terminal_cmd = claude_cmd,
             auto_start = true,
             log_level = "info",
+            env = { CLAUDE_THREAD = "main" },
             terminal = {
                 split_side = "right",
                 split_width_percentage = 0.35,
                 provider = "snacks",
                 auto_close = false,
+                snacks_win_opts = { wo = { winbar = winbar("Claude", 0) } },
             },
             diff_opts = {
                 auto_close_on_accept = true,

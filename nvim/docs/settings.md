@@ -138,6 +138,7 @@ Claude Code の hooks（`claude/settings.json`）が `~/.cache/claude-status/<ke
 
 - `◉` に変わった瞬間だけ `vim.notify` で通知します
 - nvim 内の Claude は hook から `nvim --server $NVIM --remote-expr` で即時反映、それ以外は 3 秒ごとのポーリングで拾います
+- 返答が終わる（Stop）たびに最後の返答のテキストを `<key>.txt` にも書き出します。Claude ウィンドウの `Y` / `[⧉ Copy]` はこれをクリップボードに入れます（ターミナルの折り返しや罫線は混ざりません）
 - Claude を kill などで強制終了すると SessionEnd が走らず表示が残ることがあります。`rm ~/.cache/claude-status/*.json` で消えます
 
 ## 見た目
