@@ -45,7 +45,7 @@ return {
                 theme = "github_dark_default",
                 globalstatus = true,
                 component_separators = { left = "", right = "" },
-                section_separators = { left = "", right = "" },
+                section_separators = { left = "", right = "" },
             },
             sections = {
                 lualine_a = { "mode" },

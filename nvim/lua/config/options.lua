@@ -14,6 +14,7 @@ opt.pumheight = 12
 opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 opt.fillchars = { eob = " " }
+opt.winborder = "rounded"
 
 opt.expandtab = true
 opt.shiftwidth = 4
