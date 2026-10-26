@@ -199,4 +199,13 @@ return {
             vim.notify = function(...) require("notify")(...) end
         end,
     },
+
+    {
+        "sphamba/smear-cursor.nvim",
+        event = "VeryLazy",
+        keys = {
+            { "<leader>us", "<cmd>SmearCursorToggle<CR>", desc = "Toggle smear cursor" },
+        },
+        opts = {},
+    },
 }
