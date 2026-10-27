@@ -294,6 +294,7 @@ LSP が接続されたバッファだけで有効です。定義: `lua/plugins/l
 | --- | --- | --- |
 | `]h` / `[h` | n | 次 / 前の変更箇所（hunk）へ |
 | `<leader>hp` | n | hunk をプレビュー |
+| サイン列を左クリック | n | クリックした行の hunk をプレビュー（`preview_hunk`） |
 | `<leader>hi` | n | hunk をインライン表示 |
 | `<leader>hs` | n | hunk をステージ |
 | `<leader>hu` | n | hunk のステージを取り消す |

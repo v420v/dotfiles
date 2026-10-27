@@ -116,6 +116,15 @@ return {
                 map("n", "<leader>hw", gs.toggle_word_diff, "Toggle word diff")
                 map("n", "<leader>ht", gs.toggle_deleted, "Toggle deleted lines")
                 map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
+                vim.keymap.set("n", "<LeftMouse>", function()
+                    local m = vim.fn.getmousepos()
+                    if m.winid == vim.api.nvim_get_current_win() and m.wincol <= 2 and m.line > 0 then
+                        vim.api.nvim_win_set_cursor(0, { m.line, 0 })
+                        vim.schedule(gs.preview_hunk)
+                        return ""
+                    end
+                    return "<LeftMouse>"
+                end, { buffer = buf, expr = true, desc = "Click sign column: preview hunk" })
             end,
         },
     },
