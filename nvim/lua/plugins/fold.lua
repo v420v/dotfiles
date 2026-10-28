@@ -41,8 +41,8 @@ return {
             vim.o.foldenable = true
             vim.opt.fillchars:append({
                 -- VSCode / Zed と同じ codicon のシェブロン
-                foldopen = "\u{EAB4}", -- nf-cod-chevron_down
-                foldclose = "\u{EAB6}", -- nf-cod-chevron_right
+                foldopen = "", -- nf-cod-chevron_down (U+EAB4)
+                foldclose = "", -- nf-cod-chevron_right (U+EAB6)
                 fold = " ",
                 foldsep = " ",
             })
