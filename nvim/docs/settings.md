@@ -20,12 +20,14 @@ nvim/
         ├── colorscheme.lua  カラースキーム
         ├── completion.lua   補完・スニペット
         ├── editor.lua       コメント・囲み文字・括弧補完・Diffview など
+        ├── fold.lua         フォールド（nvim-ufo・statuscol）
         ├── hex.lua          バイナリ編集
         ├── lint.lua         リンター
         ├── lsp.lua          LSP・フォーマッター
+        ├── multicursor.lua  マルチカーソル
         ├── php.lua          Blade テンプレート・PHPDoc 生成
         ├── telescope.lua    あいまい検索
-        ├── treesitter.lua   構文解析
+        ├── treesitter.lua   構文解析・テキストオブジェクト
         └── ui.lua           バッファタブ・ステータスライン・gitsigns・パンくず・Sticky scroll・which-key など
 ```
 
@@ -198,7 +200,10 @@ Git の状態がないドットファイルもグレーで表示されます。
 | nvim-lspconfig + fidget.nvim | LSP の設定、進捗表示 | ファイルを開いたとき | `lsp.lua` |
 | conform.nvim | フォーマッター | 保存時 / `<leader>cf` / `:ConformInfo` | `lsp.lua` |
 | nvim-lint | リンター | ファイルを開いたとき / 保存時 | `lint.lua` |
-| nvim-treesitter + nvim-treesitter-textobjects | 構文ハイライト、インデント、選択 | ファイルを開いたとき | `treesitter.lua` |
+| nvim-treesitter + nvim-treesitter-textobjects | 構文ハイライト、インデント、選択、テキストオブジェクト | ファイルを開いたとき | `treesitter.lua` |
+| nvim-ufo + promise-async | フォールド（Treesitter ベース、プレビュー、行数表示） | ファイルを開いたとき | `fold.lua` |
+| statuscol.nvim | ガターの並び（折りたたみアイコン / サイン / 行番号）とクリック | ファイルを開いたとき | `fold.lua` |
+| multicursor.nvim | マルチカーソル | ファイルを開いたとき | `multicursor.lua` |
 | telescope.nvim + telescope-fzf-native / telescope-live-grep-args | あいまい検索 | キー / コマンド | `telescope.lua` |
 | bufferline.nvim | バッファタブ | 起動後 | `ui.lua` |
 | lualine.nvim | ステータスライン | 起動後 | `ui.lua` |
@@ -289,6 +294,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 定義: `lua/plugins/treesitter.lua`（nvim-treesitter の `master` ブランチ）
 
 - ハイライト・インデント・範囲選択（`<C-Space>` / `<BS>`）が有効
+- テキストオブジェクトと移動（`af` / `]f` など）は nvim-treesitter-textobjects の `main` ブランチを使い、`treesitter.lua` でキーマップを直接登録している（`main` は `nvim-treesitter.configs` の設定を読まないため）
 - 自動インストールは無効。下にない言語は `:TSInstall <言語>` で入れる
 - Neovim 0.12 で `master` ブランチが動くようにする互換処理を入れている
 
@@ -352,19 +358,17 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 
 実際の動作を確認して見つかった点です。
 
-1. **Treesitter のテキストオブジェクトと移動キーが動かない**
-   `treesitter.lua` には `af` / `if` / `ac` / `ic` / `aa` / `ia` と `]f` / `[f` / `]c` / `[c` を設定していますが、キーマップが作られていません。nvim-treesitter は `master` ブランチなのに、nvim-treesitter-textobjects は `main` ブランチ（`lazy-lock.json`）が入っていて、`main` ブランチは `nvim-treesitter.configs` の `textobjects` 設定を読まないためです。依存関係に `branch = "master"` を指定すれば読まれるはずです（未確認）。
-2. **`<leader>cl`（`:LspInfo`）がエラーになる**
+1. **`<leader>cl`（`:LspInfo`）がエラーになる**
    Neovim 0.12 には標準の `:lsp` コマンドがあるため、nvim-lspconfig が `:LspInfo` を作りません。代わりに `:checkhealth vim.lsp` を使います。
-3. **`<leader>p` はビジュアルモード専用**
+2. **`<leader>p` はビジュアルモード専用**
    ノーマルモードで押しても何も起きません。
-4. **`<leader>bd` が 2 か所で定義されている**
+3. **`<leader>bd` が 2 か所で定義されている**
    `ui.lua`（bufferline の spec。`Snacks.bufdelete()`）と `editor.lua`（mini.bufremove）の両方にあり、`ui.lua` 側が使われます。
-5. **`<S-h>` / `<S-l>` が 2 か所で定義されている**
+4. **`<S-h>` / `<S-l>` が 2 か所で定義されている**
    `keymaps.lua` の `:bprevious` / `:bnext` は、`ui.lua` の bufferline 版（`BufferLineCyclePrev` / `Next`）に上書きされています。
-6. **macOS では Vue の `<script>` で TypeScript の補完が効かない**
+5. **macOS では Vue の `<script>` で TypeScript の補完が効かない**
    `lsp.lua` は `@vue/typescript-plugin` を `/nix/store` の中からしか探しません。macOS の `vue-language-server` は Homebrew の npm 版（`/opt/homebrew/lib/node_modules`）で、`darwin/configuration.nix` には入っていないため、プラグインが見つからずに無効になります（テンプレートの機能は動きます）。
-7. **macOS の kitty では Alt のキーが届かない**
+6. **macOS の kitty では Alt のキーが届かない**
    `kitty/kitty.conf`（と macOS 用の `macos.conf`）に `macos_option_as_alt` がないため、`<M-e>`（Fast Wrap）やエクスプローラーの `<a-h>` などの Alt キーは使えません。
-8. **Hex の自動変換は hex.nvim が読み込まれてから**
+7. **Hex の自動変換は hex.nvim が読み込まれてから**
    バイナリファイルを開いたときの xxd 表示への自動変換は、`<leader>x…` や `:Hex…` で hex.nvim を一度読み込んだあとから有効になります。

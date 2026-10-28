@@ -118,7 +118,10 @@ return {
                 map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
                 vim.keymap.set("n", "<LeftMouse>", function()
                     local m = vim.fn.getmousepos()
-                    if m.winid == vim.api.nvim_get_current_win() and m.wincol <= 2 and m.line > 0 then
+                    -- statuscol の並びは fold / 空白 / sign / 行番号。fold 列 + 余白 1 桁ぶんサイン列はずれる
+                    local fold_w = (tonumber((vim.wo[m.winid].foldcolumn or "0"):match("%d+$")) or 0) + 1
+                    local in_sign = m.wincol > fold_w and m.wincol <= fold_w + 2
+                    if m.winid == vim.api.nvim_get_current_win() and in_sign and m.line > 0 then
                         vim.api.nvim_win_set_cursor(0, { m.line, 0 })
                         vim.schedule(gs.preview_hunk)
                         return ""
@@ -196,6 +199,8 @@ return {
                 { "<leader>b", group = "buffer" },
                 { "<leader>t", group = "tab" },
                 { "<leader>u", group = "ui" },
+                { "<leader>m", group = "multicursor" },
+                { "<leader>s", group = "swap" },
             },
         },
     },
