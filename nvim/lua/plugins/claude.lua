@@ -17,8 +17,23 @@ end
 -- winbar の [⧉ Copy] クリック用（minwid にスレッド番号、0 は <leader>cc の Claude）
 function _G.ClaudeCopyReply(minwid) copy_reply(minwid == 0 and "main" or tostring(minwid)) end
 
+-- ログイン中アカウントのメール（~/.claude.json の mtime が変わった時だけ読み直す）
+local account = { mtime = -1, email = "" }
+function _G.ClaudeAccount()
+    local path = vim.env.HOME .. "/.claude.json"
+    local st = vim.uv.fs_stat(path)
+    if st and st.mtime.sec ~= account.mtime then
+        account.mtime = st.mtime.sec
+        local fh = io.open(path, "r")
+        local ok, data = pcall(vim.json.decode, fh and fh:read("*a") or "")
+        if fh then fh:close() end
+        account.email = ok and type(data) == "table" and vim.tbl_get(data, "oauthAccount", "emailAddress") or ""
+    end
+    return account.email ~= "" and ("  " .. account.email) or ""
+end
+
 local function winbar(label, minwid)
-    return string.format(" %s  %%%d@v:lua.ClaudeCopyReply@[⧉ Copy]%%X", label, minwid)
+    return string.format(" %s  %%%d@v:lua.ClaudeCopyReply@[⧉ Copy]%%X%%{v:lua.ClaudeAccount()}", label, minwid)
 end
 
 vim.api.nvim_create_autocmd("TermOpen", {
