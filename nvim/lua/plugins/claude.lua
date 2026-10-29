@@ -166,6 +166,7 @@ return {
                 sources = {
                     explorer = {
                         hidden = true,
+                        ignored = true,
                         layout = { preset = "sidebar", layout = { width = 35 } },
                     },
                 },
