@@ -138,9 +138,9 @@
     };
 
     shellAliases = {
-      ls = "eza --group-directories-first --icons=auto";
-      ll = "eza -lh --group-directories-first --icons=auto --git";
-      la = "eza -lah --group-directories-first --icons=auto --git";
+      ls = "eza --group-directories-first --icons=auto --git-repos";
+      ll = "eza -lh --group-directories-first --icons=auto --git --git-repos";
+      la = "eza -lah --group-directories-first --icons=auto --git --git-repos";
       lt = "eza --tree --level=2 --icons=auto";
       tree = "eza --tree --icons=auto";
 
