@@ -113,6 +113,7 @@ Finder からファイルやフォルダをエクスプローラーにドラッ�
 - カーソル行の blame が行末に表示されます（`<leader>hl` で切り替え）
 - `<leader>gd` で変更一覧と差分（Diffview）。ファイルパネルで `-` でステージ、`<leader>gq` で閉じる
 - `<leader>gs` Git status、`<leader>gc` コミット一覧、`<leader>gl` 現在のファイルの履歴
+- コンフリクトのあるファイルを開くと ours / theirs が色分けされます。`co` / `ct` / `cb` / `c0` で ours / theirs / 両方 / どちらも不採用、`]x` / `[x` で移動、`<leader>gx` で一覧（git-conflict.nvim）
 
 ### Claude Code
 

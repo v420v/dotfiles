@@ -60,4 +60,37 @@ return {
             },
         },
     },
+
+    -- コンフリクトマーカー（<<<<<<< / ======= / >>>>>>>）を色分けして、
+    -- co / ct / cb / c0 で ours / theirs / both / none を選べる。
+    -- マッピングはコンフリクトを検出したバッファにだけ張られる
+    {
+        "akinsho/git-conflict.nvim",
+        version = "*",
+        event = { "BufReadPost", "BufNewFile" },
+        cmd = {
+            "GitConflictChooseOurs",
+            "GitConflictChooseTheirs",
+            "GitConflictChooseBoth",
+            "GitConflictChooseNone",
+            "GitConflictNextConflict",
+            "GitConflictPrevConflict",
+            "GitConflictListQf",
+            "GitConflictRefresh",
+        },
+        keys = {
+            { "<leader>gx", "<cmd>GitConflictListQf<CR>", desc = "Conflicts: list in quickfix" },
+        },
+        opts = {
+            default_mappings = true, -- co / ct / cb / c0 / ]x / [x
+            default_commands = true,
+            -- コンフリクト中は LSP の診断（マーカー行の構文エラーなど）を出さない
+            disable_diagnostics = true,
+            list_opener = "copen",
+            highlights = {
+                incoming = "DiffAdd", -- theirs（>>>>>>> 側）
+                current = "DiffText", -- ours（<<<<<<< 側）
+            },
+        },
+    },
 }

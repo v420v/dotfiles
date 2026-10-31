@@ -408,6 +408,21 @@ Diffview の中（主なもの。`g?` で全キーを表示）:
 
 Diffview の中では `<leader>e`・`<leader>b`・`<leader>cb`・`<leader>ca` が Diffview の操作になり、エクスプローラーや Claude Code のキーより優先されます。
 
+### コンフリクト（git-conflict.nvim）
+
+コンフリクトマーカー（`<<<<<<<` / `=======` / `>>>>>>>`）のあるファイルを開くと、ours 側と theirs 側が色分けされ、そのバッファにだけ次のキーが張られます。
+
+| キー | モード | 動作 |
+| --- | --- | --- |
+| `co` | n | ours（`<<<<<<<` 側 = 自分の変更）を採用 |
+| `ct` | n | theirs（`>>>>>>>` 側 = 取り込む変更）を採用 |
+| `cb` | n | 両方を採用 |
+| `c0` | n | どちらも採用しない（削除） |
+| `]x` / `[x` | n | 次 / 前のコンフリクトへ |
+| `<leader>gx` | n | リポジトリ内のコンフリクトを quickfix に一覧 |
+
+コマンドは `:GitConflictChooseOurs` / `Theirs` / `Both` / `None`、`:GitConflictNextConflict` / `PrevConflict`、`:GitConflictListQf`。
+
 ## Claude Code
 
 定義: `lua/plugins/claude.lua`
