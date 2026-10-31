@@ -476,6 +476,7 @@ Claude のウィンドウの中:
 | `<leader>xa` | n | xxd 形式をバイナリに戻す |
 | `<leader>up` | n | モーションヒント（precognition）の表示切り替え（既定: 非表示） |
 | `<leader>ut` | n | Sticky scroll（treesitter-context）の表示切り替え（既定: 表示） |
+| `<leader>ul` | n | 依存パッケージのライセンス表示（package-license-viewer）の切り替え（既定: 表示） |
 
 ## パンくずリスト（dropbar.nvim）
 

@@ -100,6 +100,7 @@ Finder からファイルやフォルダをエクスプローラーにドラッ�
 - VSCode のように `Cmd+クリック`（Linux では `Ctrl+クリック`）で定義へジャンプ、`<C-o>` で戻る
 - 補完は入力中に自動で出ます。`Tab` / `Shift-Tab` で選択、`Enter` で確定
 - フォーマットは `<leader>cf`。保存時の自動フォーマットは**既定で無効**（`:FormatEnable` で有効化）
+- `package.json` / `Cargo.toml` / `go.mod` などを開くと、依存の行末にライセンス（`MIT` など）が表示されます。`<leader>ul` で切り替え（package-license-viewer）
 
 ### 折りたたみ・マルチカーソル
 

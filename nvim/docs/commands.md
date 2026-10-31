@@ -85,6 +85,14 @@
 
 更新の確認はバックグラウンドで自動実行されます（通知はしません）。
 
+## パッケージのライセンス表示（package-license-viewer）
+
+| コマンド | 動作 |
+| --- | --- |
+| `:PackageLicenseViewerToggle` | 行末のライセンス表示の切り替え（`<leader>ul`） |
+| `:PackageLicenseViewerRefresh` | 開いているファイルのライセンスを再取得 |
+| `:PackageLicenseViewerClearCache` | 取得済みのキャッシュを破棄（LSP サーバーを再起動） |
+
 ## 表示・その他
 
 | コマンド | 動作 |

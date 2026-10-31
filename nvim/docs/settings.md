@@ -22,6 +22,7 @@ nvim/
         ├── editor.lua       コメント・囲み文字・括弧補完・Diffview など
         ├── fold.lua         フォールド（nvim-ufo・statuscol）
         ├── hex.lua          バイナリ編集
+        ├── license.lua      依存パッケージのライセンス表示
         ├── lint.lua         リンター
         ├── lsp.lua          LSP・フォーマッター
         ├── multicursor.lua  マルチカーソル
@@ -222,10 +223,13 @@ Git の状態がないドットファイルもグレーで表示されます。
 | todo-comments.nvim | TODO / FIXME などのハイライトと検索 | ファイルを開いたとき | `editor.lua` |
 | diffview.nvim | Git の差分ビュー | キー / コマンド | `editor.lua` |
 | hex.nvim | バイナリの Hex 編集 | キー / コマンド | `hex.lua` |
+| package-license-viewer | `package.json` / `Cargo.toml` / `go.mod` などの依存行の行末にライセンスを表示 | 対象ファイルを開いたとき / キー / コマンド | `license.lua` |
 | vim-blade | Blade のハイライトとインデント | Blade ファイルを開いたとき | `php.lua` |
 | neogen | PHPDoc などのドキュメントコメント生成 | キー / コマンド | `php.lua` |
 
 todo-comments がハイライトするキーワード: `TODO`、`FIX`（`FIXME` / `BUG` / `FIXIT` / `ISSUE`）、`HACK`、`WARN`（`WARNING` / `XXX`）、`PERF`（`OPTIM` / `PERFORMANCE` / `OPTIMIZE`）、`NOTE`（`INFO`）、`TEST`（`TESTING` / `PASSED` / `FAILED`）
+
+package-license-viewer は同梱の Node 製 LSP サーバー（`packages/lsp-server/dist/lspServer.js`）を `node` で起動します。サーバーはプラグインの build 時に `npm install && npm run compile:lsp` で生成されるため、Node 22 以上と npm が PATH に必要です。対象は `*.json` / `*.jsonc` / `Cargo.toml` / `pnpm-workspace.yaml` / `moon.mod` / `go.mod`。ライセンス情報はレジストリ（npm / crates.io など）から取得するので、オフラインでは表示されません。
 
 claudecode.nvim が起動するコマンド: `claude` が PATH にあればそれ、なければ `~/.local/bin/claude`（ネイティブインストーラー版）。rebuild で PATH が変わった直後の古いシェルでも動くようにするためです。
 
