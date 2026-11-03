@@ -37,9 +37,7 @@ return {
             vim.api.nvim_buf_set_extmark = function(bufnr, ns_id, line, col, opts)
                 if ns_id == ns and opts and opts.virt_text then
                     for _, chunk in ipairs(opts.virt_text) do
-                        if chunk[2] == "String" then
-                            chunk[2] = "Comment"
-                        end
+                        if chunk[2] == "String" then chunk[2] = "Comment" end
                     end
                 end
                 return set_extmark(bufnr, ns_id, line, col, opts)
