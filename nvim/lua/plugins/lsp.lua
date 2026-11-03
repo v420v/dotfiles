@@ -111,9 +111,19 @@ return {
                                 maxSize = 5000000,
                                 associations = { "*.php", "*.blade.php" },
                             },
-                            environment = { phpVersion = "8.3" },
+                            environment = { phpVersion = "8.5" }, -- composer.json が無いときのフォールバック
                         },
                     },
+                    before_init = function(_, config)
+                        local f = io.open(config.root_dir .. "/composer.json")
+                        if not f then return end
+                        local ok, json = pcall(vim.json.decode, f:read("*a"))
+                        f:close()
+                        -- "^8.2" / ">=8.1" / "~8.3.0" の先頭バージョンだけ拾う
+                        local php = ok and type(json) == "table" and json.require and json.require.php
+                        local v = type(php) == "string" and php:match("%d+%.%d+")
+                        if v then config.settings.intelephense.environment.phpVersion = v end
+                    end,
                 },
                 clangd = {
                     cmd = {
