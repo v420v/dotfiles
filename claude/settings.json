@@ -27,5 +27,9 @@
   },
   "tui": "fullscreen",
   "switchModelsOnFlag": true,
-  "model": "fable"
+  "model": "fable",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }
