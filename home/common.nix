@@ -223,6 +223,9 @@
         export ZSH_RICED_GREETED=1
         command -v fastfetch >/dev/null 2>&1 && fastfetch
       fi
+
+      # machine-local / work-specific config lives outside the repo
+      [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
     '';
   };
 
