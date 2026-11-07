@@ -39,7 +39,7 @@ in
     curl
     wget
 
-    go
+    go_1_27
     gopls
     gofumpt
     gotools
