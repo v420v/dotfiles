@@ -144,7 +144,7 @@ return {
                             runtime = { version = "LuaJIT" },
                             workspace = {
                                 checkThirdParty = false,
-                                library = vim.api.nvim_get_runtime_file("", true),
+                                library = { vim.env.VIMRUNTIME, "${3rd}/luv/library" },
                             },
                             diagnostics = { globals = { "vim" } },
                             telemetry = { enable = false },
