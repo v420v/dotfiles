@@ -54,8 +54,6 @@ in
 
     uv
 
-    vlang
-
     clang-tools
     typescript-language-server
     vscode-langservers-extracted
