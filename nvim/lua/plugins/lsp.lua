@@ -26,6 +26,21 @@ return {
 
             vim.o.winborder = "rounded"
 
+            vim.lsp.inlay_hint.enable(true)
+            vim.keymap.set(
+                "n",
+                "<leader>uh",
+                function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
+                { desc = "Toggle inlay hints" }
+            )
+            -- Colorschemes define their own LspInlayHint; re-link after every :colorscheme too
+            local function inlay_hint_hl() vim.api.nvim_set_hl(0, "LspInlayHint", { link = "Comment" }) end
+            inlay_hint_hl()
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                group = vim.api.nvim_create_augroup("UserInlayHintHl", { clear = true }),
+                callback = inlay_hint_hl,
+            })
+
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
                 callback = function(args)
@@ -123,6 +138,20 @@ return {
                         local php = ok and type(json) == "table" and json.require and json.require.php
                         local v = type(php) == "string" and php:match("%d+%.%d+")
                         if v then config.settings.intelephense.environment.phpVersion = v end
+                    end,
+                    -- phpactor draws the inlay hints; stop intelephense from drawing a second set
+                    on_attach = function(client) client.server_capabilities.inlayHintProvider = nil end,
+                },
+                phpactor = {
+                    -- Inferred variable / parameter types as inlay hints; Mago owns lint + format
+                    init_options = {
+                        ["language_server_worse_reflection.inlay_hints.enable"] = true,
+                        ["language_server_worse_reflection.inlay_hints.types"] = true,
+                        ["language_server_worse_reflection.inlay_hints.params"] = true,
+                    },
+                    on_attach = function(client)
+                        client.server_capabilities.documentFormattingProvider = false
+                        client.server_capabilities.documentRangeFormattingProvider = false
                     end,
                 },
                 clangd = {

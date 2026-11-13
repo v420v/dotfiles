@@ -243,7 +243,8 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | `ts_ls` | JavaScript / TypeScript / JSX / TSX / Vue | `typescript-language-server` | Vue の `<script>` 用に `@vue/typescript-plugin` を読み込む（下の注意点を参照） |
 | `vue_ls` | Vue（テンプレート・スタイル） | `vue-language-server` | 既定 |
 | `html` / `cssls` / `jsonls` / `eslint` | HTML / CSS / JSON / ESLint | `vscode-*-language-server` | 既定 |
-| `intelephense` | PHP / Laravel | `intelephense` | ファイルサイズの上限 5MB、PHP 8.3 |
+| `intelephense` | PHP / Laravel | `intelephense` | ファイルサイズの上限 5MB、PHP バージョンは `composer.json` から（なければ 8.5）。インレイヒントは phpactor に任せるため無効 |
+| `phpactor` | PHP | `phpactor language-server` | 変数・引数の推論型をインレイヒントで表示。フォーマットは Mago に任せるため無効。`.git` / `composer.json` のあるプロジェクト内でだけ起動 |
 | `clangd` | C / C++ / Objective-C | `clangd` | `--background-index` `--clang-tidy` `--header-insertion=iwyu` `--completion-style=detailed` `--function-arg-placeholders` |
 | `asm_lsp` | アセンブリ | `asm-lsp` | 既定 |
 | `bashls` | Bash | `bash-language-server` | 既定 |
@@ -251,6 +252,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | `lua_ls` | Lua | `lua-language-server` | LuaJIT、`vim` をグローバルとして認識、Neovim のランタイムをライブラリに追加 |
 
 - すべてのサーバーに nvim-cmp の補完機能を渡しています。
+- インレイヒントは全バッファで有効（`<leader>uh` で切り替え）。`LspInlayHint` は `Comment` にリンクし、カラースキームを変えても維持されます。
 - V 言語の `v_analyzer` は nixpkgs にないため無効です（フォーマットの `v fmt` は使えます）。
 - サーバーを追加するときは、`lsp.lua` の `servers` と、Nix のパッケージ（`darwin/configuration.nix`）の両方に追加します。
 
