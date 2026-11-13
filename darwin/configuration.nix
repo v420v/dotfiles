@@ -47,6 +47,7 @@ in
     php
     php.packages.composer
     intelephense
+    phpactor
     phpPackages.php-cs-fixer
     mago
 
