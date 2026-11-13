@@ -223,12 +223,14 @@ return {
                     lua = { "stylua" },
                     nix = { "nixpkgs_fmt" },
                     sh = { "shfmt" },
-                    php = { "pint", "php_cs_fixer", stop_after_first = true },
+                    php = { "mago_format" },
                     v = { "v_fmt" },
                 },
                 formatters = {
-                    pint = {
-                        command = require("conform.util").find_executable({ "vendor/bin/pint" }, "pint"),
+                    mago_format = {
+                        command = require("conform.util").find_executable({ "vendor/bin/mago" }, "mago"),
+                        -- --stdin-filepath lets mago.toml excludes apply to the buffer
+                        args = { "format", "--stdin-input", "--stdin-filepath", "$FILENAME" },
                     },
                     v_fmt = {
                         command = "v",

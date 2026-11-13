@@ -277,7 +277,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | Lua | stylua |
 | Nix | nixpkgs-fmt |
 | Shell（`sh`） | shfmt |
-| PHP | Pint（プロジェクトの `vendor/bin/pint`、なければ `$PATH` の `pint`）。Pint がなければ php-cs-fixer |
+| PHP | `mago format`（プロジェクトの `vendor/bin/mago`、なければ `$PATH` の `mago`）。スタイルはプロジェクトの `mago.toml` に従う |
 | V | `v fmt -w` |
 
 - 手動: `<leader>cf`（非同期。フォーマッターがなければ LSP でフォーマット）
