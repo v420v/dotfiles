@@ -6,3 +6,6 @@
 CLAUDE.local.md
 .claude/skills
 tmp-agents
+
+.phpactor.json
+
