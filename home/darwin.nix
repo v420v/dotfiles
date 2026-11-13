@@ -26,9 +26,10 @@
 
   # V is deliberately not a Nix package: it tracks master and updates itself
   # with `v up`, which needs a writable git checkout. Bootstrap it once here
-  # (clone + make); after that Nix never touches it again.
+  # (clone + make); after that Nix never touches it again. ~/v is the layout
+  # V's own install docs use, and an existing checkout there is reused as is.
   home.activation.bootstrapV = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    vroot="${config.xdg.dataHome}/v"
+    vroot="${config.home.homeDirectory}/v"
     if [ ! -x "$vroot/v" ]; then
       # make/cc come from the Xcode Command Line Tools in /usr/bin.
       export PATH="${pkgs.git}/bin:/usr/bin:/bin:$PATH"
