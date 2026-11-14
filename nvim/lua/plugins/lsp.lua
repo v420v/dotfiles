@@ -164,6 +164,15 @@ return {
                         "--function-arg-placeholders",
                     },
                 },
+                rust_analyzer = {
+                    settings = {
+                        ["rust-analyzer"] = {
+                            -- Diagnostics on save come from clippy instead of plain `cargo check`
+                            check = { command = "clippy" },
+                            cargo = { allFeatures = true },
+                        },
+                    },
+                },
                 asm_lsp = {},
                 bashls = {},
                 nil_ls = {},
@@ -220,6 +229,7 @@ return {
                     markdown = { "prettierd", "prettier", stop_after_first = true },
                     c = { "clang_format" },
                     cpp = { "clang_format" },
+                    rust = { "rustfmt" },
                     lua = { "stylua" },
                     nix = { "nixpkgs_fmt" },
                     sh = { "shfmt" },

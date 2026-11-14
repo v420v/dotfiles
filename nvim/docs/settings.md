@@ -246,6 +246,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | `intelephense` | PHP / Laravel | `intelephense` | ファイルサイズの上限 5MB、PHP バージョンは `composer.json` から（なければ 8.5）。インレイヒントは phpactor に任せるため無効 |
 | `phpactor` | PHP | `phpactor language-server` | 変数・引数の推論型をインレイヒントで表示。フォーマットは Mago に任せるため無効。`.git` / `composer.json` のあるプロジェクト内でだけ起動 |
 | `clangd` | C / C++ / Objective-C | `clangd` | `--background-index` `--clang-tidy` `--header-insertion=iwyu` `--completion-style=detailed` `--function-arg-placeholders` |
+| `rust_analyzer` | Rust | `rust-analyzer` | 保存時のチェックは `cargo clippy`、全 feature を有効にして解析。`Cargo.toml` のあるプロジェクト内で起動 |
 | `asm_lsp` | アセンブリ | `asm-lsp` | 既定 |
 | `bashls` | Bash | `bash-language-server` | 既定 |
 | `nil_ls` | Nix | `nil` | 既定 |
@@ -274,6 +275,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | Go | gofumpt → goimports（順に両方実行） |
 | JavaScript / TypeScript / JSX / TSX / Vue / HTML / CSS / SCSS / JSON / YAML / Markdown | prettierd（なければ prettier） |
 | C / C++ | clang-format |
+| Rust | rustfmt（エディションは `Cargo.toml` から。スタイルはプロジェクトの `rustfmt.toml` に従う） |
 | Lua | stylua |
 | Nix | nixpkgs-fmt |
 | Shell（`sh`） | shfmt |
@@ -310,7 +312,7 @@ claudecode.nvim が起動するコマンド: `claude` が PATH にあればそ�
 | --- | --- |
 | Go | go, gomod, gosum, gowork |
 | Web | html, css, scss, javascript, typescript, tsx, vue, php, php_only, phpdoc, json, jsonc, yaml, toml |
-| 低レイヤー | c, cpp, asm, make, cmake |
+| 低レイヤー | c, cpp, asm, make, cmake, rust |
 | V | v |
 | 設定・その他 | lua, vim, vimdoc, query, bash, nix, markdown, markdown_inline, diff, git_config, gitcommit, gitignore, gitattributes, regex, comment |
 
