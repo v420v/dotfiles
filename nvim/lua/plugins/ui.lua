@@ -160,7 +160,40 @@ return {
                 desc = "Breadcrumbs: select next context",
             },
         },
-        opts = {},
+        opts = {
+            menu = {
+                keymaps = {
+                    -- h: back to the parent menu (closes the root menu)
+                    h = "<C-w>q",
+                    -- l: open the submenu; on a leaf entry, jump to it
+                    l = function()
+                        local menu = require("dropbar.utils").menu.get_current()
+                        if not menu then return end
+                        local row = vim.api.nvim_win_get_cursor(menu.win)[1]
+                        local component = menu.entries[row]:first_clickable(0)
+                        if component then menu:click_on(component, nil, 1, "l") end
+                    end,
+                },
+            },
+        },
+        config = function(_, opts)
+            require("dropbar").setup(opts)
+            -- Dropdown menus: editor background + visible GitHub-style border instead of the
+            -- darker NormalFloat panel, and a subtle hover instead of orange IncSearch.
+            local function paint()
+                local hl = vim.api.nvim_set_hl
+                hl(0, "DropBarMenuNormalFloat", { link = "Normal" })
+                hl(0, "DropBarMenuFloatBorder", { fg = "#30363d" })
+                hl(0, "DropBarMenuCurrentContext", { bg = "#1c3d6a" })
+                hl(0, "DropBarMenuHoverEntry", { bg = "#21262d" })
+                hl(0, "DropBarMenuHoverIcon", {})
+                hl(0, "DropBarMenuHoverSymbol", { bold = true })
+                hl(0, "DropBarMenuSbar", { bg = "#161b22" })
+                hl(0, "DropBarMenuThumb", { bg = "#30363d" })
+            end
+            paint()
+            vim.api.nvim_create_autocmd("ColorScheme", { callback = paint })
+        end,
     },
 
     {
