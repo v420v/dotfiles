@@ -51,6 +51,12 @@ in
     phpPackages.php-cs-fixer
     mago
 
+    rustc
+    cargo
+    rustfmt
+    clippy
+    rust-analyzer
+
     nodejs
 
     uv

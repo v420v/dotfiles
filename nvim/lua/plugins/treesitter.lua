@@ -60,6 +60,7 @@ return {
                     "asm",
                     "make",
                     "cmake",
+                    "rust",
                     "v",
                     "lua",
                     "vim",
